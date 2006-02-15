@@ -6,7 +6,7 @@
 \title{ Functions for evaluating balance}
 \description{
 These are a collection of functions that can be used as components of 
-\code{\link[twang]{stop.methods}} for evaluating the balance of two groups
+\code{\link{stop.methods}} for evaluating the balance of two groups
 }
 \usage{
 ks.stat(logw = NULL, w.ctrl = NULL, 
@@ -36,7 +36,7 @@ The weights be passed to these functions with any of the first three arguments
   \item{w.ctrl}{the weights for the control subjects }
   \item{gbm1}{a \code{\link[gbm]{gbm.object}} used for estimating the 
               propensity scores, usually the \code{gbm} component of a \code{ps} 
-              object returned from \code{\link[twang]{ps}}}
+              object returned from \code{\link{ps}}}
   \item{i}{the iteration of \code{\link[gbm]{gbm}} with which to compute the 
            weights}
   \item{data}{ a data frame with the data }
@@ -63,6 +63,6 @@ The weights be passed to these functions with any of the first three arguments
   ...
 }
 
-\seealso{ \code{\link[twang]{stop.methods}} }
+\seealso{ \code{\link{stop.methods}} }
 
 \keyword{ models }

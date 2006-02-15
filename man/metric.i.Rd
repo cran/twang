@@ -19,7 +19,7 @@ metric.i(i, fun = ks.stat, ...)
 Evaluates \code{fun} at \code{i}
 }
 
-\seealso{ \code{\link[twang]{ks.stat}}, \code{\link[twang]{es.stat}}, 
-          \code{\link[twang]{strata.stat}} }
+\seealso{ \code{\link{ks.stat}}, \code{\link{es.stat}}, 
+          \code{\link{strata.stat}} }
 
 \keyword{ models }% at least one, from doc/KEYWORDS

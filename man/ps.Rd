@@ -2,13 +2,12 @@
 \alias{ps}
 
 \title{Propensity score estimation}
-\description{
-ps calculates propensity scores, diagnostic plots and information for a
-dataframe which must include a treatment assignment variable, labeled
-\code{y}, having 0's for the comparison group cases, and 1's for the treatment
-group cases.
-}
-\usage{
+
+\description{ \code{ps} calculates propensity scores and diagnoses them using 
+a variety of methods, but centered on using boosted logistic regression as 
+implemented in \code{\link[gbm]{gbm}} }
+
+\usage{ 
 ps(formula = formula(data),
    data,
    sampw = rep(1, nrow(data)),
@@ -40,10 +39,9 @@ ps(formula = formula(data),
   \item{interaction.depth}{ \code{interaction.depth} passed on to
         \code{\link[gbm]{gbm}} }
   \item{shrinkage}{ \code{shrinkage} passed on to \code{\link[gbm]{gbm}} }
-  \item{perm.test.iters}{an non-negative integer giving the number of iterations
+  \item{perm.test.iters}{a non-negative integer giving the number of iterations
         of the permutation test for the KS statistic. If \code{perm.test.iters=0}
-        then the function returns an analytic approximation to the p-value. This
-        argument is ignored is \code{x} is a \code{ps} object. Setting
+        then the function returns an analytic approximation to the p-value. Setting
         \code{perm.test.iters=200} will yield precision to within 3\% if the true
         p-value is 0.05. Use \code{perm.test.iters=500} to be within 2\%}
   \item{print.level}{ the amount of detail to print to the screen }
@@ -60,17 +58,11 @@ interaction terms in the formula. \code{interaction.depth} controls the level
 of interactions to allow in the propensity score model.
 
 The function ps causes plots to be saved as a single pdf file with the name
-"[title].pdf" in the working directory.  The plots include
-\itemize{
-    \item Boxplot of propensity scores
-    \item Histogram of comparison weights
-    \item P-value plots for unweighted and weighted T, KS, and Std effect size statistics
-    \item Change in effect size plot
-}
-}
+"[title].pdf" in the working directory. See \code{\link{diag.plot}} for 
+details of the plots. }
 
-\value{
-Returns an object of class \code{ps}, a list containing
+\value{ 
+Returns an object of class \code{ps}, a list containing 
   \item{gbm.obj}{The returned \code{\link[gbm]{gbm}} object}
   \item{ps}{a data frame containing the estimated propensity scores. Each
             column is associated with one of the methods selected in
@@ -82,40 +74,41 @@ Returns an object of class \code{ps}, a list containing
   \item{plot.info}{a list containing the raw data used to generate the plots}
   \item{desc}{a list containing balance tables for each method selected in
               \code{stop.methods}. Includes a component for the unweighted
-              analysis. See below for a list of the components of \code{desc}}
+              analysis names \dQuote{unw}. Each \code{desc} component includes
+              a list with the following components
+  \describe{
+     \item{ess}{The effective sample size of the control group}
+     \item{n.treat}{The number of subjects in the treatment group}
+     \item{n.ctrl}{The number of subjects in the control group}
+     \item{max.es}{The largest effect size across the covariates}
+     \item{mean.es}{The mean absolute effect size}
+     \item{max.ks}{The largest KS statistic across the covariates}
+     \item{mean.ks}{The average KS statistic across the covariates}
+     \item{bal.tab}{a (potentially large) table summarizing the quality of the 
+                    weights for equalizing the distribution of features across 
+                    the two groups. This table is best extracted using the
+                    \code{\link{bal.table}} method. See the help for 
+                    \code{\link{bal.table}} for details on the table's contents}
+     \item{n.trees}{The estimated optimal number of \code{\link[gbm]{gbm}} 
+                    iterations to optimize the loss function for the associated 
+                    \code{\link{stop.methods}}}
+     }      
+  }
   \item{datestamp}{Records the date of the analysis}
   \item{parameters}{Saves the \code{ps} call}
   \item{alerts}{Text containing any warnings accumulated during the estimation}
-  
-The \code{desc} component of the \code{ps} object contains detailed information
-on the model fit and diagnostics of the propensity score weights.
-  \item{ess}{The effective sample size of the control group}
-  \item{n.treat}{The number of subjects in the treatment group}
-  \item{n.ctrl}{The number of subjects in the control group}
-  \item{max.es}{The largest effect size across the covariates}
-  \item{mean.es}{The mean absolute effect size}
-  \item{max.ks}{The largest KS statistic across the covariates}
-  \item{mean.ks}{The average KS statistic across the covariates}
-  \item{bal.tab}{a (potentially large) table summarizing the quality of the 
-                 weights for equalizing the distribution of features across 
-                 the two groups. This table is best extracted using the
-                 \code{\link[twang]{bal.table}} method. See the help for that
-                 function for details on the table's contents}
-  \item{n.trees}{The estimated optimal number of \code{\link[gbm]{gbm}} 
-                 iterations to optimize the loss function for the associated 
-                 \code{\link[twang]{stop.methods}}}
-}
+ }
 
 \references{
-Dan McCaffrey, G. Ridgeway, Andrew Morral (2004). "Propensity Score Estimation
-with Boosted Regression for Evaluating Adolescent Substance Abuse Treatment,"
+Dan McCaffrey, G. Ridgeway, Andrew Morral (2004). \dQuote{Propensity Score Estimation
+with Boosted Regression for Evaluating Adolescent Substance Abuse Treatment,}
 \emph{Psychological Methods} 9(4):403-425.
 }
 
 \author{
-Andrew Morral \email{morral@rand.org},
+Greg Ridgeway \email{gregr@rand.org},
 Dan McCaffrey \email{danielm@rand.org},
-Greg Ridgeway \email{gregr@rand.org}
+Andrew Morral \email{morral@rand.org}
 }
 
 \seealso{ \code{\link[gbm]{gbm}} }
@@ -128,7 +121,7 @@ ps.lalonde <- ps(treat ~ age + educ + black + hispan + nodegree +
                          married + re74 + re75, 
                  data = lalonde,
                  title="Lalonde example",
-                 stop.method=stop.methods$ks.stat.max,  
+                 stop.method=stop.methods[c("ks.stat.mean","ks.stat.max")],
                  # generate plots?
                  plots=TRUE,
                  # gbm options
@@ -155,7 +148,6 @@ dx.wts(w,data=lalonde,treat.var="treat",
 
 # diagnose the weights as propensity scores
 p <- ps.lalonde$ps
-p[lalonde$treat==1,] <- 1
 dx.wts(p,data=lalonde,treat.var="treat",x.as.weights=FALSE)
 
 # look at propensity scores
@@ -184,6 +176,9 @@ bal.stat(data=lalonde,
          get.means=TRUE,
          get.ks=TRUE,
          na.action="level")
+         
+# sensitivity analysis
+sensitivity(ps.lalonde,lalonde,"re78")
 }
 \keyword{models}
 \keyword{multivariate}

@@ -37,17 +37,17 @@ desc.wts(data,
   \item{alerts.stack}{ an object for collecting warnings issued during the analyses }
 }
 \details{
-\code{desc.wts} calls \code{\link[twang]{bal.stat}} to assess covariate balance.
-If \code{perm.test.iters>0} it will call \code{\link[twang]{bal.stat}} multiple
+\code{desc.wts} calls \code{\link{bal.stat}} to assess covariate balance.
+If \code{perm.test.iters>0} it will call \code{\link{bal.stat}} multiple
 times to compute Monte Carlo p-values for the KS statistics and the maximum KS
 statistic. It assembles the results into a list object, which usually becomes 
-the \code{desc} component of ps objects that \code{\link[twang]{ps}} returns.
+the \code{desc} component of ps objects that \code{\link{ps}} returns.
 }
 \value{
 See the description of the \code{desc} component of the \code{ps} object that 
-\code{\link[twang]{ps}} returns
+\code{\link{ps}} returns
 }
 
-\seealso{ \code{\link[twang]{ps}} }
+\seealso{ \code{\link{ps}} }
 
 \keyword{ models }

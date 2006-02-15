@@ -24,11 +24,11 @@ diag.plot(til, treat, p.s, w.ctrl, desc.unw, desc.w)
   \item{w.ctrl}{weights for the control subjects}
   \item{desc.unw}{a list object containing the balance assessment without 
                   weights, usually the result of a call to 
-                  \code{\link[twang]{desc.wts}} or the \code{desc} component 
-                  of a \code{\link[twang]{ps}} object}
+                  \code{\link{desc.wts}} or the \code{desc} component 
+                  of a \code{\link{ps}} object}
   \item{desc.w}{a list object containing the weighted balance assessment}
   
-  \item{x}{ a \code{ps} object, usually one returned from \code{\link[twang]{ps}} }
+  \item{x}{ a \code{ps} object, usually one returned from \code{\link{ps}} }
   \item{label}{ a character string for titling the plots }
   \item{ask}{logical. If \code{TRUE} then the graphics window waits for a 
              response from the user before showing the next graph}
@@ -36,11 +36,18 @@ diag.plot(til, treat, p.s, w.ctrl, desc.unw, desc.w)
 }
 \details{
   \code{plot.ps} and \code{plot.dxwts} are wrappers for \code{\link{diag.plot}}
+  
+The plots include
+    \item Boxplot of propensity scores
+    \item Histogram of comparison weights
+    \item P-value plots for unweighted and weighted t statistics, KS statistics, 
+          and standardized effect size
+    \item Change in effect size plot
 }
 \value{
 No returned objects
 }
 
-\seealso{ \code{\link[twang]{ps}} }
+\seealso{ \code{\link{ps}} }
 
 \keyword{ hplot }

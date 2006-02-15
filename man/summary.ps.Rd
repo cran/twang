@@ -10,7 +10,7 @@ Computes summary information about a stored \code{ps} object
 }
 
 \arguments{
-  \item{object}{ a \code{\link[twang]{ps}} object }
+  \item{object}{ a \code{\link{ps}} object }
   \item{\dots}{ additional arguments affecting the summary produced }
 }
 \details{
@@ -19,9 +19,9 @@ into a short summary table describing the size of the dataset and the quality of
 the propensity score weights.
 }
 \value{
-See \code{\link[twang]{ps}} for details on the returned table
+See \code{\link{ps}} for details on the returned table
 }
 
-\seealso{\code{\link[twang]{ps}}}
+\seealso{\code{\link{ps}}}
 
 \keyword{ models }

@@ -1,7 +1,7 @@
 \name{lalonde}
 \alias{lalonde}
 \docType{data}
-\title{ ~~ data name/kind ... ~~}
+\title{Lalonde's National Supported Work Demonstration data}
 \description{
 One of the datasets used by Dehejia and Wahba in their paper "Causal Effects 
 in Non-Experimental Studies: Reevaluating the Evaluation of Training Programs."

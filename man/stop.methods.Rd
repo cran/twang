@@ -15,6 +15,7 @@ The \code{\link{ps}} function uses a \code{stop.method} object for instructions
     they wish and pass them to \code{\link{ps}} for it to optimize.
 
 A valid \code{stop.method} object is a list that defines the following
+\describe{
 \item{metric}{a function that evaluates the similarity of the distribution of 
     a variable across the treatment and control groups. Currently, the 
     \code{twang} package has functions \code{\link{es.stat}}, 
@@ -31,7 +32,8 @@ A valid \code{stop.method} object is a list that defines the following
     "exclude", or "lowest"}
 \item{name}{a character string, preferably unique from other 
     \code{stop.method}s for labeling the resulting weights}
-In addition, the object must have \code{class(mystopmethod) <- "stop.method"}
+}
+In addition, the object must have \code{class(mystopmethod) == "stop.method"}
 }
 
 \keyword{multivariate}

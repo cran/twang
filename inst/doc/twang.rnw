@@ -1,0 +1,57 @@
+\documentclass{article}
+\bibliographystyle{plain}
+\usepackage[active]{srcltx}
+\newcommand{\EV}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\aRule}{\begin{center} \rule{5in}{1mm} \end{center}}
+
+\title{Toolkit for Weighting and Analysis of Nonequivalent Groups:\\A 
+tutorial for the \texttt{twang} package} \author{Greg Ridgeway, Dan 
+McCaffrey, Andrew Morral}
+
+%\VignetteIndexEntry{Toolkit for Weighting and Analysis of Nonequivalent Groups: A guide to the twang package}
+\newcommand{\mathgbf}[1]{{\mbox{\boldmath$#1$\unboldmath}}}
+
+\begin{document}
+
+\maketitle
+
+This document describes
+
+\section{An example}
+
+To demonstrate the package we utilize data from Lalonde's National Supported 
+Work Demonstration analysis (Lalonde 1986, Dehejia \& Wahba 1999).
+
+\begin{thebibliography}{77}     % start the bibliography
+
+\small                          % put the bibliography in a small font
+
+\bibitem{Lalonde:1986} Lalonde, R. (1986). ``Evaluating the econometric 
+evaluations of training programs with experimental data," \textit{American 
+Economic Review} 76: 604-620.
+
+\bibitem{Dehejia:1999} Dehejia, R.H. and Wahba, S. (1999). ``Causal Effects 
+in Nonexperimental Studies: Re-Evaluating the Evaluation of Training 
+Programs," \textit{Journal of the American Statistical Association} 94: 
+1053-1062.
+
+\bibitem{Friedman:2001} J.H. Friedman (2001). ``Greedy Function 
+Approximation: A Gradient Boosting Machine,'' \textit{Annals of Statistics} 
+29(5):1189-1232.
+
+\bibitem{Friedman:2002}
+J.H. Friedman (2002). ``Stochastic Gradient Boosting,'' \textit{Computational Statistics
+and Data Analysis} 38(4):367-378.
+
+\bibitem{FHT:2000}
+J.H. Friedman, T. Hastie, R. Tibshirani (2000). ``Additive Logistic Regression:
+a Statistical View of Boosting,'' \textit{Annals of Statistics} 28(2):337-374.
+
+Dan McCaffrey, G. Ridgeway, Andrew Morral (2004). "Propensity Score 
+Estimation with Boosted Regression for Evaluating Adolescent Substance Abuse 
+Treatment," \textit{Psychological Methods} 9(4):403-425. 
+
+\end{thebibliography}           % end the bibliography
+
+\end{document}

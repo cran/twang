@@ -65,7 +65,7 @@ Returns a list containing
   \item{alerts}{text containing any warnings accumulated during the estimation}
 }
 
-\seealso{ The example for \code{\link[twang]{ps}} contains an example of the 
+\seealso{ The example for \code{\link{ps}} contains an example of the 
 use of \code{dx.wts}, \code{\link{diag.plot}}}
 
 \keyword{ models }

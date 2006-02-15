@@ -57,9 +57,9 @@ depending on whether \code{x} is a numeric vector or a factor.
 columns in the returned result.
 }
 
-\seealso{\code{\link[twang]{bal.stat}}, 
-         \code{\link[twang]{ks.stat}}, 
-         \code{\link[twang]{es.stat}}}
+\seealso{\code{\link{bal.stat}}, 
+         \code{\link{ks.stat}}, 
+         \code{\link{es.stat}}}
 \examples{
 treat <- rbinom(100,1,0.5)
 w     <- rexp(100)
@@ -70,7 +70,7 @@ ps.summary.f(x.cat,treat,w)
 
 # numeric data
 x.num <- rnorm(100)
-ps.summary.f(x.num,treat,w)
+ps.summary.n(x.num,treat,w)
 
 # or let ps.summary figure out which to call
 ps.summary(x.num,treat,w)

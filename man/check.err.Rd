@@ -3,8 +3,8 @@
 
 \title{ Reports on errors and warnings }
 \description{
-Reports on errors and warnings encountered while running \code{\link[twang]{ps}} 
-and \code{\link[twang]{desc.wts}}. This function is not intended for the user to
+Reports on errors and warnings encountered while running \code{\link{ps}} 
+and \code{\link{desc.wts}}. This function is not intended for the user to
 call directly
 }
 \usage{
@@ -13,7 +13,7 @@ check.err(cov.table, stage, alerts.stack)
 
 \arguments{
   \item{cov.table}{a balance table, intended to be the \code{results} 
-                   component of the list that \code{\link[twang]{bal.stat}} 
+                   component of the list that \code{\link{bal.stat}} 
                    returns}
   \item{stage}{a title for the method ``type" used to create the weights, used
                to label the results}

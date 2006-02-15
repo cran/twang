@@ -37,12 +37,12 @@ bal.stat(data,
     a table
 }
 \value{
-See \code{\link[twang]{ps.summary}} for details on the returned object. 
+See \code{\link{ps.summary}} for details on the returned object. 
 \code{get.means} and \code{get.ks} manipulate the inclusion of certain 
 columns in the returned result.
 }
 
-\seealso{ The example for \code{\link[twang]{ps}} contains an example of the 
+\seealso{ The example for \code{\link{ps}} contains an example of the 
 use of \code{bal.table} }
 
 \keyword{ multivariate }
