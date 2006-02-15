@@ -1,0 +1,14 @@
+bal.stat                Calculate weighted balance statistics
+bal.table               Compute balance table
+check.err               Reports on errors and warnings
+desc.wts                Diagnosis of weights
+diag.plot               Create diagnostic plots
+dx.wts                  Propensity score diagnostics
+ks.stat                 Functions for evaluating balance
+lalonde                 ~~ data name/kind ... ~~
+metric.i                Losses for *.stat functions
+print.dxwts             Print a diagnosis of the weights
+ps                      Propensity score estimation
+ps.summary              Computes balance measures
+stop.methods            Rules for selecting the propensity scores
+summary.ps              Summarize a ps object
