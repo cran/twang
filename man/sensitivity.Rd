@@ -71,7 +71,8 @@ score model. The columns are
   \item{breakeven.cor}{the break even correlation (see Details section)}
 } 
 
-\references{ G. Ridgeway (2006). \dQuote{Assessing the effect of race bias in 
+\references{ 
+G. Ridgeway (2006). \dQuote{Assessing the effect of race bias in 
 post-traffic stop outcomes using propensity scores,} \emph{Journal of 
 Quantitative Criminology} 22(1). } 
 

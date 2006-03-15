@@ -4,6 +4,7 @@ check.err               Reports on errors and warnings
 desc.wts                Diagnosis of weights
 diag.plot               Create diagnostic plots
 dx.wts                  Propensity score diagnostics
+get.weights             Extract propensity score weights
 ks.stat                 Functions for evaluating balance
 lalonde                 Lalonde's National Supported Work Demonstration
                         data
@@ -11,6 +12,9 @@ metric.i                Losses for *.stat functions
 print.dxwts             Print a diagnosis of the weights
 ps                      Propensity score estimation
 ps.summary              Computes balance measures
+raceprofiling           Traffic stop data
 sensitivity             Sensitivity analysis
 stop.methods            Rules for selecting the propensity scores
 summary.ps              Summarize a ps object
+twang-package           Toolkit for Weighting and Analysis of
+                        Nonequivalent Groups

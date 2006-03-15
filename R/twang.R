@@ -15,7 +15,8 @@ ps<-function(formula = formula(data),
              sampw=rep(1,nrow(data)),       # sampling weights
              title=NULL,
              stop.method=stop.methods[1:2], # stopping rules
-             plots=TRUE,
+             plots="all",
+             pdf.plots=FALSE,
              n.trees=10000,                 # gbm options
              interaction.depth=3,
              shrinkage=0.01,
@@ -44,11 +45,19 @@ ps<-function(formula = formula(data),
       stop.method <- list(stop.method)
    }
    stop.method.names <- sapply(stop.method,function(x){x$name})
-   print(stop.method.names)
    i <- which(sapply(stop.method,function(x){x$direct}))
    if(length(i)>0) cat(paste("*** WARNING: Stop method",stop.method.names[i],"involves direct\noptimization, which is very time consuming, especially\nfor datasets with more than a few hundred cases. Consider\nusing another stop.method or be prepared for a very long wait. ***\n\n"))
    desc <- vector("list",1+length(stop.method))
    names(desc) <- c("unw",stop.method.names)
+
+   # plot options
+   plot.options <- c("optimize","ps boxplot","weight histogram",
+                     "t pvalues","ks pvalues","spaghetti")
+   plots <- tolower(plots)
+   if("all" %in% plots)
+   {
+      plots <- plot.options
+   }   
 
    # create the plot.info object to reproduce the plots later
    plot.info <- vector("list",1+length(stop.method))
@@ -98,7 +107,7 @@ ps<-function(formula = formula(data),
                         alerts.stack=alerts.stack)
    desc$unw$n.trees <- NA
 
-   if(plots) pdf(file=paste(title,".pdf",sep=""))
+   if(pdf.plots) pdf(file=paste(title,".pdf",sep=""))
 
    for(i.tp in 1:length(stop.method))
    {
@@ -122,7 +131,7 @@ ps<-function(formula = formula(data),
                     na.action    = stop.method[[i.tp]]$na.action,
                     gbm1         = gbm1)
       }
-      if(plots) 
+      if("optimize" %in% plots) 
       {
          plot(iters,bal,xlab="Iteration",ylab=stop.method.names[i.tp])
       }
@@ -147,6 +156,7 @@ ps<-function(formula = formula(data),
                     na.action = stop.method[[i.tp]]$na.action,
                     gbm1      = gbm1)
       if(verbose) cat("   Optimized at",round(opt$minimum),"\n")
+      if(gbm1$n.trees-opt$minimum < 100) warning("Optimal number of iterations is close to the specified n.trees. n.trees is likely set too small and better balance might be obtainable by setting n.trees to be larger.")
 
       # compute propensity score weights
       p.s[,i.tp]  <- predict(gbm1,newdata=data,
@@ -191,18 +201,19 @@ ps<-function(formula = formula(data),
       desc[[tp]]$n.trees <- 
          ifelse(stop.method[[i.tp]]$direct, NA, round(opt$minimum))
       
-      if(plots)
+      if(any(plots %in% plot.options[-1]))
       {
-         diag.plot(til      = paste(title,"-",tp),
+         diag.plot(title    = paste(title,"-",tp),
                    treat    = data[,treat.var],
                    p.s      = p.s[,i.tp],
                    w.ctrl   = w[data[,treat.var]==0,i.tp],
                    desc.unw = desc$unw,
-                   desc.w   = desc[[tp]])
+                   desc.w   = desc[[tp]],
+                   plots    = plots)
       }
    }
 
-   if(plots) dev.off()
+   if(pdf.plots) dev.off()
 
    close(alerts.stack)
    if(verbose) cat(alert,sep="\n")
@@ -779,70 +790,104 @@ check.err<-function(cov.table, stage, alerts.stack)
 }
 
 
-diag.plot <- function(til,treat,p.s,w.ctrl,desc.unw,desc.w)
+diag.plot <- function(title=NULL,
+                      treat=NULL,
+                      p.s=NULL,
+                      w.ctrl=NULL,
+                      desc.unw=NULL,
+                      desc.w=NULL,
+                      plots="all")
 {
-   par(mfrow=c(2,2))
+   if("all" %in% plots)
+      plots <- c("ps boxplot","weight histogram",
+                 "t pvalues","ks pvalues","spaghetti")
 
-   if(!is.null(p.s))
+   if("ps boxplot" %in% plots)
    {
+      if(is.null(p.s) || is.null(treat))
+         stop("For the ps boxplot p.s and treat cannot be NULL")
       boxplot(t(p.s)~t(treat),
               names=c("Control","Treatment"),
-              ylab="Propensity Scores",xlab="Treatment assignment",main=til)
+              ylab="Propensity Scores",xlab="Treatment assignment",main=title)
    }
 
-   h1<-hist(w.ctrl, xlab="Weight",main="Control Weights")
-   h2<-max(h1$counts)-(1:3)*.1*max(h1$counts)
-
-   labels <- c(paste("Tx.n=",sum(treat==1),sep=""),
-                 paste("Ct.n=",sum(treat==0),sep=""),
-                 paste("ESS=", round(desc.w$ess,1),sep=""))
-   text(x=par()$usr[2]-max(strwidth(labels)), 
-        y=par()$usr[4],
-        labels=paste(labels,collapse="\n"),
-        col="dark green",
-        adj=c(0,1))        
-
-   stats.unw <- desc.unw$bal.tab$results
-   stats.w   <- desc.w$bal.tab$results
-   plot(sort(stats.unw$p), col = "red", pch = 20,
-        xlab="pretreatment covariates", ylim=c(0,1),
-        main="T-test p-values", ylab="red (unw), black (wt)")
-   points(sort(stats.w$p))
-   lines(c(1,sum(!is.na(stats.w$p))),c(0,1), col="blue")
+   if("weight histogram" %in% plots)
+   {
+      if(is.null(w.ctrl) || is.null(treat))
+         stop("For the weight histogram w.ctrl and treat cannot be NULL")
+      h1<-hist(w.ctrl, xlab="Weight",main="Control Weights")
+      h2<-max(h1$counts)-(1:3)*0.1*max(h1$counts)
+   
+      labels <- c(paste("Tx.n=",sum(treat==1),sep=""),
+                  paste("Ct.n=",sum(treat==0),sep=""),
+                  paste("ESS=", round(sum(w.ctrl)^2/sum(w.ctrl^2),1),sep=""))
+      text(x=par()$usr[2]-max(strwidth(labels)), 
+           y=par()$usr[4],
+           labels=paste(labels,collapse="\n"),
+           col="dark green",
+           adj=c(0,1))        
+   }
+   
+   if(any(c("t pvalues","ks pvalues","spaghetti") %in% plots))
+   {
+      if(is.null(desc.unw) || is.null(desc.unw))
+         stop("For the t and KS statistic p-value plots and the spaghetti plots desc.unw and desc.w cannot be NULL")
+      stats.unw <- desc.unw$bal.tab$results
+      stats.w   <- desc.w$bal.tab$results
+   }
+   
+   if("t pvalues" %in% plots)
+   {
+      plot(sort(stats.unw$p), col = "red", pch = 20, ylim=c(0,1),
+           xlab="pretreatment covariates\nred (unw), black (wt)",
+           ylab="T-test p-values",
+           main=title)
+      points(sort(stats.w$p))
+      lines(c(1,sum(!is.na(stats.w$p))),c(0,1), col="blue")
+   }
 
    # KS p-value plot
-   plot(sort(stats.unw$ks.pval), col="red", pch=20,
-             xlab="pretreatment covariates", ylim=c(0,1),
-             main="KS-test p-values", ylab="red (unw), black (wt)")
-   points(sort(stats.w$ks.pval))
-   lines(c(1,sum(!is.na(stats.w$ks.pval))), c(0,1), col="blue")
-
+   if("ks pvalues" %in% plots)
+   {
+      plot(sort(stats.unw$ks.pval), col="red", pch=20, ylim=c(0,1),
+           xlab="pretreatment covariates\nred (unw), black (wt)", 
+           ylab="KS-test p-values",
+           main=title)
+      points(sort(stats.w$ks.pval))
+      lines(c(1,sum(!is.na(stats.w$ks.pval))), c(0,1), col="blue")
+   }
+   
    # ES spaghetti plot
-   par(mfrow=c(1,1))
-   ases.dat <- data.frame(es.unw=stats.unw$std.eff.sz, es.w=stats.w$std.eff.sz,
-                          p.unw =stats.unw$p,          p.w =stats.w$p)
-   ases.dat <- abs(subset(ases.dat, !is.na(p.unw)))
-
-   plot(c(0.85,2.15),c(0,min(3,max(unlist(ases.dat[,1:2]), na.rm=TRUE))), type="n",
-        xaxt="n",ylab="Absolute Std Difference",xlab="",
-        main=til, sub="Std Effect Sizes")
-   abline(h=c(.2,.5,.8))
-   axis(side=1, at=1:2, labels=c("Unweighted", "Weighted"))
-   for(i in 1:nrow(ases.dat))
+   if("spaghetti" %in% plots)
    {
-      points(1:2,abs(ases.dat[i,c("es.unw","es.w")]),type="b",col="skyblue")
+      ases.dat <- data.frame(es.unw = stats.unw$std.eff.sz, 
+                             es.w   = stats.w$std.eff.sz,
+                             p.unw  = stats.unw$p,          
+                             p.w    = stats.w$p)
+      ases.dat <- abs(subset(ases.dat, !is.na(p.unw)))
+   
+      plot(c(0.85,2.15),c(0,min(3,max(unlist(ases.dat[,1:2]), na.rm=TRUE))), 
+           type="n",
+           xaxt="n",ylab="Absolute Std Difference",xlab="",
+           main=title)
+      abline(h=c(.2,.5,.8))
+      axis(side=1, at=1:2, labels=c("Unweighted", "Weighted"))
+      for(i in 1:nrow(ases.dat))
+      {
+         points(1:2,abs(ases.dat[i,c("es.unw","es.w")]),type="b",col="skyblue")
+      }
+      temp1 <- ases.dat[abs(ases.dat$es.unw) < abs(ases.dat$es.w),]
+      for(i in 1:nrow(temp1))
+      {
+            points(1:2,abs(temp1[i,c("es.unw","es.w")]),type="b", col="red",lwd=2)
+      }
+      ind <- which(ases.dat$p.unw < 0.05)
+      points(rep(1,length(ind)), ases.dat$es.unw[ind],pch=19, col="red")
+      ind <- which(ases.dat$p.w   < 0.05)
+      points(rep(2,length(ind)), ases.dat$es.w[ind],  pch=19, col="red")
+      if (max(ases.dat$es.w,na.rm=TRUE)>3) 
+         mtext(text="Some weighted effects>3 !!",side=3,col="red")
    }
-   temp1 <- ases.dat[abs(ases.dat$es.unw) < abs(ases.dat$es.w),]
-   for(i in 1:nrow(temp1))
-   {
-         points(1:2,abs(temp1[i,c("es.unw","es.w")]),type="b", col="red",lwd=2)
-   }
-   ind <- which(ases.dat$p.unw < 0.05)
-   points(rep(1,length(ind)), ases.dat$es.unw[ind],pch=19, col="red")
-   ind <- which(ases.dat$p.w   < 0.05)
-   points(rep(2,length(ind)), ases.dat$es.w[ind],  pch=19, col="red")
-   if (max(ases.dat$es.w,na.rm=TRUE)>3) mtext(text="Some weighted effects>3 !!",side=3,col="red")
-
 }
 
 
@@ -907,7 +952,7 @@ dx.wts <- function(x,
 
    for(i.tp in 1:n.tp)
    {
-      if(class(x)=="ps")
+      if((class(x)=="ps") & is.null(vars))
       {
          desc.temp <- x$desc[[i.tp]]
          iter      <- desc.temp$n.trees
@@ -944,7 +989,7 @@ dx.wts <- function(x,
             desc.unw <- desc.temp
          } else
          {
-            diag.plot(til      = paste(title,"-",tp),
+            diag.plot(title    = paste(title,"-",tp),
                       treat    = data[,treat.var],
                       p.s      = p.s[,i.tp],
                       w.ctrl   = w[data[,treat.var]==0,i.tp],
@@ -980,7 +1025,7 @@ print.dxwts <- function(x,...)
 ########################################################
 # ps object summary functions added by Dan Mc
 
-plot.ps <- function(x,label="",ask=FALSE, ...)
+plot.ps <- function(x,label="",ask=FALSE,plots="all",...)
 {
    # Creates diag.plot plots and sends to current device
    # x:     ps object 
@@ -1010,12 +1055,13 @@ plot.ps <- function(x,label="",ask=FALSE, ...)
          desc.unw <- desc.temp
       } else
       {
-         diag.plot(til      = paste(label,tp,sep=""),
+         diag.plot(title    = paste(label,tp,sep=""),
                    treat    = x$treat,
                    p.s      = p.s[,i.tp],
                    w.ctrl   = w[x$treat==0,i.tp],
                    desc.unw = desc.unw,
-                   desc.w   = desc.temp)
+                   desc.w   = desc.temp,
+                   plots    = plots)
       }
    } 
 
@@ -1082,7 +1128,7 @@ bal.table.dxwts <- function(x,...)
 # Creates diag.plot plots and sends to current device
 # x:     dxwts object 
 # label: Label added to the plot titles
-plot.dxwts <- function(x,label="", ...)
+plot.dxwts <- function(x,label="", ask=FALSE, plots="all",...)
 {
    # extract the propensity scores and weights from the dxwts object
    p.s    <- x$ps
@@ -1093,6 +1139,9 @@ plot.dxwts <- function(x,label="", ...)
       p.s <- cbind(unw=rep(0.5,nrow(p.s)),p.s)
    }
 
+   par.ask0 <- par()$ask
+   par(ask=ask)
+   
    n.tp <- ifelse(class(x)=="ps",length(x$desc),ncol(w))
    for(i.tp in 1:n.tp)
    {
@@ -1105,21 +1154,25 @@ plot.dxwts <- function(x,label="", ...)
          desc.unw <- desc.temp
       } else
       {
-         diag.plot(til      = paste(label,tp,sep=""),
+         diag.plot(title    = paste(label,tp,sep=""),
                    treat    = x$treat,
                    p.s      = p.s[,i.tp],
                    w.ctrl   = w[x$treat==0,i.tp],
                    desc.unw = desc.unw,
-                   desc.w   = desc.temp)
+                   desc.w   = desc.temp,
+                   plots    = plots)
       }
    } 
+
+   par(ask=par.ask0)
+   invisible()
 }
 
 
 
-# G. Ridgeway (2006, to appear). "Assessing the effect of race bias in 
+# G. Ridgeway (2006). "Assessing the effect of race bias in 
 #    post-traffic stop outcomes using propensity scores," Journal of 
-#    Quantitative Criminology
+#    Quantitative Criminology 22(1).
 sensitivity <- function(ps1,data,
                         outcome,
                         order.by.importance=TRUE,
@@ -1169,7 +1222,7 @@ sensitivity <- function(ps1,data,
                   sampw = ps1$parameters$sampw,
                   title = ps1$parameters$title, 
                   stop.method = stop.method[[i.smethod]], 
-                  plots = FALSE, 
+                  plots = "none", 
                   n.trees = ps1$parameters$n.trees, 
                   interaction.depth = ps1$parameters$interaction.depth, 
                   shrinkage = ps1$parameters$shrinkage, 
@@ -1243,4 +1296,31 @@ sensitivity <- function(ps1,data,
    }
    
    return(results)
+}
+
+
+get.weights <- function(ps1,
+                        type=c("ATT","ATE")[1],
+                        stop.method=NULL)
+{
+   if(class(ps1)!="ps") stop("ps1 much be a ps object.")
+   if(!(type %in% c("ATT","ATE"))) stop("type must be either \"ATT\" or \"ATE\".")
+   if(length(stop.method)>1) stop("More than 1 stop.method was selected.")
+   if(!is.null(stop.method))
+   {
+      i <- match(stop.method, names(ps1$w))
+      if(is.na(i)) stop("Weights for stop.method=",stop.method," are not available. Available options: ",names(ps1$ps),".")
+   } else
+   {
+      i <- 1
+   }
+  
+   if(type=="ATT") return(ps1$w[[i]])
+   else if(type=="ATE")
+   { 
+      w <- ps1$ps[[i]]
+      w[ps1$treat==1] <- with(ps1, 1/ps[treat==1])
+      w[ps1$treat==0] <- with(ps1, 1/(1-ps[treat==0]))
+      return(w)
+   }
 }

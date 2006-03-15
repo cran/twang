@@ -13,7 +13,8 @@ ps(formula = formula(data),
    sampw = rep(1, nrow(data)),
    title=NULL,
    stop.method = stop.methods[1:2],
-   plots = TRUE,
+   plots="all",
+   pdf.plots=FALSE,
    n.trees = 10000,
    interaction.depth = 3,
    shrinkage = 0.01,
@@ -33,8 +34,12 @@ ps(formula = formula(data),
   \item{stop.method}{a \code{\link{stop.methods}} object, or a list of such
                      objects, containing the metrics and rules for evaluating
                      the quality of the propensity scores}
-  \item{plots}{a logical value for determining whether or not to plot balance
-               diagnostics; default is to plot}
+  \item{plots}{a character vector indicating which plots to create. The options 
+    are all (the default), optimize, ps boxplot, weight histogram, 
+    t pvalues, ks pvalues, spaghetti. Any other options (such as "none") will
+    produce no plots}
+  \item{pdf.plots}{if \code{TRUE} then all plots are dumped to a pdf file with
+    the name specified in \code{title}}
   \item{n.trees}{ number of gbm iterations passed on to \code{\link[gbm]{gbm}} }
   \item{interaction.depth}{ \code{interaction.depth} passed on to
         \code{\link[gbm]{gbm}} }
@@ -57,9 +62,9 @@ treatment variable should be a 0/1 indicator. There is no need to specify
 interaction terms in the formula. \code{interaction.depth} controls the level
 of interactions to allow in the propensity score model.
 
-The function ps causes plots to be saved as a single pdf file with the name
-"[title].pdf" in the working directory. See \code{\link{diag.plot}} for 
-details of the plots. }
+If \code{pdf.plots=TRUE} then \code{ps} causes plots to be saved as a single 
+pdf file with the name "[title].pdf" in the working directory. See 
+\code{\link{diag.plot}} for details of the plots.}
 
 \value{ 
 Returns an object of class \code{ps}, a list containing 
@@ -123,12 +128,13 @@ ps.lalonde <- ps(treat ~ age + educ + black + hispan + nodegree +
                  title="Lalonde example",
                  stop.method=stop.methods[c("ks.stat.mean","ks.stat.max")],
                  # generate plots?
-                 plots=TRUE,
+                 plots="all",
+                 pdf.plots=FALSE,
                  # gbm options
                  n.trees=2000,
                  interaction.depth=3,
                  shrinkage=0.005,
-                 perm.test.iters=50,
+                 perm.test.iters=0,
                  verbose=TRUE)
                  
 # get the balance tables
@@ -140,11 +146,12 @@ print(a)
 bal.table(a)
 
 # diagnose the weights as propensity score weights
-# will be the same as before, except for MC variation in the KS p-values
+#    will be the same as before, except for MC variation in the KS p-values
+#    when perm.test.iters is greater than 0
 w <- with(ps.lalonde, ps/(1-ps))
 w[lalonde$treat==1,] <- 1
 dx.wts(w,data=lalonde,treat.var="treat",
-       perm.test.iters=100)
+       perm.test.iters=0)
 
 # diagnose the weights as propensity scores
 p <- ps.lalonde$ps
