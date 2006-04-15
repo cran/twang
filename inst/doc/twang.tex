@@ -70,9 +70,6 @@ expect in theory, and use them in computing treatment effect estimates.
 
 \section{An example to start}
 
-<<echo=FALSE>>=
-options(width=60)
-@
 
 If you have not already done so, install twang by typing
 \texttt{install.packages("twang")}. \texttt{twang} relies on other R packages,
@@ -85,18 +82,37 @@ versions of the packages, including bug fixes and new features.
 To start using \texttt{twang}, first load the package. You will have to do this
 step once for each R session that you run.
 
-<<>>=
-library(twang)
-@
+\begin{Schunk}
+\begin{Sinput}
+> library(twang)
+\end{Sinput}
+\begin{Soutput}
+Loading required package: gbm
+Loading required package: survival
+Loading required package: splines
+Loading required package: lattice
+Loading required package: mgcv
+This is mgcv 1.3-13 
+Loaded gbm 1.5-5 
+Loading required package: survey
+Loading required package: xtable
+Loading required package: mlmRev
+Loading required package: lme4
+Loading required package: Matrix
+Loading required package: Matrix
+\end{Soutput}
+\end{Schunk}
 
 To demonstrate the package we utilize data from Lalonde's National Supported
 Work Demonstration analysis (Lalonde 1986, Dehejia \& Wahba 1999,
 \url{http://www.columbia.edu/~rd247/nswdata.html}). This dataset is provided
 with the \texttt{twang} package.
 
-<<>>=
-data(lalonde)
-@
+\begin{Schunk}
+\begin{Sinput}
+> data(lalonde)
+\end{Sinput}
+\end{Schunk}
 
 R can read data from many other sources. The manual ``R Data Import/Export,''
 available at \url{http://cran.r-project.org/doc/manuals/R-data.pdf}, describes
@@ -112,19 +128,16 @@ outcome variables at this time. The \texttt{ps()} function is the primary
 method in twang for estimating propensity scores. This step is computationally
 intensive and can take a few minutes.
 
-<<label=psfig,include=FALSE>>=
-par(mfrow=c(1,2))
-ps.lalonde <- ps(treat ~ age + educ + black + hispan + nodegree +
-                         married + re74 + re75,
-                 data = lalonde,
-                 plots="optimize",
-                 stop.method=stop.methods[c("es.stat.mean","ks.stat.max")],
-                 n.trees=2000,
-                 interaction.depth=2,
-                 shrinkage=0.01,
-                 perm.test.iters=0,
-                 verbose=FALSE)
-@
+\begin{Schunk}
+\begin{Sinput}
+> par(mfrow = c(1, 2))
+> ps.lalonde <- ps(treat ~ age + educ + black + 
++     hispan + nodegree + married + re74 + re75, 
++     data = lalonde, plots = "optimize", stop.method = stop.methods[c("es.stat.mean", 
++         "ks.stat.max")], n.trees = 2000, interaction.depth = 2, 
++     shrinkage = 0.01, perm.test.iters = 0, verbose = FALSE)
+\end{Sinput}
+\end{Schunk}
 
 The arguments to \texttt{ps()} require some discussion. The first argument
 specifies a formula indicating that \texttt{treat} is the 0/1 treatment
@@ -151,9 +164,7 @@ directory is and \texttt{setwd()} to set it). The default is
 
 \begin{figure}
 \begin{center}
-<<fig=TRUE,echo=FALSE,height=4, width=6>>=
-<<psfig>>
-@
+\includegraphics{twang-005}
 \end{center}
 \caption{Optimization of \texttt{es.stat.mean} and \texttt{ks.stat.max}. The
          horizontal axes indicate the number of iterations and the vertical
@@ -181,8 +192,8 @@ propensity score model giving it greater modeling flexibility. The increased
 flexibility improves the balance of the two groups up to a certain point at
 which additional iterations offer no improvement or actually make the balance
 worse. In this example, iterating gbm for
-\Sexpr{ps.lalonde$desc$es.stat.mean$n.trees} iterations minimized the average
-effect size difference and \Sexpr{ps.lalonde$desc$ks.stat.max$n.trees}
+946 iterations minimized the average
+effect size difference and 946
 iterations minimized the largest of the eight Kolmogorov-Smirnov (KS) statistics computed for the
 eight covariates. \texttt{n.trees} is the maximum number of iterations that
 \texttt{ps()} will run and it will issue a warning if the estimated optimal
@@ -200,19 +211,28 @@ can be found in the \texttt{n.trees} elementof the \texttt{ks.stat.max} element 
 Figure~\ref{fig:relativeinfluence} shows the barchart of the relative influence
 if \texttt{plot=TRUE}.
 
-<<echo=FALSE>>=
-par(mfrow=c(1,1))
-@
 
-<<include=FALSE,width=6,height=8.5>>=
-summary(ps.lalonde$gbm.obj, n.trees=ps.lalonde$desc$ks.stat.max$n.trees, plot=FALSE)
-@
+\begin{Schunk}
+\begin{Sinput}
+> summary(ps.lalonde$gbm.obj, n.trees = ps.lalonde$desc$ks.stat.max$n.trees, 
++     plot = FALSE)
+\end{Sinput}
+\begin{Soutput}
+       var    rel.inf
+1    black 46.9866311
+2      age 21.3639461
+3     re74 16.9928215
+4     re75  5.0567355
+5     educ  4.5293987
+6  married  3.8981933
+7 nodegree  0.6554839
+8   hispan  0.5167900
+\end{Soutput}
+\end{Schunk}
 
 \begin{figure}
 \begin{center}
-<<fig=TRUE,echo=FALSE,term=FALSE,width=6,height=8.5>>=
-summary(ps.lalonde$gbm.obj, n.trees=ps.lalonde$desc$ks.stat.max$n.trees)
-@
+\includegraphics{twang-008}
 \end{center}
 \caption{Relative influence of the covariates on the estimated propensity score}
 \label{fig:relativeinfluence}
@@ -223,18 +243,48 @@ Having estimated the propensity scores, \texttt{bal.table} produces a table
 that shows how well the resulting propensity score weights balance the
 treatment and comparison groups.
 
-<<echo=FALSE>>=
-options(width=85)
-@
 
-<<>>=
-lalonde.balance <- bal.table(ps.lalonde)
-lalonde.balance
-@
+\begin{Schunk}
+\begin{Sinput}
+> lalonde.balance <- bal.table(ps.lalonde)
+> lalonde.balance
+\end{Sinput}
+\begin{Soutput}
+$unw
+            tx.mn    tx.sd    ct.mn    ct.sd std.eff.sz   stat     p    ks ks.pval
+age        25.816    7.155   28.030   10.787     -0.309 -2.994 0.003 0.158   0.003
+educ       10.346    2.011   10.235    2.855      0.055  0.547 0.584 0.111   0.075
+black       0.843    0.365    0.203    0.403      1.757 19.371 0.000 0.640   0.000
+hispan      0.059    0.237    0.142    0.350     -0.349 -3.413 0.001 0.083   0.319
+nodegree    0.708    0.456    0.597    0.491      0.244  2.716 0.007 0.111   0.075
+married     0.189    0.393    0.513    0.500     -0.824 -8.607 0.000 0.324   0.000
+re74     2095.574 4886.620 5619.237 6788.751     -0.721 -7.254 0.000 0.447   0.000
+re75     1532.055 3219.251 2466.484 3291.996     -0.290 -3.282 0.001 0.288   0.000
 
-<<echo=FALSE>>=
-options(width=60)
-@
+$es.stat.mean
+            tx.mn    tx.sd    ct.mn    ct.sd std.eff.sz   stat     p    ks ks.pval
+age        25.816    7.155   25.787    7.737      0.004  0.030 0.976 0.088   0.983
+educ       10.346    2.011   10.524    2.238     -0.089 -0.600 0.549 0.084   0.989
+black       0.843    0.365    0.843    0.364      0.000  0.002 0.998 0.000   1.000
+hispan      0.059    0.237    0.046    0.210      0.056  0.634 0.527 0.013   1.000
+nodegree    0.708    0.456    0.625    0.485      0.183  0.919 0.359 0.084   0.989
+married     0.189    0.393    0.192    0.395     -0.008 -0.061 0.951 0.003   1.000
+re74     2095.574 4886.620 1800.480 4253.284      0.060  0.527 0.598 0.054   1.000
+re75     1532.055 3219.251 1349.576 2795.808      0.057  0.461 0.645 0.072   0.998
+
+$ks.stat.max
+            tx.mn    tx.sd    ct.mn    ct.sd std.eff.sz   stat     p    ks ks.pval
+age        25.816    7.155   25.787    7.737      0.004  0.030 0.976 0.088   0.983
+educ       10.346    2.011   10.524    2.238     -0.089 -0.600 0.549 0.084   0.989
+black       0.843    0.365    0.843    0.364      0.000  0.002 0.998 0.000   1.000
+hispan      0.059    0.237    0.046    0.210      0.056  0.634 0.527 0.013   1.000
+nodegree    0.708    0.456    0.625    0.485      0.183  0.919 0.359 0.084   0.989
+married     0.189    0.393    0.192    0.395     -0.008 -0.061 0.951 0.003   1.000
+re74     2095.574 4886.620 1800.480 4253.284      0.060  0.527 0.598 0.054   1.000
+re75     1532.055 3219.251 1349.576 2795.808      0.057  0.461 0.645 0.072   0.998
+\end{Soutput}
+\end{Schunk}
+
 
 \texttt{bal.table()} returns a lot of information, not all of which is needed
 for all analyses. The returned component is a list with named components, one
@@ -275,24 +325,60 @@ table into a Word document, highlight it, Table->Convert->Text to Table, then
 under ``Separate text at'' insert ``\&'' in the Other: box. Additional
 formatting from there will finish it.
 
-<<results=tex>>=
-library(xtable)
-pretty.tab <- lalonde.balance$ks.stat.max[,c("tx.mn","ct.mn","ks")]
-pretty.tab <- cbind(pretty.tab, lalonde.balance$unw[,"ct.mn"])
-names(pretty.tab) <- c("E(Y1|t=1)","E(Y0|t=1)","KS","E(Y0|t=0)")
-xtable(pretty.tab,
-       caption = "Balance of the treatment and comparison groups",
-       label = "tab:balance",
-       digits = c(0, 2, 2, 2, 2),
-       align=c("l","r","r","r","r"))
-@
+\begin{Schunk}
+\begin{Sinput}
+> library(xtable)
+> pretty.tab <- lalonde.balance$ks.stat.max[, c("tx.mn", 
++     "ct.mn", "ks")]
+> pretty.tab <- cbind(pretty.tab, lalonde.balance$unw[, 
++     "ct.mn"])
+> names(pretty.tab) <- c("E(Y1|t=1)", "E(Y0|t=1)", 
++     "KS", "E(Y0|t=0)")
+> xtable(pretty.tab, caption = "Balance of the treatment and comparison groups", 
++     label = "tab:balance", digits = c(0, 2, 2, 
++         2, 2), align = c("l", "r", "r", "r", "r"))
+\end{Sinput}
+% latex table generated in R 2.2.1 by xtable 1.3-1 package
+% Wed Apr 12 20:51:36 2006
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{lrrrr}
+\hline
+ & E(Y1$|$t=1) & E(Y0$|$t=1) & KS & E(Y0$|$t=0) \\
+\hline
+age & 25.82 & 25.79 & 0.09 & 28.03 \\
+educ & 10.35 & 10.52 & 0.08 & 10.23 \\
+black & 0.84 & 0.84 & 0.00 & 0.20 \\
+hispan & 0.06 & 0.05 & 0.01 & 0.14 \\
+nodegree & 0.71 & 0.62 & 0.08 & 0.60 \\
+married & 0.19 & 0.19 & 0.00 & 0.51 \\
+re74 & 2095.57 & 1800.48 & 0.05 & 5619.24 \\
+re75 & 1532.06 & 1349.58 & 0.07 & 2466.48 \\
+\hline
+\end{tabular}
+\caption{Balance of the treatment and comparison groups}
+\label{tab:balance}
+\end{center}
+\end{table}\end{Schunk}
 
 The \texttt{summary()} method for \texttt{ps} objects offers a compact summary
 of the sample sizes of the groups and the balance measures
 
-<<>>=
-summary(ps.lalonde)
-@
+\begin{Schunk}
+\begin{Sinput}
+> summary(ps.lalonde)
+\end{Sinput}
+\begin{Soutput}
+           type n.treat n.ctrl       ess   max.es
+1           unw     185    429 429.00000 1.756775
+11 es.stat.mean     185    429  28.09103 0.183351
+12  ks.stat.max     185    429  28.09103 0.183351
+      mean.es    max.ks max.ks.p    mean.ks iter
+1  0.56872589 0.6404460       NA 0.27024507   NA
+11 0.05724476 0.0875748       NA 0.04970737  946
+12 0.05724476 0.0875748       NA 0.04970737  946
+\end{Soutput}
+\end{Schunk}
 
 In general, weighted means have greater sampling variance than unweighted means
 from a sample of equal size. The effective sample size (ESS) of the weighted
@@ -313,10 +399,10 @@ but it still serves as a useful measure on the effective number of control cases
 
 The \texttt{ess} column in the summary
 results shows the ESS for the estimated propensity scores. Note that although
-the original comparison group had \Sexpr{ps.lalonde$desc[[1]]$n.ctrl} cases,
+the original comparison group had 429 cases,
 the propensity score estimates effectively utilize only
-\Sexpr{round(ps.lalonde$desc$es.stat.mean$ess,1)} or
-\Sexpr{round(ps.lalonde$desc$ks.stat.max$ess,1)} of the comparison cases,
+28.1 or
+28.1 of the comparison cases,
 depending on the rules and measures used to estimate the propensity scores.
 While this may seem like a large loss of sample size, this indicates that many
 of the original cases were unlike the treatment cases and, hence, were not
@@ -328,11 +414,14 @@ The \texttt{plot()} method can generate useful diagnostic plots from the
 propensity score objects. Boxplots comparing the estimated propensity score weights
 between the treatment and comparison groups checks for overlap in the groups.
 
-<<fig=TRUE,height=4,width=6>>=
-par(mfrow=c(1,2))
-plot(ps.lalonde, plots="ps boxplot")
-par(mfrow=c(1,1))
-@
+\begin{Schunk}
+\begin{Sinput}
+> par(mfrow = c(1, 2))
+> plot(ps.lalonde, plots = "ps boxplot")
+> par(mfrow = c(1, 1))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{twang-014}
 
 P-values from independent tests in which the null hypothesis is true have a
 uniform distribution. Therefore, a QQ plot comparing the quantiles of the
@@ -341,11 +430,14 @@ how similar the propensity score weighting makes the samples look like what we
 would expect from a randomized study. Setting \texttt{plots="t pvalues"}
 generates such QQ plots.
 
-<<fig=TRUE,height=4,width=6>>=
-par(mfrow=c(1,2))
-plot(ps.lalonde, plots="t pvalues")
-par(mfrow=c(1,1))
-@
+\begin{Schunk}
+\begin{Sinput}
+> par(mfrow = c(1, 2))
+> plot(ps.lalonde, plots = "t pvalues")
+> par(mfrow = c(1, 1))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{twang-015}
 
 Before weighting (closed circles), many variables have statistically
 significant differences between groups (i.e., with p-values near zero). After
@@ -355,11 +447,14 @@ indicates that the p-values are even larger than would be expected in a
 randomized study. \texttt{plot()} can create similar figures for KS statistic
 p-values by setting \texttt{plots="ks pvalues"}.
 
-<<fig=TRUE,height=4,width=6>>=
-par(mfrow=c(1,2))
-plot(ps.lalonde, plots="spaghetti")
-par(mfrow=c(1,1))
-@
+\begin{Schunk}
+\begin{Sinput}
+> par(mfrow = c(1, 2))
+> plot(ps.lalonde, plots = "spaghetti")
+> par(mfrow = c(1, 1))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{twang-016}
 
 
 
@@ -368,18 +463,24 @@ The \texttt{survey} package is useful for performing the outcomes analyses
 using propensity score weights. Its statistical methods properly account for
 the weights when computing standard error estimates.
 
-<<>>=
-library(survey)
-@
+\begin{Schunk}
+\begin{Sinput}
+> library(survey)
+\end{Sinput}
+\end{Schunk}
 
 The \texttt{get.weights} function extracts the propensity score weights from a
 \texttt{ps} object. Those weights may then be used as case weights in a
 \texttt{svydesign} object.
 
-<<>>=
-lalonde$w <- get.weights(ps.lalonde, type="ATT",stop.method="ks.stat.max")
-design.ps <- svydesign(ids=~1, weights=~w, data=lalonde)
-@
+\begin{Schunk}
+\begin{Sinput}
+> lalonde$w <- get.weights(ps.lalonde, type = "ATT", 
++     stop.method = "ks.stat.max")
+> design.ps <- svydesign(ids = ~1, weights = ~w, 
++     data = lalonde)
+\end{Sinput}
+\end{Schunk}
 
 The \texttt{type} argument to the \texttt{get.weights} function specifies
 whether the weights are for estimating the treatment effect on the treated,
@@ -398,13 +499,33 @@ The aim of the National Supported Work Demonstration analysis is to determine
 whether the program was effective at increasing earnings in 1978. The
 propensity score adjusted test can be computed with \texttt{svyglm}.
 
-<<>>=
-glm1 <- svyglm(re78 ~ treat, design=design.ps)
-summary(glm1)
-@
+\begin{Schunk}
+\begin{Sinput}
+> glm1 <- svyglm(re78 ~ treat, design = design.ps)
+> summary(glm1)
+\end{Sinput}
+\begin{Soutput}
+Call:
+svyglm(re78 ~ treat, design = design.ps)
+
+Survey design:
+svydesign(ids = ~1, weights = ~w, data = lalonde)
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   5720.2      759.4   7.533 1.79e-13 ***
+treat          628.9      953.9   0.659     0.51    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+(Dispersion parameter for gaussian family taken to be 49340405)
+
+Number of Fisher Scoring iterations: 2
+\end{Soutput}
+\end{Schunk}
 
 The analysis estimates an increase in earnings of
-\$\Sexpr{round(coef(glm1)[2])} for those that participated in the NSW compared
+\$629 for those that participated in the NSW compared
 with similarly situated people observed in the CPS. The effect, however, does
 not appear to be statistically significant.
 
@@ -414,9 +535,9 @@ treatment effect (Huppler-Hullsiek \& Louis 2002, Bang \& Robins 2005). These es
 either the propensity scores are estimated correctly \textit{or} the regression
 model is specified correctly. For example, note that the balance table for
 \texttt{ks.stat.max} made the two groups more similar on \texttt{nodegree}, but
-still some differences remained, \Sexpr{100*lalonde.balance$ks.stat.max[5,1]}\%
+still some differences remained, 70.8\%
 of the treatment group had no degree while
-\Sexpr{100*lalonde.balance$ks.stat.max[5,3]}\% of the comparison group had no
+62.5\% of the comparison group had no
 degree. While linear regression is sensitive to model misspecification when the
 treatment and comparison groups are dissimilar, the propensity score weighting
 has made them more similar, perhaps enough so that additional modeling with
@@ -425,23 +546,73 @@ bias reduction, the inclusion of additional covariates can reduce the standard
 error of the treatment effect if some of the covariates are strongly related to
 the outcome.
 
-<<>>=
-glm2 <- svyglm(re78 ~ treat + nodegree, design=design.ps)
-summary(glm2)
-@
+\begin{Schunk}
+\begin{Sinput}
+> glm2 <- svyglm(re78 ~ treat + nodegree, design = design.ps)
+> summary(glm2)
+\end{Sinput}
+\begin{Soutput}
+Call:
+svyglm(re78 ~ treat + nodegree, design = design.ps)
+
+Survey design:
+svydesign(ids = ~1, weights = ~w, data = lalonde)
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   6890.9     1256.5   5.484 6.08e-08 ***
+treat          785.6      980.3   0.801    0.423    
+nodegree     -1874.5     1141.4  -1.642    0.101    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+(Dispersion parameter for gaussian family taken to be 48568844)
+
+Number of Fisher Scoring iterations: 2
+\end{Soutput}
+\end{Schunk}
 
 Adjusting for the remaining group difference in degree slightly increased the
-estimate of the program's effect to \$\Sexpr{round(coef(glm2)[2])}, but the
+estimate of the program's effect to \$786, but the
 difference is still not statistically significant. We can covariate adjust for
 the other variables seeking additional bias and variance reduction, but that
 too in this case has no effect on the estimated program effect.
 
-<<>>=
-glm3 <- svyglm(re78 ~ treat + age + educ + black + hispan + nodegree +
-                      married + re74 + re75,
-               design=design.ps)
-summary(glm3)
-@
+\begin{Schunk}
+\begin{Sinput}
+> glm3 <- svyglm(re78 ~ treat + age + educ + black + 
++     hispan + nodegree + married + re74 + re75, 
++     design = design.ps)
+> summary(glm3)
+\end{Sinput}
+\begin{Soutput}
+Call:
+svyglm(re78 ~ treat + age + educ + black + hispan + nodegree + 
+    married + re74 + re75, design = design.ps)
+
+Survey design:
+svydesign(ids = ~1, weights = ~w, data = lalonde)
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)   
+(Intercept) -1.914e+03  4.033e+03  -0.475  0.63530   
+treat        6.674e+02  9.320e+02   0.716  0.47419   
+age          4.257e+00  5.213e+01   0.082  0.93494   
+educ         7.101e+02  2.405e+02   2.953  0.00327 **
+black       -7.854e+02  9.577e+02  -0.820  0.41252   
+hispan       6.961e+02  1.642e+03   0.424  0.67178   
+nodegree     4.625e+02  1.504e+03   0.307  0.75861   
+married      5.215e+02  1.046e+03   0.498  0.61835   
+re74         4.487e-02  1.618e-01   0.277  0.78163   
+re75         1.566e-01  1.749e-01   0.895  0.37112   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+(Dispersion parameter for gaussian family taken to be 46719953)
+
+Number of Fisher Scoring iterations: 2
+\end{Soutput}
+\end{Schunk}
 
 \subsection{Estimating the program effect using linear regression}
 
@@ -449,25 +620,50 @@ The more traditional regression approach to estimating the program effect would
 fit a linear model with a treatment indicator and linear terms for each of the
 covariates.
 
-<<>>=
-glm4 <- lm(re78 ~ treat + age + educ + black + hispan + nodegree +
-                  married + re74 + re75,
-           data=lalonde)
-summary(glm4)
-@
+\begin{Schunk}
+\begin{Sinput}
+> glm4 <- lm(re78 ~ treat + age + educ + black + 
++     hispan + nodegree + married + re74 + re75, 
++     data = lalonde)
+> summary(glm4)
+\end{Sinput}
+\begin{Soutput}
+Call:
+lm(formula = re78 ~ treat + age + educ + black + hispan + nodegree + 
+    married + re74 + re75, data = lalonde)
 
-<<echo=FALSE>>=
-glm5 <- lm(sqrt(re78) ~ treat + age + educ + black + hispan + nodegree +
-                        married + sqrt(re74) + sqrt(re75),
-           data=lalonde)
-@
+Residuals:
+   Min     1Q Median     3Q    Max 
+-13595  -4894  -1662   3929  54570 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  6.651e+01  2.437e+03   0.027   0.9782    
+treat        1.548e+03  7.813e+02   1.982   0.0480 *  
+age          1.298e+01  3.249e+01   0.399   0.6897    
+educ         4.039e+02  1.589e+02   2.542   0.0113 *  
+black       -1.241e+03  7.688e+02  -1.614   0.1071    
+hispan       4.989e+02  9.419e+02   0.530   0.5966    
+nodegree     2.598e+02  8.474e+02   0.307   0.7593    
+married      4.066e+02  6.955e+02   0.585   0.5590    
+re74         2.964e-01  5.827e-02   5.086 4.89e-07 ***
+re75         2.315e-01  1.046e-01   2.213   0.0273 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+Residual standard error: 6948 on 604 degrees of freedom
+Multiple R-Squared: 0.1478,	Adjusted R-squared: 0.1351 
+F-statistic: 11.64 on 9 and 604 DF,  p-value: < 2.2e-16 
+\end{Soutput}
+\end{Schunk}
+
 
 This model estimates a rather strong treatment effect, estimating a program
-effect of \$\Sexpr{round(coef(glm4)[2])} with a
-p-value=\Sexpr{round(coef(summary(glm4))[2,4],3)}. Several variations of this
+effect of \$1548 with a
+p-value=0.048. Several variations of this
 regression approach also estimate strong program effects. For example using
 square root transforms on the earnings variables yields a
-p-value=\Sexpr{round(coef(summary(glm5))[2,4],3)}. These estimates, however,
+p-value=0.016. These estimates, however,
 are very sensitive to the model structure since the treatment and comparison
 subjects differ greatly as seen in the unweighted balance comparison (\$unw) from
 \texttt{bal.table(ps.lalonde)}.
@@ -479,14 +675,16 @@ of the balance and the treatment effect estimates can be sensitive to the
 method used to estimate the propensity scores. Consider estimating the
 propensity scores using logistic regression instead of \texttt{ps()}.
 
-<<>>=
-ps.logit <- glm(treat ~ age + educ + black + hispan + nodegree +
-                        married + re74 + re75,
-                data = lalonde,
-                family = binomial)
-lalonde$w.logit <- rep(1,nrow(lalonde))
-lalonde$w.logit[lalonde$treat==0] <- exp(predict(ps.logit,subset(lalonde,treat==0)))
-@
+\begin{Schunk}
+\begin{Sinput}
+> ps.logit <- glm(treat ~ age + educ + black + hispan + 
++     nodegree + married + re74 + re75, data = lalonde, 
++     family = binomial)
+> lalonde$w.logit <- rep(1, nrow(lalonde))
+> lalonde$w.logit[lalonde$treat == 0] <- exp(predict(ps.logit, 
++     subset(lalonde, treat == 0)))
+\end{Sinput}
+\end{Schunk}
 
 \texttt{predict()} for logistic regression model produces estimates on the
 log-odds scale by default. Exponentiating those predictions for the comparison
@@ -494,74 +692,128 @@ subjects gives the propensity score weights $p/(1-p)$. \texttt{dx.wts()} from th
 diagnoses the
 balance for an arbitrary set of weights producing a balance table.
 
-<<>>=
-bal.logit <- dx.wts(lalonde$w.logit,
-                    data=lalonde,
-                    vars=c("age","educ","black","hispan","nodegree","married","re74","re75"),
-                    treat.var="treat",
-                    perm.test.iters=0)
-print(bal.logit)
-@
+\begin{Schunk}
+\begin{Sinput}
+> bal.logit <- dx.wts(lalonde$w.logit, data = lalonde, 
++     vars = c("age", "educ", "black", "hispan", 
++         "nodegree", "married", "re74", "re75"), 
++     treat.var = "treat", perm.test.iters = 0)
+\end{Sinput}
+\begin{Soutput}
+
+\end{Soutput}
+\begin{Sinput}
+> print(bal.logit)
+\end{Sinput}
+\begin{Soutput}
+  type n.treat n.ctrl       ess    max.es    mean.es
+1  unw     185    429 429.00000 1.7567745 0.56872589
+2          185    429  99.81539 0.1188496 0.03188410
+     max.ks    mean.ks iter
+1 0.6404460 0.27024507   NA
+2 0.3078039 0.09302319   NA
+\end{Soutput}
+\end{Schunk}
 
 For propensity score weights estimated with logistic regression, the largest KS
 statistic was reduced from the unweighted sample's largest KS of
-\Sexpr{round(bal.logit$summary.tab$max.ks[1],2)} to
-\Sexpr{round(bal.logit$summary.tab$max.ks[2],2)}, still quite a large KS
+0.64 to
+0.31, still quite a large KS
 statistic. Table~\ref{tab:balancelogit} shows the details of the balance of the
 treatment and comparison groups. The means of the two groups appear to be quite
 similar while the KS statistic shows substantial differences in their
 distributions.
 
-<<results=tex>>=
-pretty.tab <- bal.table(bal.logit)[[2]][,c("tx.mn","ct.mn","ks")]
-pretty.tab <- cbind(pretty.tab, bal.table(bal.logit)[[1]]$ct.mn)
-names(pretty.tab) <- c("E(Y1|t=1)","E(Y0|t=1)","KS","E(Y0|t=0)")
-xtable(pretty.tab,
-       caption = "Logistic regression estimates of the propensity scores",
-       label = "tab:balancelogit",
-       digits = c(0, 2, 2, 2, 2),
-       align=c("l","r","r","r","r"))
-@
+\begin{Schunk}
+\begin{Sinput}
+> pretty.tab <- bal.table(bal.logit)[[2]][, c("tx.mn", 
++     "ct.mn", "ks")]
+> pretty.tab <- cbind(pretty.tab, bal.table(bal.logit)[[1]]$ct.mn)
+> names(pretty.tab) <- c("E(Y1|t=1)", "E(Y0|t=1)", 
++     "KS", "E(Y0|t=0)")
+> xtable(pretty.tab, caption = "Logistic regression estimates of the propensity scores", 
++     label = "tab:balancelogit", digits = c(0, 
++         2, 2, 2, 2), align = c("l", "r", "r", 
++         "r", "r"))
+\end{Sinput}
+% latex table generated in R 2.2.1 by xtable 1.3-1 package
+% Wed Apr 12 20:51:43 2006
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{lrrrr}
+\hline
+ & E(Y1$|$t=1) & E(Y0$|$t=1) & KS & E(Y0$|$t=0) \\
+\hline
+age & 25.82 & 24.97 & 0.31 & 28.03 \\
+educ & 10.35 & 10.40 & 0.04 & 10.23 \\
+black & 0.84 & 0.84 & 0.00 & 0.20 \\
+hispan & 0.06 & 0.06 & 0.00 & 0.14 \\
+nodegree & 0.71 & 0.69 & 0.02 & 0.60 \\
+married & 0.19 & 0.17 & 0.02 & 0.51 \\
+re74 & 2095.57 & 2106.05 & 0.23 & 5619.24 \\
+re75 & 1532.06 & 1496.54 & 0.13 & 2466.48 \\
+\hline
+\end{tabular}
+\caption{Logistic regression estimates of the propensity scores}
+\label{tab:balancelogit}
+\end{center}
+\end{table}\end{Schunk}
 
 Table~\ref{tab:balancecompare} compares the balancing quality of the propensity
 score weights directly with one another.
 
-<<echo=FALSE,results=tex>>=
-bal.gbm <- dx.wts(ps.lalonde,
-                    data=lalonde,
-                    vars=c("age","educ","black","hispan","nodegree","married","re74","re75"),
-                    treat.var="treat",
-                    perm.test.iters=0)
-pretty.tab <- rbind(bal.logit$summary.tab,
-                    bal.gbm$summary.tab[-1,])
-rownames(pretty.tab) <- pretty.tab$type
-rownames(pretty.tab)[2] <- "logit"
-pretty.tab <- pretty.tab[,c("n.treat","ess","max.es","mean.es","max.ks","mean.ks")]
-xtable(pretty.tab,
-       caption = "Summary of the balancing properties of logistic regression and gbm",
-       label = "tab:balancecompare",
-       digits = c(0, 0, 2, 2, 2, 2, 2),
-       align=c("l","r","r","r","r","r","r"))
-@
+% latex table generated in R 2.2.1 by xtable 1.3-1 package
+% Wed Apr 12 20:51:52 2006
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{lrrrrrr}
+\hline
+ & n.treat & ess & max.es & mean.es & max.ks & mean.ks \\
+\hline
+unw & 185 & 429.00 & 1.76 & 0.57 & 0.64 & 0.27 \\
+logit & 185 & 99.82 & 0.12 & 0.03 & 0.31 & 0.09 \\
+es.stat.mean & 185 & 28.09 & 0.18 & 0.06 & 0.09 & 0.05 \\
+ks.stat.max & 185 & 28.09 & 0.18 & 0.06 & 0.09 & 0.05 \\
+\hline
+\end{tabular}
+\caption{Summary of the balancing properties of logistic regression and gbm}
+\label{tab:balancecompare}
+\end{center}
+\end{table}
+\begin{Schunk}
+\begin{Sinput}
+> design.logit <- svydesign(ids = ~1, weights = ~w.logit, 
++     data = lalonde)
+> glm6 <- svyglm(re78 ~ treat, design = design.logit)
+> summary(glm6)
+\end{Sinput}
+\begin{Soutput}
+Call:
+svyglm(re78 ~ treat, design = design.logit)
 
-<<>>=
-design.logit <- svydesign(ids=~1, weights=~w.logit, data=lalonde)
-glm6 <- svyglm(re78 ~ treat, design=design.logit)
-summary(glm6)
-@
+Survey design:
+svydesign(ids = ~1, weights = ~w.logit, data = lalonde)
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   5135.1      588.9   8.719   <2e-16 ***
+treat         1214.1      824.7   1.472    0.142    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+(Dispersion parameter for gaussian family taken to be 49598072)
+
+Number of Fisher Scoring iterations: 2
+\end{Soutput}
+\end{Schunk}
 
 
 
 The analysis estimates an increase in earnings of
-\$\Sexpr{round(coef(glm6)[2])} for those that participated in the NSW compared
+\$1214 for those that participated in the NSW compared
 with similarly situated people observed in the CPS. Table~\ref{tab:allTE}
 compares all of the treatment effect estimates
 
-<<echo=FALSE>>=
-glm7 <- svyglm(re78 ~ treat + age + educ + black + hispan + nodegree +
-                      married + re74 + re75,
-               design=design.logit)
-@
 
 \begin{table}[ht]
 \begin{center}
@@ -569,12 +821,12 @@ glm7 <- svyglm(re78 ~ treat + age + educ + black + hispan + nodegree +
 \hline
 Treatment effect & PS estimate & Linear adjustment \\
 \hline
-\$\Sexpr{round(coef(glm1)[2])} & GBM, minimize KS    & none \\
-\$\Sexpr{round(coef(glm2)[2])} & GBM, minimize KS    & nodegree\\
-\$\Sexpr{round(coef(glm3)[2])} & GBM, minimize KS    & all\\
-\$\Sexpr{round(coef(glm4)[2])} & None                & all\\
-\$\Sexpr{round(coef(glm6)[2])} & Logistic regression & none \\
-\$\Sexpr{round(coef(glm7)[2])} & Logistic regression & all\\
+\$629 & GBM, minimize KS    & none \\
+\$786 & GBM, minimize KS    & nodegree\\
+\$667 & GBM, minimize KS    & all\\
+\$1548 & None                & all\\
+\$1214 & Logistic regression & none \\
+\$1237 & Logistic regression & all\\
 \hline
 \end{tabular}
 \caption{Treatment effect estimates by various methods}
@@ -797,70 +1049,180 @@ data using the following commands.
 
 First we read in the data
 
-<<>>=
-library(mlmRev)
-data(egsingle)
-@
+\begin{Schunk}
+\begin{Sinput}
+> library(mlmRev)
+> data(egsingle)
+\end{Sinput}
+\end{Schunk}
 
 Next we create the patterns of grades for which students have
 responses
 
-<<>>=
-tmp <- sapply(split(egsingle,egsingle$childid),function(x){
-              paste(as.character(x$grade),collapse="")})
-@
+\begin{Schunk}
+\begin{Sinput}
+> tmp <- sapply(split(egsingle, egsingle$childid), 
++     function(x) {
++         paste(as.character(x$grade), collapse = "")
++     })
+\end{Sinput}
+\end{Schunk}
 identify students with test scores for every grade from 1 to 4
 
-<<>>=
-tmp <- data.frame(childid=names(tmp), gpatt=tmp,
-                  resp=as.numeric((1:length(tmp)) %in%
-                          grep("1234",as.character(tmp))))
-@
+\begin{Schunk}
+\begin{Sinput}
+> tmp <- data.frame(childid = names(tmp), gpatt = tmp, 
++     resp = as.numeric((1:length(tmp)) %in% grep("1234", 
++         as.character(tmp))))
+\end{Sinput}
+\end{Schunk}
 and merge this back to create a single data frame
 
-<<>>=
-egsingle <- merge(egsingle, tmp)
-@
+\begin{Schunk}
+\begin{Sinput}
+> egsingle <- merge(egsingle, tmp)
+\end{Sinput}
+\end{Schunk}
 
 Because nonresponse is a student-level variable rather than a
 student-by-year-level variable we create one record per student.
 
-<<>>=
-egsingle.one <-unique(egsingle[,-c(3:6)])
-@
+\begin{Schunk}
+\begin{Sinput}
+> egsingle.one <- unique(egsingle[, -c(3:6)])
+\end{Sinput}
+\end{Schunk}
 
 We also create a race variable
 
-<<>>=
-egsingle.one$race <- as.factor(race <- ifelse(egsingle.one$black==1, 1,
-                                         ifelse(egsingle.one$hispanic==1, 2, 3)))
-@
+\begin{Schunk}
+\begin{Sinput}
+> egsingle.one$race <- as.factor(race <- ifelse(egsingle.one$black == 
++     1, 1, ifelse(egsingle.one$hispanic == 1, 2, 
++     3)))
+\end{Sinput}
+\end{Schunk}
 
 As discussed above, to use \texttt{ps()} to estimate nonresponse, we
 need to let nonrespondents be the treatment group by modeling an
 indicator of nonresponse rather than an indicator of response.  We
 create this indicator and are set to estimate weights.
 
-<<>>=
-egsingle.one$nresp <- 1-egsingle.one$resp
-@
+\begin{Schunk}
+\begin{Sinput}
+> egsingle.one$nresp <- 1 - egsingle.one$resp
+\end{Sinput}
+\end{Schunk}
 
-<<label=psfig2,include=FALSE>>=
-par(mfrow=c(1,2))
-egsingle.ps <-
-ps(nresp ~ race + female + size + lowinc +
-                   mobility,
-                   data=egsingle.one,
-                   plots="optimize",
-                   stop.method=stop.methods[c("es.stat.mean","ks.stat.max")],
-                   n.trees=2500)
-@
+\begin{Schunk}
+\begin{Sinput}
+> par(mfrow = c(1, 2))
+> egsingle.ps <- ps(nresp ~ race + female + size + 
++     lowinc + mobility, data = egsingle.one, plots = "optimize", 
++     stop.method = stop.methods[c("es.stat.mean", 
++         "ks.stat.max")], n.trees = 2500)
+\end{Sinput}
+\begin{Soutput}
+Fitting gbm model
+Iter   TrainDeviance   ValidDeviance   StepSize   Improve
+     1        1.3849             nan     0.0100    0.0004
+     2        1.3841             nan     0.0100    0.0004
+     3        1.3832             nan     0.0100    0.0005
+     4        1.3820             nan     0.0100    0.0004
+     5        1.3811             nan     0.0100    0.0004
+     6        1.3800             nan     0.0100    0.0005
+     7        1.3793             nan     0.0100    0.0002
+     8        1.3784             nan     0.0100    0.0004
+     9        1.3776             nan     0.0100    0.0003
+    10        1.3769             nan     0.0100    0.0002
+   100        1.3266             nan     0.0100    0.0001
+   200        1.2992             nan     0.0100   -0.0000
+   300        1.2832             nan     0.0100   -0.0000
+   400        1.2709             nan     0.0100   -0.0001
+   500        1.2621             nan     0.0100   -0.0000
+   600        1.2550             nan     0.0100   -0.0001
+   700        1.2496             nan     0.0100   -0.0000
+   800        1.2451             nan     0.0100   -0.0002
+   900        1.2410             nan     0.0100   -0.0001
+  1000        1.2376             nan     0.0100   -0.0001
+  1100        1.2345             nan     0.0100   -0.0001
+  1200        1.2319             nan     0.0100   -0.0001
+  1300        1.2295             nan     0.0100   -0.0001
+  1400        1.2273             nan     0.0100   -0.0001
+  1500        1.2253             nan     0.0100   -0.0000
+  1600        1.2234             nan     0.0100   -0.0001
+  1700        1.2215             nan     0.0100   -0.0001
+  1800        1.2199             nan     0.0100   -0.0000
+  1900        1.2183             nan     0.0100   -0.0001
+  2000        1.2171             nan     0.0100   -0.0001
+  2100        1.2159             nan     0.0100   -0.0001
+  2200        1.2149             nan     0.0100   -0.0000
+  2300        1.2136             nan     0.0100   -0.0001
+  2400        1.2125             nan     0.0100   -0.0001
+  2500        1.2114             nan     0.0100   -0.0001
+
+Diagnosis of unweighted analysis
+Optimizing with es.stat.mean stopping rule
+   Optimized at 1013 
+Diagnosis of es.stat.mean weights
+Optimizing with ks.stat.max stopping rule
+   Optimized at 185 
+Diagnosis of ks.stat.max weights
+\end{Soutput}
+\end{Schunk}
 
 \begin{figure}
 \begin{center}
-<<fig=TRUE,echo=FALSE,height=4, width=6>>= 
-<<psfig2>> 
-@
+\begin{Schunk}
+\begin{Soutput}
+Fitting gbm model
+Iter   TrainDeviance   ValidDeviance   StepSize   Improve
+     1        1.3853             nan     0.0100    0.0002
+     2        1.3845             nan     0.0100    0.0004
+     3        1.3833             nan     0.0100    0.0004
+     4        1.3823             nan     0.0100    0.0005
+     5        1.3814             nan     0.0100    0.0004
+     6        1.3804             nan     0.0100    0.0004
+     7        1.3795             nan     0.0100    0.0003
+     8        1.3789             nan     0.0100    0.0002
+     9        1.3779             nan     0.0100    0.0005
+    10        1.3773             nan     0.0100    0.0003
+   100        1.3263             nan     0.0100    0.0001
+   200        1.2984             nan     0.0100    0.0000
+   300        1.2827             nan     0.0100   -0.0000
+   400        1.2711             nan     0.0100   -0.0002
+   500        1.2629             nan     0.0100   -0.0000
+   600        1.2562             nan     0.0100   -0.0001
+   700        1.2508             nan     0.0100   -0.0001
+   800        1.2463             nan     0.0100   -0.0001
+   900        1.2421             nan     0.0100   -0.0001
+  1000        1.2391             nan     0.0100   -0.0001
+  1100        1.2360             nan     0.0100   -0.0001
+  1200        1.2329             nan     0.0100   -0.0001
+  1300        1.2307             nan     0.0100   -0.0000
+  1400        1.2283             nan     0.0100   -0.0001
+  1500        1.2259             nan     0.0100   -0.0001
+  1600        1.2240             nan     0.0100   -0.0001
+  1700        1.2224             nan     0.0100   -0.0000
+  1800        1.2209             nan     0.0100   -0.0001
+  1900        1.2193             nan     0.0100   -0.0001
+  2000        1.2177             nan     0.0100   -0.0001
+  2100        1.2165             nan     0.0100   -0.0001
+  2200        1.2151             nan     0.0100   -0.0001
+  2300        1.2141             nan     0.0100   -0.0001
+  2400        1.2130             nan     0.0100   -0.0001
+  2500        1.2119             nan     0.0100   -0.0001
+
+Diagnosis of unweighted analysis
+Optimizing with es.stat.mean stopping rule
+   Optimized at 1658 
+Diagnosis of es.stat.mean weights
+Optimizing with ks.stat.max stopping rule
+   Optimized at 182 
+Diagnosis of ks.stat.max weights
+\end{Soutput}
+\end{Schunk}
+\includegraphics{twang-038}
 \end{center}
 \caption{Optimization of \texttt{es.stat.mean} and
 \texttt{ks.stat.max} for nonresponse weighting of egsingle data. The
@@ -873,36 +1235,63 @@ ps(nresp ~ race + female + size + lowinc +
 \end{figure}
 
 The optimal number of iterations for gbm to minimize the maximum KS
-statistic is \Sexpr{egsingle.ps$desc$es.stat.mean$n.trees} and the
+statistic is 2048 and the
 optimal number of iterations for gbm to minimize the average effect
-size is \Sexpr{egsingle$desc$ks.stat.mean$n.trees}.  The weights do
+size is .  The weights do
 an excellent job matching the distribution of the respondent group
 covariates to those of the nonrespondents.
 
-<<results=tex>>=
-pretty.tab<-bal.table(egsingle.ps)$ks.stat.max[,c("tx.mn","ct.mn","std.eff.sz","ks")]
-names(pretty.tab) <- c("E(Y1|t=1)","E(Y0|t=1)","Std.Eff.","KS")
-xtable(pretty.tab,
-       caption = "Balance of the nonrespondents and respondents",
-       label = "tab:balance2",
-       digits = c(0, 2, 2, 2, 2),
-       align=c("l","r","r","r","r"))
-@
+\begin{Schunk}
+\begin{Sinput}
+> pretty.tab <- bal.table(egsingle.ps)$ks.stat.max[, 
++     c("tx.mn", "ct.mn", "std.eff.sz", "ks")]
+> names(pretty.tab) <- c("E(Y1|t=1)", "E(Y0|t=1)", 
++     "Std.Eff.", "KS")
+> xtable(pretty.tab, caption = "Balance of the nonrespondents and respondents", 
++     label = "tab:balance2", digits = c(0, 2, 2, 
++         2, 2), align = c("l", "r", "r", "r", "r"))
+\end{Sinput}
+% latex table generated in R 2.2.1 by xtable 1.3-1 package
+% Wed Apr 12 21:02:53 2006
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{lrrrr}
+\hline
+ & E(Y1$|$t=1) & E(Y0$|$t=1) & Std.Eff. & KS \\
+\hline
+race:1 & 0.73 & 0.71 & 0.04 & 0.02 \\
+race:2 & 0.16 & 0.15 & 0.04 & 0.01 \\
+race:3 & 0.11 & 0.14 & $-$0.10 & 0.03 \\
+female:Female & 0.52 & 0.48 & 0.07 & 0.04 \\
+female:Male & 0.48 & 0.52 & $-$0.07 & 0.04 \\
+size & 761.33 & 762.12 & $-$0.00 & 0.04 \\
+lowinc & 80.75 & 80.71 & 0.00 & 0.04 \\
+mobility & 36.44 & 35.48 & 0.07 & 0.04 \\
+\hline
+\end{tabular}
+\caption{Balance of the nonrespondents and respondents}
+\label{tab:balance2}
+\end{center}
+\end{table}\end{Schunk}
 
 The final step is to add 1 to the weights to get the final
 nonresponse weight and then add the nonresponse weights to the
 respondent data so analyses can proceed.
 
-<<>>=
-egsingle.one$wgt <- 1 + get.weights(egsingle.ps, type="ATT",
-                                    stop.method="ks.stat.max")
-@
+\begin{Schunk}
+\begin{Sinput}
+> egsingle.one$wgt <- 1 + get.weights(egsingle.ps, 
++     type = "ATT", stop.method = "ks.stat.max")
+\end{Sinput}
+\end{Schunk}
 
-<<>>=
- egsinge.resp <- merge(subset(egsingle, subset=resp==1),
-                      subset(egsingle.one, subset=resp==1,
-                             select=c(childid, wgt)) )
-@
+\begin{Schunk}
+\begin{Sinput}
+> egsinge.resp <- merge(subset(egsingle, subset = resp == 
++     1), subset(egsingle.one, subset = resp == 
++     1, select = c(childid, wgt)))
+\end{Sinput}
+\end{Schunk}
 
 \begin{thebibliography}{77}     % start the bibliography
 
