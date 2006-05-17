@@ -1,12 +1,8 @@
-####### casemix.R
 .First.lib <- function(lib, pkg)
 {
      require(gbm)
      require(survey)
 }
-
-########################################################
-
 
 
 ### Function returns ps and balance information
@@ -52,7 +48,7 @@ ps<-function(formula = formula(data),
 
    # plot options
    plot.options <- c("optimize","ps boxplot","weight histogram",
-                     "t pvalues","ks pvalues","spaghetti")
+                     "t pvalues","ks pvalues","es")
    plots <- tolower(plots)
    if("all" %in% plots)
    {
@@ -276,7 +272,7 @@ desc.wts <-function(data,w,
       }
       for(i.rep in 1:perm.test.iters)
       {
-         if(verbose & (i.rep %in% progress))
+         if(verbose && (i.rep %in% progress))
          {
             cat(round(100*i.rep/perm.test.iters),"%\n",sep="")
          }
@@ -800,7 +796,7 @@ diag.plot <- function(title=NULL,
 {
    if("all" %in% plots)
       plots <- c("ps boxplot","weight histogram",
-                 "t pvalues","ks pvalues","spaghetti")
+                 "t pvalues","ks pvalues","es")
 
    if("ps boxplot" %in% plots)
    {
@@ -828,10 +824,10 @@ diag.plot <- function(title=NULL,
            adj=c(0,1))        
    }
    
-   if(any(c("t pvalues","ks pvalues","spaghetti") %in% plots))
+   if(any(c("t pvalues","ks pvalues","es") %in% plots))
    {
       if(is.null(desc.unw) || is.null(desc.unw))
-         stop("For the t and KS statistic p-value plots and the spaghetti plots desc.unw and desc.w cannot be NULL")
+         stop("For the t and KS statistic p-value plots and the effect size plots desc.unw and desc.w cannot be NULL")
       stats.unw <- desc.unw$bal.tab$results
       stats.w   <- desc.w$bal.tab$results
    }
@@ -857,8 +853,8 @@ diag.plot <- function(title=NULL,
       lines(c(1,sum(!is.na(stats.w$ks.pval))), c(0,1), col="blue")
    }
    
-   # ES spaghetti plot
-   if("spaghetti" %in% plots)
+   # ES plot
+   if("es" %in% plots)
    {
       ases.dat <- data.frame(es.unw = stats.unw$std.eff.sz, 
                              es.w   = stats.w$std.eff.sz,

@@ -7,7 +7,7 @@
 \description{
 Creates diagnostic plots of propensity scores including, a side-by-side boxplot
 of propensity scores, a histogram of propensity score weights, QQ plots of KS 
-and t-statistic p-values, and a ``spaghetti" plot of absolute effect sizes
+and t-statistic p-values, and a plot of absolute effect sizes
 }
 \usage{
 diag.plot(title=NULL,
@@ -35,7 +35,7 @@ diag.plot(title=NULL,
   \item{desc.w}{a list object containing the weighted balance assessment}
   \item{plots}{a character vector listing the plots to be created. The options 
     are all (the default), optimize, ps boxplot, weight histogram, 
-    t pvalues, ks pvalues, spaghetti. Any other options (such as "none") will
+    t pvalues, ks pvalues, es. Any other options (such as "none") will
     produce no plots}
   
   \item{x}{ a \code{ps} object, usually one returned from \code{\link{ps}} }

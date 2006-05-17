@@ -63,7 +63,7 @@ score model. The columns are
   \item{E0}{the estimated \eqn{E(Y_0|t=1)} with \code{var} excluded from the 
         propensity score model}
   \item{a.min,a.max}{the smallest and largest values of \eqn{a} observed}
-  \item{a.cor}{the observed correlation between \eqn{a} and \eqn{\rho}}
+  \item{a.cor}{the observed correlation between \eqn{a} and \eqn{y}}
   \item{a.mincor,a.maxcor}{the smallest and largest values of \eqn{\rho} 
         possible}
   \item{minE0,maxE0}{the smallest and largest values of estimated 
@@ -74,7 +74,7 @@ score model. The columns are
 \references{ 
 G. Ridgeway (2006). \dQuote{Assessing the effect of race bias in 
 post-traffic stop outcomes using propensity scores,} \emph{Journal of 
-Quantitative Criminology} 22(1). } 
+Quantitative Criminology} 22(1):1-29. } 
 
 \author{ Greg Ridgeway \email{gregr@rand.org} }
 

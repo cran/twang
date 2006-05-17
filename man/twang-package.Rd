@@ -13,8 +13,8 @@ of the weights
 \details{
 \tabular{ll}{
 Package: \tab twang\cr
-Version: \tab 0.6-3\cr
-Date: \tab 2006-2-15\cr
+Version: \tab 0.6-7\cr
+Date: \tab 2006-5-17\cr
 Depends: \tab R (>= 2.2), gbm (>= 1.5-3), survey\cr
 License: \tab GPL (version 2 or newer)\cr
 Built: \tab R 2.2.1; ; 2006-02-15 10:35:20; windows\cr
