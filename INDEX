@@ -4,6 +4,7 @@ check.err               Reports on errors and warnings
 desc.wts                Diagnosis of weights
 diag.plot               Create diagnostic plots
 dx.wts                  Propensity score diagnostics
+egsingle                US Sustaining Effects study
 get.weights             Extract propensity score weights
 ks.stat                 Functions for evaluating balance
 lalonde                 Lalonde's National Supported Work Demonstration

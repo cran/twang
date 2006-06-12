@@ -23,7 +23,7 @@ R01 DA017507 and R01 DA015697-03}
 \\RAND}
 
 %\VignetteIndexEntry{Toolkit for Weighting and Analysis of Nonequivalent Groups: A guide to the twang package}
-%\VignetteDepends{gbm,survey,xtable,mlmRev}
+%\VignetteDepends{gbm,survey,xtable}
 %\VignetteKeywords{propensity score, nonresponse weighting}
 %\VignettePackage{twang}
 
@@ -774,10 +774,9 @@ weights from \texttt{ps()}.
 Before we can generate nonresponse weights, we need to prepare the
 data using the following commands.
 
-First we load the data from the \texttt{mlmRev} package.
+First we load the data.
 
 <<>>=
-library(mlmRev)
 data(egsingle)
 @
 

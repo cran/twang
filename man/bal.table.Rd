@@ -31,7 +31,9 @@ unweighted analysis.}
   \item{tx.sd}{The standard deviation of the treatment group}
   \item{ct.mn}{The mean of the control group}
   \item{ct.sd}{The standard deviation of the control group}
-  \item{std.eff.sz}{The standardized effect size, (tx.mn-ct.mn)/tx.sd}
+  \item{std.eff.sz}{The standardized effect size, (tx.mn-ct.mn)/tx.sd.  
+If tx.sd is small or 0, the standardized effect size can be large or INF. 
+Therefore standardized effect sizes greater than 500 are set to NA}
   \item{stat}{the t-statistic for numeric variables and the chi-square 
               statistic for continuous variables}
   \item{p}{the p-value for the test associated with \code{stat}}

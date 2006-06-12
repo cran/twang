@@ -48,11 +48,20 @@ diag.plot(title=NULL,
   \code{plot.ps} and \code{plot.dxwts} are wrappers for \code{\link{diag.plot}}
   
 The plots include
-    \item Boxplot of propensity scores
-    \item Histogram of comparison weights
-    \item P-value plots for unweighted and weighted t statistics, KS statistics, 
-          and standardized effect size
-    \item Change in effect size plot
+    \item Boxplot of propensity scores for cases in the treatment and 
+comparison conditions
+    \item Histogram of comparison condition case weights
+    \item P-value plots for unweighted and weighted t statistics, and KS 
+statistics
+    \item Change in standardized effect size plot. For each model 
+covariate, standardized effect sizes before and 
+after comparison group case weighting are linked by blue lines if 
+weighting reduces the effect size, and by red lines if weights increase 
+the effect size.  Significant effect sizes are indicated with a  closed 
+red circle.  Standardized effect sizes are defined as the difference 
+between the treatment and comparison group means, divided by the treatment 
+group standard deviation.  Very large effect sizes are omitted from these 
+plots.  When this occurs, a warning is placed at the top of the figure 
 }
 \value{
 No returned objects

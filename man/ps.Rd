@@ -37,7 +37,8 @@ ps(formula = formula(data),
   \item{plots}{a character vector indicating which plots to create. The options 
     are all (the default), optimize, ps boxplot, weight histogram, 
     t pvalues, ks pvalues, es. Any other options (such as "none") will
-    produce no plots}
+    produce no plots. See the help for \code{\link{diag.plot}} for details 
+    on the plotted figures}
   \item{pdf.plots}{if \code{TRUE} then all plots are dumped to a pdf file with
     the name specified in \code{title}}
   \item{n.trees}{ number of gbm iterations passed on to \code{\link[gbm]{gbm}} }

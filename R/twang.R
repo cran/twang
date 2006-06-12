@@ -707,7 +707,12 @@ ps.summary.f <- function(x, t, w,
          pval <- 1
       } else
       {
-         pval <- as.numeric(svychisq(~x+t,design=design)$p.value)
+         pval <- try(as.numeric(svychisq(~x+t,design=design)$p.value), 
+                     silent=TRUE)
+         if(class(pval)[1] == "try-error")
+         {
+            p.val <- NA
+         }
       }
       ret <- cbind(ret, ks, ks.pval=c(pval,rep(NA,length(ks)-1)))
    }
@@ -1314,9 +1319,7 @@ get.weights <- function(ps1,
    if(type=="ATT") return(ps1$w[[i]])
    else if(type=="ATE")
    { 
-      w <- ps1$ps[[i]]
-      w[ps1$treat==1] <- with(ps1, 1/ps[treat==1])
-      w[ps1$treat==0] <- with(ps1, 1/(1-ps[treat==0]))
+      w <- with(ps1, treat/ps[[i]] + (1-treat)/(1-ps[[i]]))
       return(w)
    }
 }
