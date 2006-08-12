@@ -684,16 +684,16 @@ ps.summary.f <- function(x, t, w,
       if(class(test)[1] != "try-error")
       {
          stat  <- c(test$statistic,rep(NA,nrow(p)-1))
-         p.val <- c(test$p.value,rep(NA,nrow(p)-1))
+         pval <- c(test$p.value,rep(NA,nrow(p)-1))
       } else
       {
-         stat <- p.val <- NA
+         stat <- pval <- NA
       }
 
       ret  <- cbind(tx.mn=p[,2], tx.sd=sd[,2],
                     ct.mn=p[,1],  ct.sd=sd[,1],
                     std.eff.sz=b.f,
-                    stat=stat, p=p.val)
+                    stat=stat, p=pval)
    }
    if(get.ks)
    {
@@ -711,7 +711,7 @@ ps.summary.f <- function(x, t, w,
                      silent=TRUE)
          if(class(pval)[1] == "try-error")
          {
-            p.val <- NA
+            pval <- NA
          }
       }
       ret <- cbind(ret, ks, ks.pval=c(pval,rep(NA,length(ks)-1)))
@@ -912,7 +912,7 @@ dx.wts <- function(x,
       if(x.as.weights)
       {
          w <- x
-         p.s <- 1/(1+x)
+         p.s <- x/(1+x)
       } else
       {
          if(any(x > 1) && !x.as.weights) stop("x has values greater than 1. With x.as.weights=FALSE x should be a vector of propensity scores.")

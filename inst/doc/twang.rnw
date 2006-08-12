@@ -901,7 +901,7 @@ f(\mathbf{x}|t=1) = w(\mathbf{x})f(\mathbf{x}|t=0).
 \label{eq:balance}
 \end{equation}
 For example, if $f(\mbox{age=65},\mbox{sex=F}|t=1) = 0.10$ and
-$f(\mbox{age=65},\mbox{sex=F}|t=1) = 0.05$ (i.e. 10\% of the
+$f(\mbox{age=65},\mbox{sex=F}|t=0) = 0.05$ (i.e. 10\% of the
 treatment cases and 5\% of the comparison cases are 65 year old
 females) then we need to give a weight of 2.0 to every 65 year old
 female in the comparison group so that they have the same

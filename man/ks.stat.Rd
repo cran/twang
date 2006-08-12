@@ -53,7 +53,7 @@ The weights be passed to these functions with any of the first three arguments
                  the progress of the fitting}
 }
 \details{
-  ~~ If necessary, more details than the description above ~~
+  ~ If necessary, more details than the description above ~
 }
 \value{
   ~Describe the value returned

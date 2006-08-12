@@ -19,8 +19,9 @@ get.weights(ps1,
 \details{
   Weights for ATT are 1 for the treatment cases and p/(1-p) for the control cases.
 
-  Weights for ATE are 1/p for the treatment cases and 1/(1-p) for the control cases.}
+  Weights for ATE are 1/p for the treatment cases and 1/(1-p) for the control cases.
 }
+
 \value{
 a vector of weights
 }

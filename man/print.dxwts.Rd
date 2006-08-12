@@ -6,8 +6,9 @@
 Prints a diagnosis of the weights. Extracts \code{summary.tab} from the 
 \code{\link{dx.wts}} object
 }
+
 \usage{
-print.dxwts(x, ...)
+\method{print}{dxwts}(x, ...)
 }
 
 \arguments{
