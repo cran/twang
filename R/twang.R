@@ -922,7 +922,12 @@ dx.wts <- function(x,
          w[i,] <- x[i,]/(1-x[i,])
          p.s <- x
       }
+      if(is.list(w)){
+      	if(any(unlist(lapply(w, is.infinite)))) stop("Some propensity weights are infinite.")
+      }
+      else {
       if(any(is.infinite(w))) stop("Some propensity weights are infinite.")
+      }
       # add a column for unweighted analysis
    } else
    {
