@@ -9,13 +9,12 @@ computes diagnostics assessing covariates balance.
 \usage{
 dx.wts(x,
        data,
+       estimand,
        vars=NULL,
        treat.var,
        x.as.weights=TRUE,
        sampw=NULL,
-       perm.test.iters=0,
-       plots=TRUE,
-       title)
+       perm.test.iters=0)
 }
 
 \arguments{
@@ -23,6 +22,7 @@ dx.wts(x,
            object. \code{x} can also be a data frame, matrix, or vector of 
            propensity scores if \code{x.as.weights=FALSE}}
   \item{data}{a data frame}
+  \item{estimand}{the estimand of interest: either "ATT" or "ATE"}
   \item{vars}{a vector of character strings naming variables in \code{data} on 
               which to assess balance}
   \item{treat.var}{a character string indicating which variable in \code{data}
@@ -40,10 +40,6 @@ dx.wts(x,
         argument is ignored is \code{x} is a \code{ps} object. Setting
         \code{perm.test.iters=200} will yield precision to within 3\% if the true
         p-value is 0.05. Use \code{perm.test.iters=500} to be within 2\%}
-  \item{plots}{if \code{plots=TRUE} then \code{dx.wts} will call 
-               \code{\link{diag.plot}} generating diagnostic plots}
-  \item{title}{a short text title, it will be used in plots and saved files. 
-               By default this is set to the current date and time}
 }
 \details{
 Creates a balance table that compares unweighted and weighted means and 
@@ -63,9 +59,10 @@ Returns a list containing
   \item{datestamp}{the date and time of the call to \code{dx.wts}}
   \item{parameters}{the parameters used when calling \code{dx.wts}}
   \item{alerts}{text containing any warnings accumulated during the estimation}
+  \item{varNames}{the variable names}
 }
 
 \seealso{ The example for \code{\link{ps}} contains an example of the 
-use of \code{dx.wts}, \code{\link{diag.plot}}}
+use of \code{dx.wts}}
 
 \keyword{ models }

@@ -15,7 +15,8 @@ desc.wts(data,
          na.action = "level",
          perm.test.iters=0,
          verbose=TRUE,
-         alerts.stack)
+         alerts.stack,
+         estimand)
 }
 
 \arguments{
@@ -35,6 +36,7 @@ desc.wts(data,
   \item{verbose}{ if TRUE, lots of information will be printed to monitor the
                  the progress of the fitting }
   \item{alerts.stack}{ an object for collecting warnings issued during the analyses }
+  \item{estimand}{the estimand of interest: either "ATT" or "ATE"}
 }
 \details{
 \code{desc.wts} calls \code{\link{bal.stat}} to assess covariate balance.

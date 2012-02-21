@@ -1,7 +1,6 @@
 \name{bal.table}
 \alias{bal.table}
-\alias{bal.table.ps}
-\alias{bal.table.dxwts}
+
 
 \title{Compute balance table}
 \description{
@@ -19,7 +18,7 @@ bal.table(x)
 \details{ \code{bal.table} is a generic function for extracting balance 
 tables from \code{\link{ps}} and \code{\link{dx.wts}} objects. These objects 
 usually have several sets of candidate weights, one for an unweighted 
-analysis and perhaps several \code{\link{stop.methods}}. \code{bal.table} 
+analysis and perhaps several \code{stop.methods}. \code{bal.table} 
 will return a table for each set of weights combined into a list. Each list 
 component will be named as given in the \code{x}, usually the name of the 
 \code{stop.method}. The balance table labeled \dQuote{unw} indicates the 

@@ -12,13 +12,16 @@ to be called directly by the user but is used by other functions in the package.
 \usage{
 ps.summary(x, t, w, get.means = TRUE, get.ks = TRUE, 
            na.action = c("level", "exclude", "lowest")[1], 
-           collapse.by.var = FALSE)
+           collapse.by.var = FALSE,
+           estimand)
 ps.summary.f(x, t, w, get.means = TRUE, get.ks = TRUE, 
              na.action = c("level", "exclude", "lowest")[1], 
-             collapse.by.var = TRUE)
+             collapse.by.var = TRUE,
+             estimand)
 ps.summary.n(x, t, w, get.means = TRUE, get.ks = TRUE, 
              na.action = c("level", "exclude", "lowest")[1], 
-             collapse.by.var = FALSE)
+             collapse.by.var = FALSE,
+             estimand)
 }
 
 
@@ -32,6 +35,7 @@ ps.summary.n(x, t, w, get.means = TRUE, get.ks = TRUE,
   \item{na.action}{a string indicating the method for handling missing data}
   \item{collapse.by.var}{if \code{TRUE}, then statistics computed for factors 
                          are collapsed across the levels}
+ \item{estimand}{either \code{"ATT"} or \code{"ATE"}}                        
 }
 \details{
 \code{ps.summary} dispatches \code{ps.summary.n} or \code{ps.summary.f} 
@@ -57,22 +61,6 @@ depending on whether \code{x} is a numeric vector or a factor.
 columns in the returned result.
 }
 
-\seealso{\code{\link{bal.stat}}, 
-         \code{\link{ks.stat}}, 
-         \code{\link{es.stat}}}
-\examples{
-treat <- rbinom(100,1,0.5)
-w     <- rexp(100)
+\seealso{\code{\link{bal.stat}}}
 
-# categorical data
-x.cat <- factor(sample(letters[1:3],size=100,replace=TRUE))
-ps.summary.f(x.cat,treat,w)
-
-# numeric data
-x.num <- rnorm(100)
-ps.summary.n(x.num,treat,w)
-
-# or let ps.summary figure out which to call
-ps.summary(x.num,treat,w)
-}
 \keyword{ models }

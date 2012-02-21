@@ -1,12 +1,8 @@
-# Default NAMESPACE created by R
-# Remove the previous line if you edit this file
+export(ps, dx.wts, get.weights, bal.table, ps.summary, stop.methods)
 
-# Export all names
-exportPattern(".")
+S3method(plot, ps)
+S3method(plot, dxwts)
+S3method(summary, ps)
+S3method(print, summary.ps)
+S3method(print, dxwts)
 
-# Import all packages listed as Imports or Depends
-import(
-  gbm,
-  survey,
-  xtable
-)

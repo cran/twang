@@ -7,14 +7,15 @@
 }
 \usage{
 get.weights(ps1,
-            type = c("ATT", "ATE")[1],
-            stop.method = NULL)
+			stop.method,
+            estimand = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{ps1}{ a \code{ps} object }
-  \item{type}{ indicates whether the weights are for the average treatment effect on the treated (ATT) or the average treatment effect on the population (ATE) }
-  \item{stop.method}{ indicates which set of weights to retrieve from the \code{ps} object }
+  \item{stop.method}{ indicates which set of weights to retrieve from the \code{ps} object }  
+  \item{estimand}{ indicates whether the weights are for the average treatment effect on the treated (ATT) or the average treatment effect on the population (ATE).  By default, \code{get.weights} will use the estimand used to fit the 
+  	\code{ps} object. }
 }
 \details{
   Weights for ATT are 1 for the treatment cases and p/(1-p) for the control cases.

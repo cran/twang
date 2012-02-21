@@ -13,7 +13,8 @@ bal.stat(data,
          w.all, 
          get.means = TRUE,
          get.ks = TRUE, 
-         na.action = "level")
+         na.action = "level",
+         estimand)
 }
 
 \arguments{
@@ -30,6 +31,7 @@ bal.stat(data,
   \item{na.action}{ a character string indicating how \code{bal.stat} should 
                     handle missing values. Current options are "level", 
                     "exclude", or "lowest" }
+  \item{estimand}{ either "ATT" or "ATE"}
 }
 \details{
     \code{bal.stat} calls \code{\link{ps.summary.f}} and 
