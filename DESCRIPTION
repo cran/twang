@@ -1,6 +1,6 @@
 Package: twang
-Version: 1.2-5
-Date: 2012-2-21
+Version: 1.2-6
+Date: 2012-6-5
 Title: Toolkit for Weighting and Analysis of Nonequivalent Groups
 Author: Greg Ridgeway <gregr@rand.org>, Dan McCaffrey
         <danielm@rand.org>, Andrew Morral <morral@rand.org>, Beth Ann
@@ -13,6 +13,6 @@ Description: This package offers functions for propensity score
         Ridgeway, McCaffrey, and Morral. Burgette, Griffin and
         McCaffrey updated the package in 2011.
 License: GPL (>= 2)
-Packaged: 2012-03-07 17:51:53 UTC; burgette
+Packaged: 2012-09-18 19:35:45 UTC; burgette
 Repository: CRAN
-Date/Publication: 2012-03-08 07:11:06
+Date/Publication: 2012-09-18 20:16:28

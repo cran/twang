@@ -1,3 +1,5 @@
+useDynLib(twang)
+
 export(ps, dx.wts, get.weights, bal.table, ps.summary, stop.methods, sensitivity, bal.stat)
 
 S3method(plot, ps)

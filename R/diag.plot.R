@@ -67,12 +67,12 @@ if (plots == "optimize" || plots == 1) {
    	if(is.null(subset))
    	subset <- 1:length(levels(as.factor(esDat$whichComp)))
    	
-   	yMax <- min(3,max(esDat[,1])) + .05	
+   	yMax <- min(3,max(esDat[,1], na.rm=TRUE),na.rm=TRUE) + .05	
    	
-   	if(max(esDat[,1]) > 3)
+   	if(max(esDat[,1], na.rm=TRUE) > 3)
    	warning("Some effect sizes are larger than 3 and may not have been plotted.\n")	
    	
-   	pt1.1 <- xyplot(effectSize ~ weighted | whichComp, groups = whichVar, data = esDat, scales = list(alternating = 1),
+   	pt1 <- xyplot(effectSize ~ weighted | whichComp, groups = whichVar, data = esDat, scales = list(alternating = 1),
    	ylim = c(-.05, yMax), type = "l", col = "lightblue", 
    	subset = !esBig & (as.factor(esDat$whichComp) %in% levels(as.factor(esDat$whichComp))[subset]), 
    	ylab = "Absolute standard difference", xlab = NULL, ...,
@@ -81,17 +81,34 @@ if (plots == "optimize" || plots == 1) {
    		panel.xyplot(...)
    		
    	})
+   	
+   	if(sum((esDat$esBig & (as.factor(esDat$whichComp) %in% levels(as.factor(esDat$whichComp))[subset])) == TRUE, na.rm=TRUE)>0){
+   	
    	pt1.2 <- xyplot(effectSize ~ weighted | whichComp, groups = whichVar, 
    	data = esDat, ylab = "Absolute standard difference", xlab = NULL,
    	ylim = c(-.05, yMax), type = "l", col = "red", 
    	subset = esBig & (as.factor(esDat$whichComp) %in% levels(as.factor(esDat$whichComp))[subset]), lwd = 2)
+   	
+   	pt1 <- pt1 + pt1.2
+   	
+   	}
+   	
+   	
+   	if(sum(as.factor(esDat$whichComp) %in% levels(as.factor(esDat$whichComp))[subset] == TRUE, na.rm = TRUE)>0){
    	
    	pt2 <- xyplot(effectSize ~ weighted | whichComp, groups = pVal, data = esDat,
    	ylab = "Absolute standard difference", xlab = NULL, 
    	ylim = c(-.05, yMax), type = "p", col = "red", pch = c(19,1),
    	subset = as.factor(esDat$whichComp) %in% levels(as.factor(esDat$whichComp))[subset])
    	
-   	pt1 <- pt1.1 + pt1.2 + pt2
+   	pt1 <- pt1 + pt2
+   	
+   	}
+   	
+#   	else pt2 <- NULL
+   	
+#   	pt1 <- pt1.1 + pt1.2 + pt2
+  
    	
    	}
    						

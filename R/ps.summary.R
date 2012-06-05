@@ -86,7 +86,11 @@ if(estimand=="ATT")
       
       # XXX jitter?
       pval <- 1 - .C("psmirnov2x", p = as.double(ks), 
-              as.integer(ess[2]), as.integer(ess[1]), PACKAGE = "stats")$p
+              as.integer(ess[2]), as.integer(ess[1]))$p
+
+#pval <- 0
+              
+#      pval <- ks.test(rep(0, as.integer(ess[2])))$p.value        
 
       if((sum(is.na(design$variables$x))>0) && (na.action=="level"))
       {
@@ -179,7 +183,8 @@ if(estimand=="ATE")
         cumv <- cumv[diff(work$x[ind]) != 0]
         ks <- ifelse(length(cumv) > 0, max(cumv), 0)
         pval <- 1 - .C("psmirnov2x", p = as.double(ks), as.integer(ess[2]), 
-            as.integer(ess[1]), PACKAGE = "stats")$p
+            as.integer(ess[1]))$p
+
         if ((sum(is.na(design$variables$x)) > 0) && (na.action == 
             "level")) {
             work <- design$variables

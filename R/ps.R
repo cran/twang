@@ -254,6 +254,7 @@ balance[,i.tp] <- bal
                   iters = iters,
                   balance = balance,
                   n.trees = n.trees,
+                  sampW = sampw,
                   data = data)
    class(result) <- "ps"
    return(result)

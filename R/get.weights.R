@@ -1,4 +1,4 @@
-get.weights <- function(ps1, stop.method, estimand = NULL)
+get.weights <- function(ps1, stop.method, estimand = NULL, withSampW = TRUE)
 {
    if(class(ps1)!="ps") stop("ps1 must be a ps object.")
    if(is.null(estimand)) estimand <- ps1$estimand
@@ -16,14 +16,19 @@ get.weights <- function(ps1, stop.method, estimand = NULL)
 #      Available options: ",names(ps1$ps),".")
    } else
    {
-   	warning("No stop.method specified.  Using ")
+   	warning("No stop.method specified.  Using ", names(ps1$ps)[1], "\n")
       i <- 1
    }
   
-   if (estimand == "ATT") return(ps1$w[[i]])
+   if (estimand == "ATT") {
+   	w <- with(ps1,  treat + ps[[i]]/(1-ps[[i]]))
+   	if(withSampW) w <- w * ps1$sampW
+   	return(ps1$w[[i]])
+   }
    else if (estimand == "ATE")
    { 
       w <- with(ps1, treat/ps[[i]] + (1-treat)/(1-ps[[i]]))
+      if(withSampW) w <- w* ps1$sampW
       return(w)
    }
 }

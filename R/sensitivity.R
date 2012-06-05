@@ -1,22 +1,28 @@
-sensitivity <- function(ps1,data,
+sensitivity <- function(ps1,data = ps1$data,
                         outcome,
                         order.by.importance=TRUE,
                         verbose=TRUE)
 {
    stop.method <- eval(ps1$parameters$stop.method)
-   if(class(stop.method)=="stop.method") 
-   {
-      stop.method <- list(stop.method)
+   stop.method.long <- stop.method
+   for(i in 1:length(stop.method)){
+   	stop.method.long[i] <- paste(stop.method[i], ps1$estimand,sep=".")
    }
+   #stop.method <- names(ps1$ps)
+#   if(class(stop.method)=="stop.method") 
+#   {
+#      stop.method <- list(stop.method)
+#   }
    
    results <- vector("list",length(stop.method))
    for(i.smethod in 1:length(stop.method))
    {
-      if(verbose) cat("Sensitivity analysis for",stop.method[[i.smethod]]$name,"\n")
+#      if(verbose) cat("Sensitivity analysis for",stop.method[[i.smethod]]$name,"\n")
+	   if(verbose) cat("Sensitivity analysis for",stop.method[i.smethod],"\n")
    
       if(order.by.importance)
       {
-         best.iter <- ps1$desc[[stop.method[[i.smethod]]$name]]$n.trees
+         best.iter <- ps1$desc[[stop.method.long[i.smethod]]]$n.trees
          vars <- as.character(summary(ps1$gbm.obj,n.trees=best.iter,plot=FALSE)$var)
       } else
       {
@@ -45,9 +51,9 @@ sensitivity <- function(ps1,data,
          ps2 <- ps(formula(form), 
                   data = data,
                   sampw = ps1$parameters$sampw,
-                  title = ps1$parameters$title, 
+#                  title = ps1$parameters$title, 
                   stop.method = stop.method[[i.smethod]], 
-                  plots = "none", 
+#                  plots = "none", 
                   n.trees = ps1$parameters$n.trees, 
                   interaction.depth = ps1$parameters$interaction.depth, 
                   shrinkage = ps1$parameters$shrinkage, 
@@ -59,8 +65,11 @@ sensitivity <- function(ps1,data,
          # what kind of ai's are there?
          i <- which(data[,ps1$treat.var]==0)
          d0 <- data[i, outcome, drop=FALSE]
-         d0$w <- ps1$w[[stop.method[[i.smethod]]$name]][i]
-         d0$wa <- ps2$w[[stop.method[[i.smethod]]$name]][i]
+#         d0$w <- ps1$w[[stop.method[[i.smethod]]$name]][i]
+#         d0$wa <- ps2$w[[stop.method[[i.smethod]]$name]][i]
+         d0$w <- ps1$w[[stop.method.long[i.smethod]]][i]
+         d0$wa <- ps2$w[[stop.method.long[i.smethod]]][i]
+
          d0$a <- with(d0, w/wa)
    
          design.ps <- svydesign(ids=~1,weights=~wa,data=d0)
