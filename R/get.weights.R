@@ -21,7 +21,7 @@ get.weights <- function(ps1, stop.method, estimand = NULL, withSampW = TRUE)
    }
   
    if (estimand == "ATT") {
-   	w <- with(ps1,  treat + ps[[i]]/(1-ps[[i]]))
+   	w <- with(ps1,  treat + (1-treat) * ps[[i]]/(1-ps[[i]]))
    	if(withSampW) w <- w * ps1$sampW
    	return(ps1$w[[i]])
    }
