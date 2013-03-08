@@ -1,8 +1,8 @@
 ### calculate weighted balance statistic
-bal.stat <- function(data,vars=NULL,treat.var,w.all,
+bal.stat <- function(data,vars=NULL,treat.var,w.all, sampw, 
                      get.means=TRUE,
                      get.ks=TRUE,
-                     na.action="level", estimand)
+                     na.action="level", estimand, multinom)
 {
    if(is.null(vars)) vars<-names(data)[names(data)!=treat.var]
 
@@ -12,20 +12,26 @@ bal.stat <- function(data,vars=NULL,treat.var,w.all,
 
    ret <- vector("list",length(vars))
    names(ret) <- vars
+   
+#   multinom <- FALSE
+
+sampW <- sampw
 
    ##### Calculate stats for numeric variables
-   ret[!is.fac] <- lapply(data[,vars[!is.fac],drop=FALSE], ps.summary.n,
-                          t=data[,treat.var], w=w.all,
+   ret[!is.fac] <- lapply(data[,vars[!is.fac],drop=FALSE], ps.summary.new,
+                          t=data[,treat.var], w=w.all, sampw = sampW,
                           get.means=get.means, get.ks=get.ks,
                           na.action=na.action,
-                          collapse.by.var=FALSE, estimand=estimand)
+                          collapse.by.var=FALSE, estimand=estimand, multinom = multinom, isFactor = FALSE)
 
    ##### Calculate stats for factor variables
-   ret[is.fac] <- lapply(data[,vars[is.fac],drop=FALSE], ps.summary.f,
-                         t=data[,treat.var], w=w.all,
+   ret[is.fac] <- lapply(data[,vars[is.fac],drop=FALSE], ps.summary.new,
+                         t=data[,treat.var], w=w.all, sampw = sampW, 
                          get.means=get.means, get.ks=get.ks,
                          na.action=na.action,
-                         collapse.by.var=FALSE, estimand=estimand)
+                         collapse.by.var=FALSE, estimand=estimand, multinom = multinom, isFactor = TRUE)
+
+
    # this keeps the variables in the same order as vars
    n.rows <- sapply(ret,nrow)
    var.levels <- unlist(sapply(ret, rownames))

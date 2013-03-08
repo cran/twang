@@ -14,7 +14,7 @@ ksStat<-function(logw=NULL,
                   vars,
                   treat.var,
                   collapse.by.var=FALSE,
-                  verbose=FALSE, estimand)
+                  verbose=FALSE, estimand, multinom)
 {
 
 if(!(estimand %in% c("ATT","ATE"))) stop("estimand must be either \"ATT\" or \"ATE\".")
@@ -49,7 +49,7 @@ if(estimand=="ATT")
                 get.means=FALSE,
                 get.ks=TRUE,
                 na.action=na.action,
-                estimand=estimand)
+                estimand=estimand, multinom=multinom)
    ks <- lapply(ks, function(x){x$ks})
 
    if(collapse.by.var) ks <- sapply(ks,max)
@@ -85,7 +85,7 @@ if(estimand=="ATE")
     }
     w1 <- w1 * sampw
     ks <- lapply(data[, vars], ps.summary, t = data[, treat.var], 
-        w = w1, get.means = FALSE, get.ks = TRUE, na.action = na.action, estimand=estimand)
+        w = w1, get.means = FALSE, get.ks = TRUE, na.action = na.action, estimand=estimand, multinom = multinom)
     ks <- lapply(ks, function(x) {
         x$ks
     })

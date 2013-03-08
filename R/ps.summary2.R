@@ -85,8 +85,8 @@ if(estimand=="ATT") {
       # XXX jitter?
 #      pval <- 1 - .C("psmirnov2x", p = as.double(ks), 
 #              as.integer(ess[2]), as.integer(ess[1]), PACKAGE = "stats")$p
-      pval <- 1 - .Call("psmirnov2x", p = as.double(ks), 
-              as.integer(ess[2]), as.integer(ess[1]), PACKAGE = "twang")$p              
+      pval <- 1 - .C("psmirnov2x", p = as.double(ks), 
+              as.integer(ess[2]), as.integer(ess[1]), PACKAGE="twang")$p              
 
       if((sum(is.na(design$variables$x))>0) && (na.action=="level"))
       {
@@ -117,6 +117,8 @@ if(estimand=="ATE") {
     ret <- NULL
     if (get.means) {
         design.t <- subset(design, t == 1)
+        if(multinom) design.c <- design
+        else 
         design.c <- subset(design, t == 0)
         m.t <- svymean(~x, design.t, na.rm = TRUE)
         m.c <- svymean(~x, design.c, na.rm = TRUE)
@@ -132,7 +134,8 @@ if(estimand=="ATE") {
         }    
 
         m.t.unwt=mean(x[t==1],na.rm=TRUE)
-        m.c.unwt=mean(x[t==0],na.rm=TRUE)
+        if(!multinom) m.c.unwt=mean(x[t==0],na.rm=TRUE)
+        else m.c.unwt <- mean(x, na.rm = TRUE)
         var.t<-var(x[t==1],na.rm=TRUE)
         var.c<-var(x[t==0],na.rm=TRUE)
         N.t=length(x[t==1])
@@ -181,6 +184,7 @@ if(estimand=="ATE") {
       	work$w[work$t == 1] <- with(subset(work, t == 1), w/sum(w))
       	work$w[work$t == 0] <- 0
       	work$w <- work$w - 1/(length(work$w))
+      	#### should replace above line with survey weights 11/15/12 #####
       }
       else{ 
 
@@ -198,13 +202,23 @@ if(estimand=="ATE") {
 #        pval <- 1 - .C("psmirnov2x", p = as.double(ks), as.integer(ess[2]), 
 #            as.integer(ess[1]), PACKAGE = "stats")$p
       pval <- 1 - .C("psmirnov2x", p = as.double(ks), 
-              as.integer(ess[2]), as.integer(ess[1]), package = "twang")$p            
+              as.integer(ess[2]), as.integer(ess[1]), PACKAGE = "twang")$p            
             }
         if ((sum(is.na(design$variables$x)) > 0) && (na.action == 
             "level")) {
             work <- design$variables
-            work$w[work$t == 1] <- with(subset(work, t == 1), w/sum(w))
-            work$w[work$t == 0] <- with(subset(work, t == 0), -w/sum(w))
+            if(multinom){
+            	work$w[work$t == 1] <- with(subset(work, t == 1), w/sum(w))
+            	work$w[work$t == 0] <- 0
+            	work$w <- work$w - 1/(length(work$w))
+            	### should use sample weights
+            	}
+            else{ 
+            	work$w[work$t==1] <- with(subset(work,t==1),  w/sum(w))
+            	work$w[work$t==0] <- with(subset(work,t==0), -w/sum(w))
+            	}
+#            work$w[work$t == 1] <- with(subset(work, t == 1), w/sum(w))
+#            work$w[work$t == 0] <- with(subset(work, t == 0), -w/sum(w))
             ks <- c(ks, abs(sum(with(subset(work, is.na(x)), 
                 sapply(split(w, t), sum)))))
             if(!multinom)    

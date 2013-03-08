@@ -1,0 +1,532 @@
+
+
+% setwd("d:/dev/twang/inst/doc")
+% Sweave("twang.rnw"); system("texify twang.tex"); system("c:\\MiKTeX\\miktex\\bin\\yap.exe twang.dvi",wait=FALSE)
+
+\SweaveOpts{prefix.string=twang}
+
+\documentclass{article}
+\bibliographystyle{plain}
+\usepackage[active]{srcltx}
+\usepackage{url}
+\addtolength{\topmargin}{-0.5in}
+\addtolength{\textheight}{0.75in}
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\newcommand{\EV}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\aRule}{\begin{center} \rule{5in}{1mm} \end{center}}
+
+\title{Propensity scores for multiple treatments:\\A
+tutorial for the \texttt{mnps} function in the \texttt{twang} package}
+
+\author{Lane Burgette, Beth Ann Griffin and Dan McCaffrey 
+  \footnote{The development of this software and tutorial was funded
+    by National Institute of Drug Abuse grant number 1R01DA015697 (PI: McCaffrey).} 
+\\RAND Corporation}
+
+%\VignetteIndexEntry{Toolkit for Weighting and Analysis of Nonequivalent Groups: A guide to the twang package}
+%\VignetteDepends{gbm,survey,xtable}
+%\VignetteKeywords{propensity score, nonresponse weighting}
+%\VignettePackage{twang}
+
+ \newcommand{\mathgbf}[1]{{\mbox{\boldmath$#1$\unboldmath}}}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+The Toolkit for Weighting and Analysis of Nonequivalent Groups,
+\texttt{twang}, was designed to make causal estimates in the binary
+treatment setting.  In \texttt{twang} versions 1.3 and later, we have
+extended this software package 
+to handle more than two treatment conditions through the new
+\texttt{mnps} function, which stands for
+\underline{m}ulti\underline{n}omial \underline{p}ropensity
+\underline{s}cores.  McCaffrey et al.\ (2013) describe the 
+methodology behind the \texttt{mnps} function; the purpose of this
+document is to describe the syntax and features related to the
+implementation in \texttt{twang}.  
+
+At a high level, the \texttt{mnps} function decomposes
+the propensity score estimation into several applications of the \texttt{ps}
+function, which was designed for the standard dichotomous treatment
+setting.  For this 
+reason, users who are new to \texttt{twang} are encouraged to learn
+about the \texttt{ps} function before using the \texttt{mnps}
+function.  The other vignette that accompanies the package (Ridgeway et
+al., 2012) provides an extensive overview of the \texttt{ps} function,
+and much of that information will not be repeated here.  
+
+
+\section{An ATE example}
+
+<<echo=FALSE>>=
+options(width=60)
+@
+
+To demonstrate the package we utilize a random subset of the data
+described in McCaffrey et al.\ (2013). This truncated dataset is called
+\texttt{AOD}, and is included in the package.  There are three
+treatment groups in the study, and the data include records for 200 youths
+in each treatment group of an alcohol and other drug treatment
+evaluation.  We begin by loading the 
+package and the data.  Because there is a stochastic component to the
+subsequent model fits, we also set the random seed to ensure full
+replicability. 
+
+<<>>=
+library(twang)
+data(AOD)
+set.seed(1)
+@
+
+For the \texttt{AOD} dataset, the variable \texttt{treat} contains the
+treatment indicators, which have possible values \texttt{community},
+\texttt{metcbt5}, and \texttt{scy}.  The other variables included in
+the dataset are:
+\begin{itemize}
+\item \texttt{suf12}: outcome variable, substance use frequency at 12
+  month follow-up
+\item \texttt{illact}: pretreatment covariate, illicit activities scale
+\item \texttt{crimjust}: pretreatment covariate, criminal justice involvement
+\item \texttt{subprob}: pretreatment covariate, substance use problem scale
+\item \texttt{subdep}: pretreatment covariate, substance use dependence scale
+\item \texttt{white}: pretreatment covariate, indicator for non-Hispanic white youth
+\end{itemize}
+
+In such an observational study, there
+are several quantities that one may be interested in estimating.  
+The estimands that are most commonly of interest are the average
+treatment effect on the population (ATE) and the average treatment
+effect on the treated (ATT).  The differences between these
+quantities are explained at length in McCaffrey et al.\ (2013), but in
+brief the ATE answers the question of
+how, on average, 
+the outcome of interest would change if everyone in the population of
+interest had been assigned to a particular treatment relative to if
+they had all received another single treatment.  The ATT answers the
+question of how the average outcome would 
+change if everyone who received one particular treatment had instead received
+another particular treatment.  
+
+
+The main argument for the \texttt{mnps} function is a formula with the
+treatment variable on the left-hand side of a tilde, and pre-treatment variables
+on the right-hand side, separated by plus signs.  Other key arguments
+are \texttt{data}, which 
+simply tells the function the name of the dataframe that contains the
+variables for the propensity score estimation; the \texttt{estimand},
+which can either be ``ATT'' or ``ATE''; and \texttt{verbose}, which if
+set as \texttt{TRUE} instructs the function to print updates on the
+model fitting process, which can take a few minutes.  
+
+<<>>=
+mnps.AOD <- mnps(treat ~ illact + crimjust + subprob + subdep + white,
+                 data = AOD, estimand = "ATE", verbose = FALSE, 
+                 stop.method = c("es.mean", "ks.mean"), 
+                 n.trees = 3000)
+@ 
+
+The \texttt{twang} methods rely on tree-based regression models that
+are built in an iterative fashion.  As the iterations or number of
+regression trees added to the model increases, the
+model becomes more complex.  However, at some point, 
+more complex models typically result in worse balance on the
+pre-treatment variables and therefore are less useful in a propensity
+score weighting context.  The \texttt{n.trees} argument controls the
+maximum number of iterations.
+
+Another key choice is the measure of balance that one uses when
+fitting these models.  This is specified in the \texttt{stop.method}
+argument.  As with the \texttt{ps} function, four \texttt{stop.method}
+objects are included in the package.  They are 
+\texttt{es.mean}, \texttt{es.max}, \texttt{ks.mean}, and
+\texttt{ks.max}.   
+The four stopping rules are defined by two components:
+a balance metric for covariates and rule for summarizing across
+covariates.  The balance metric summarizes the difference between two
+univariate distributions of a single pre-treatment variable (e.g.,
+illicit activities scale).  
+The default stopping rules in \texttt{twang} use two balance
+metrics: absolute standardized bias (also referred to as the absolute
+standardized mean difference or the effect size (ES)) and
+the Kolmogorov-Smirnov (KS) statistic.  The stopping rule use two
+different rules for summarizing across covariates: the mean of the
+covariate balance metrics (``mean'') or the maximum of the balance
+metrics (``max'').  The first piece of the stopping rule name
+identifies the balance metric (ES or KS) and the second piece
+specifies the method for summarizing across balance metrics.  For
+instance, \texttt{es.mean} uses the effect
+size or the absolute standardized bias and summarizes across variables
+with the mean and the \texttt{ks.max} uses the KS statistics to assess
+balances and summarizes using the maximum across variables and the
+other two stopping rules use the remaining two combinations of balance
+metrics and summary statistics.  In this example, we chose to examine
+both \texttt{es.mean} and \texttt{ks.mean}, which is the default.  
+
+A first step is to make sure that we let the models run for a sufficiently
+large number of iterations in order to optimize the balance
+statistics of interest.  We do this by seeing whether any of the balance 
+measures of interest still appear to be decreasing after the number of
+iterations specified by the argument \texttt{n.trees} (10,000 iterations
+is the default).
+
+\begin{center}
+<<fig=TRUE, echo=TRUE, include = TRUE, height = 4.5, width = 10.5>>= 
+    plot(mnps.AOD, plots = 1)
+@
+\end{center}
+
+In this figure, it appears that each of the balance measures are
+optimized with substantially fewer than 3,000 iterations, so we do not have
+evidence that we should re-run the \texttt{mnps()} call with a higher
+number of iterations or trees.
+
+A key assumption in propensity score analyses is that each
+experimental unit has a non-zero probability of receiving each
+treatment.  The plausibility of this assumption may be assessed by the
+overlap of the empirical propensity score distributions.  This
+diagnostic is available using 
+the \texttt{plots = 2} argument in the \texttt{plot} function.  
+Here, the overlap assumption generally seems to be met, although there
+should be some concern that adolescents in the metcbt5 and scy
+conditions do not overlap well with the community group given the top
+most graphic. See McCaffrey et al.\ (2013) for more details on this
+issue. 
+
+\pagebreak
+
+  \begin{center}
+<<fig=TRUE, echo=TRUE, include = TRUE, height = 8, width = 7>>= 
+    plot(mnps.AOD, plots = 2)
+@
+
+\end{center}
+
+
+As with the \texttt{ps} function for the binary treatment setting, the default
+plotting function for \texttt{mnps}-class objects also displays information
+on commonly-used balance statistics.  
+In particular, it provides comparisons of the absolute standard
+differences (setting the \texttt{plots} argument 
+equal to 3) and $t$ statistics (with the \texttt{plots} argument
+equal to 4), before and after weighting. However,
+whereas there is a single plot for these  
+balance diagnostics in the binary treatment setting, in the multiple
+treatment case, one can either examine a plot for each of the
+treatment conditions, or summarize the balance statistics in some way,
+across the treatment conditions.
+As a default, the \texttt{plot} function for an \texttt{mnps} object
+returns the maximum of the balance statistics across treatment
+groups for each of the covariates:
+
+\pagebreak
+
+<<echo=FALSE>>=
+options(width=120)
+@
+
+  \begin{center}
+<<fig=TRUE, echo=TRUE, include = TRUE, height = 3.5, width = 5>>= 
+    plot(mnps.AOD, plots = 3)
+@
+\end{center}
+
+If any of the differences had been statistically significant (before
+taking the maximum across treatment groups), the corresponding hollow
+circles in this plot would be solid. 
+
+It is possible to adjust the summarizing function using the
+\texttt{summaryFcn} argument.  For example, one might consider the
+mean absolute standard differences rather than the maximum by setting
+\texttt{summaryFcn = mean}.  Note that the function name should be provided
+without quotes.  Regardless of the summary function, the circles at
+the end of the line segments will be hollow if none of the differences
+is statistically significant, and will be solid if at least one is
+significant.    Another useful option is setting that argument
+equal to \texttt{NULL} which avoids the summary step altogether, and displays
+the balance statistics for each of the treatment conditions separately:
+
+<<echo=FALSE>>=
+options(width=120)
+@
+
+\pagebreak
+
+ \begin{center}
+<<fig=TRUE, echo=TRUE, include = TRUE, height = 11, width = 8>>= 
+plot(mnps.AOD, plots = 3, summaryFcn = NULL, figureRows = 3)
+@
+\end{center}
+
+The additional \texttt{figureRows} argument instructs the function to
+spread the plots over three rows; by default the plots would be
+arranged in a single row rather than a column.  
+
+Setting the \texttt{plots} argument equal to 4 compares weighted and
+unweighted $t$-test or $\chi^2$ statistic $p$-values for differences
+between each of the individual treatment groups and observations in
+all other treatment groups.  Note that KS
+$p$-values are not 
+available for ATE in the multiple treatment setting, and the 
+\texttt{plots} argument therefore may not be set to 5.  
+
+\pagebreak
+
+\begin{center}
+<<fig=TRUE, echo=TRUE, include = TRUE, height = 4.5, width = 8>>= 
+    plot(mnps.AOD, plots = 4)
+@
+
+\end{center}
+
+
+
+<<echo=FALSE>>=
+options(width=60)
+@
+
+
+Beyond graphics, there are several other functions that may be of
+interest to \texttt{mnps} users.  The first is \texttt{means.table}
+which provides a nice, simple summary of balance across the groups.
+When \texttt{estimand} is set as \texttt{'ATE'}, the table shows the
+population means for each pretreatment covariate in the first column
+as well as each treatment group's unweighted and ATE weighted means
+and corresponding unweighted and weighted population
+standardized mean differences. As shown in the table below,
+incorporation of the ATE propensity score weights improves each
+treatment groups overall balance with the population means for each
+pretreatment covariate. The function also includes an argument called
+\texttt{includeSD} whose default is \texttt{FALSE}; changing it to 
+\texttt{TRUE} returns standard deviations for each of the treatment
+conditions (not shown). 
+
+<<echo=FALSE>>=
+options(width=85)
+@
+
+<<>>=
+means.table(mnps.AOD, stop.method = "es.mean", digits = 3)
+@ 
+
+
+More extensive balance information is given by the 
+\texttt{bal.table} function.  For propensity score analyses with
+multiple treatments, this function returns a lot of information. For
+each outcome category, and each stopping rule (in addition to the
+unweighted analysis) the \texttt{bal.table} function gives balance
+statistics such as weighted and unweighted means by treatment group.
+Note in this case that the ``control'' columns (labeled \texttt{ct})
+refer to every treatment group except the one that is considered the
+treatment for a particular output.  For example, in the first table
+that follows, \texttt{tx} refers to \texttt{community} treatment, and
+\texttt{ct} refers to all treatments except \texttt{community}. 
+
+<<>>=
+bal.table(mnps.AOD)
+@ 
+
+Finally, there is also \texttt{summary} method for \texttt{mnps}
+objects which gives some information on balance measures as well as
+the number of iterations (trees) selected for each model under each
+stopping rule.
+
+<<>>=
+summary(mnps.AOD)
+@ 
+
+<<echo=FALSE>>=
+options(width=60)
+@
+
+After examining the graphical and tabular diagnostics provided by
+\texttt{twang}, we can analyze the outcome variable using the
+propensity scores generated by the \texttt{mnps} function.  Although
+two stop methods were specified initially (\texttt{es.mean} and
+\texttt{ks.mean}), at this point we have to commit to a single
+set of weights.  From the \texttt{bal.table} call above, we see that the
+balance properties are very similar for the two stopping rules, and
+from the \texttt{summary} statement, we see that the effective sample
+sizes (\texttt{ess.treat}) are similar as well.  Hence, we expect the
+two stop methods to give similar results; we choose to analyze the
+data with the \texttt{es.mean} weights. 
+
+In order to analyze the data using the weights, it is recommended that
+one use the \texttt{survey} package, which performs weighted
+analyses.  We can add the weights to the dataset using the
+\texttt{get.weights} function and specify the
+survey design as follows:
+
+<<>>=
+require(survey)
+AOD$w <- get.weights(mnps.AOD, stop.method = "es.mean")
+design.mnps <- svydesign(ids=~1, weights=~w, data=AOD)
+@ 
+
+As shown in the \texttt{ps} vignette, we can then perform the
+propensity score-adjusted regression using the \texttt{svyglm} function:
+<<>>=
+glm1 <- svyglm(suf12 ~ as.factor(treat), design = design.mnps)
+summary(glm1)
+@ 
+
+Using this small subset of the
+data, we are unable to detect differences in the treatment group
+means. However, the coefficient for the metcbt5 term represents the
+causal effect of metcbt5 vs.\ community and the coefficient for the
+scy term represents the causal effect of scy vs.\ community assuming
+there are no unobserved confounders.  In the context of this
+application, the signs of the estimates correspond to higher substance
+use frequency for youths exposed to metcbt5 or scy relative to
+community.  More details on how to obtain
+all relevant pairwise differences can be found in McCaffrey et al.\
+(2013).  
+
+
+\section{An ATT example}
+
+It is also possible to explore treatment effects on the treated (ATTs)
+using the \texttt{mnps} function.  A key difference in the
+multiple treated setting is that we must be clear as to which treatment
+condition ``the treated'' refers to.  This is done through the
+\texttt{treatATT} argument. Here, we define the treatment group of
+interest to be the community group; thus, we are trying to draw
+inferences about the relative effectiveness of the three treatment
+groups for individuals like those who were enrolled in the community
+program. 
+
+<<>>=
+mnps.AOD.ATT <- mnps(treat ~ illact + crimjust + subprob + subdep + white,
+                 data = AOD, estimand = "ATT", treatATT = "community", 
+                 verbose = FALSE, n.trees = 3000)
+@ 
+
+The same array of visual and numerical summaries are available as they
+were in the ATE analysis.  
+
+  \begin{center}
+<<fig=TRUE, echo=TRUE, include = TRUE, height = 4.5, width = 10.5>>= 
+    plot(mnps.AOD.ATT, plots = 1)
+@
+\end{center}
+
+\pagebreak
+
+ \begin{center}
+<<fig=TRUE, echo=TRUE, include = TRUE, height = 4.5, width = 10.5>>= 
+    plot(mnps.AOD.ATT, plots = 3)
+@
+\end{center}
+
+<<echo=FALSE>>=
+options(width=85)
+@
+
+Although the same basic graphical descriptions are available as in the
+ATE case, note that the population means above are replaced with the
+means of the \texttt{treatATT} category in the \texttt{means.table}
+call.  
+
+<<>>=
+means.table(mnps.AOD.ATT, digits = 3)
+@ 
+
+
+The \texttt{bal.table} output is similar to the ATE case.  However, for ATT, we do not
+need tables that give balance for the \texttt{treatATT} category
+against itself.  
+
+<<>>=
+bal.table(mnps.AOD.ATT)
+@ 
+
+<<echo=FALSE>>=
+options(width=60)
+@
+
+The process to analyze the outcome variable is also similar: 
+
+<<>>=
+require(survey)
+AOD$w.ATT <- get.weights(mnps.AOD.ATT, stop.method = "es.mean")
+design.mnps.ATT <- svydesign(ids=~1, weights=~w.ATT, data=AOD)
+@ 
+
+
+<<>>=
+glm1 <- svyglm(suf12 ~ as.factor(treat), design = design.mnps.ATT)
+summary(glm1)
+@ 
+
+Note in this case that the estimated treatment effect of community
+on those
+exposed to the community treatment is slightly stronger than in the
+ATE case (high numbers are bad for the outcome variable).  Although
+not statistically significant, such differences 
+are compatible with the notion that the youths who actually received the
+community treatment responded more favorably to it than the
+``average'' youth would have
+(where the average is taken across the whole collection of youths
+enrolled in the study).  
+
+The discussion in McCaffrey et al.\ (2013) may be useful for
+determining whether the ATE or ATT is of greater interest in a
+particular application.  
+
+\section{Conclusion}
+
+Often, more than two treatments are available to study participants.  If the
+study is not randomized, analysts may be interested in using a
+propensity score approach.  Previously, few tools existed to aide the
+analysis of such data, perhaps tempting analysts to ignore all but two
+of the treatment conditions.  We hope that this extension to the
+\texttt{twang} package will encourage more appropriate analyses of
+observational data with more than two treatment conditions.  
+
+\section*{Acknowledgements}
+
+The random subset of data was supported by the Center for Substance
+Abuse Treatment (CSAT), Substance Abuse and Mental Health Services
+Administration (SAMHSA) contract \# 270-07-0191 using data provided by
+the following grantees: Adolescent Treatment Model (Study: ATM:
+CSAT/SAMHSA contracts \# 270-98-7047, \# 270-97-7011, \#2 77-00-6500,
+\# 270-2003-00006 and grantees: TI-11894, TI-11874, TI-11892), the
+Effective Adolescent Treatment (Study: EAT; CSAT/SAMHSA contract
+\# 270-2003-00006 and grantees: TI-15413, TI-15433, TI-15447,
+TI-15461,  TI-15467, TI-15475, TI-15478, TI-15479, TI-15481, TI-15483,
+TI-15486, TI-15511, TI15514, TI-15545, TI-15562, TI-15670, TI-15671,
+TI-15672, TI-15674, TI-15678, TI-15682, TI-15686, TI-15415, TI-15421,
+TI-15438, TI-15446, TI-15458, TI-15466, TI-15469, TI-15485, TI-15489,
+TI-15524, TI-15527, TI-15577, TI-15584, TI-15586, TI-15677), and the
+Strengthening Communities-Youth (Study: SCY; CSAT/SAMHSA contracts
+\# 277-00-6500, \# 270-2003-00006 and grantees: TI-13305, TI-13308,
+TI-13313, TI-13322, TI-13323, TI-13344, TI-13345, TI-13354).  The
+authors thank these grantees and their participants for agreeing to
+share their data to support the development of the \texttt{mnps} functionality.
+
+
+\begin{thebibliography}{77}     % start the bibliography
+
+\small                          % put the bibliography in a small font
+
+
+\bibitem{mccaf} McCaffrey, D.F., B.A. Griffin, D.\ Almirall, M.E.\
+  Slaughter, R.\ Ramchand, and L.F.\ Burgette (2013).  ``A tutorial on
+  propensity score estimation for multiple treatments using
+  generalized boosted models.'' Forthcoming at {\em Statistics in Medicine}.
+
+\bibitem{psVig} Ridgeway, G., D.\ McCaffrey, B.A.\ Griffin, and L.\
+  Burgette (2006). ``twang: Toolkit for weighting and analysis of
+  non-equivalent groups.'' Available at
+  http://cran.fyxm.net/web/packages/twang/. 
+
+\end{thebibliography}           % end the bibliography
+
+
+
+
+\end{document}

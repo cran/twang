@@ -9,6 +9,7 @@ and control group.
 \usage{
 desc.wts(data, 
          w, 
+         sampw,
          vars = NULL, 
          treat.var, 
          tp, 
@@ -16,12 +17,13 @@ desc.wts(data,
          perm.test.iters=0,
          verbose=TRUE,
          alerts.stack,
-         estimand)
+         estimand, multinom = FALSE)
 }
 
 \arguments{
   \item{data}{ a data frame containing the dataset }
   \item{w}{ a vector of weights equal to \code{nrow(data)} }
+  \item{sampw}{sampling weights, if provided}
   \item{vars}{ a vector of variable names corresponding to \code{data} }
   \item{treat.var}{ the name of the treatment variable }
   \item{tp}{a title for the method ``type" used to create the weights, used
@@ -37,6 +39,7 @@ desc.wts(data,
                  the progress of the fitting }
   \item{alerts.stack}{ an object for collecting warnings issued during the analyses }
   \item{estimand}{the estimand of interest: either "ATT" or "ATE"}
+  \item{multinom}{Indicator that weights are from a propsensity score analysis with 3 or more treatment groups.}
 }
 \details{
 \code{desc.wts} calls \code{\link{bal.stat}} to assess covariate balance.

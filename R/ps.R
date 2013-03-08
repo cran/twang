@@ -10,15 +10,20 @@ ps<-function(formula = formula(data),
              verbose=TRUE,
              estimand="ATE", 
              stop.method = c("ks.mean", "es.mean"), 
-             sampw = NULL,
+             sampw = NULL, multinom = FALSE,
              ...){
+             	
 	
-	if(is.null(sampw))
-	sampw <- rep(1, nrow(data))
+#	multinom <- FALSE
+	
+	if(is.null(sampw)) sampW <- rep(1, nrow(data))
+	else sampW <- sampw
+	
+	type <- alert <- NULL
 	
 	dots <- list(...)
 	if(!is.null(dots$plots))
-	warning("From version 2.0, the plots argument has been removed from ps(). \nPlease use the plot() function instead.")
+	warning("From version 1.2, the plots argument has been removed from ps(). \nPlease use the plot() function instead.")
 	
 	stop.method[stop.method == "ks.stat.mean"] <- "ks.mean"
 	stop.method[stop.method == "es.stat.mean"] <- "es.mean"
@@ -105,7 +110,7 @@ stop.method <- methodList
 
    gbm1 <-gbm(formula(form),
               data = data,
-              weights=sampw,
+              weights=sampW,
               distribution = "bernoulli",
               n.trees = n.trees,
               interaction.depth = interaction.depth,
@@ -121,13 +126,14 @@ stop.method <- methodList
    
    desc$unw <- desc.wts(data=data[,c(treat.var,var.names)],
                         treat.var=treat.var,
-                        w=sampw,
+                        w=sampW,
+                        sampw = rep(1, nrow(data)), 
                         tp="unw",
                         na.action="level",
                         perm.test.iters=perm.test.iters,
                         verbose=verbose,
                         alerts.stack=alerts.stack,
-                        estimand=estimand)
+                        estimand=estimand, multinom = multinom)
    desc$unw$n.trees <- NA
 
 balance <- matrix(NA, ncol = nMethod, nrow = 25)
@@ -149,11 +155,12 @@ balance <- matrix(NA, ncol = nMethod, nrow = 25)
                     vars         = var.names,
                     treat.var    = treat.var,
                     data         = data,
-                    sampw        = sampw,
+                    sampw        = sampW,
                     rule.summary = match.fun(stop.method[[i.tp]]$rule.summary),
                     na.action    = stop.method[[i.tp]]$na.action,
                     gbm1         = gbm1,
-                    estimand       = estimand)
+                    estimand       = estimand,
+                    multinom = multinom)
       }
 
 balance[,i.tp] <- bal
@@ -172,11 +179,12 @@ balance[,i.tp] <- bal
                     vars      = var.names,
                     treat.var = treat.var,
                     data      = data,
-                    sampw     = sampw,
+                    sampw     = sampW,
                     rule.summary = match.fun(stop.method[[i.tp]]$rule.summary),
                     na.action = stop.method[[i.tp]]$na.action,
                     gbm1      = gbm1,
-                    estimand    = estimand)
+                    estimand    = estimand,
+                    multinom = multinom)
       if(verbose) cat("   Optimized at",round(opt$minimum),"\n")
       if(gbm1$n.trees-opt$minimum < 100) warning("Optimal number of iterations is close to the specified n.trees. n.trees is likely set too small and better balance might be obtainable by setting n.trees to be larger.")
 
@@ -196,7 +204,7 @@ balance[,i.tp] <- bal
       }
       
       # adjust for sampling weights
-      w[,i.tp] <- w[,i.tp]*sampw 
+      w[,i.tp] <- w[,i.tp]*sampW 
 
       # Directly optimize the weights if requested
       if (stop.method[[i.tp]]$direct){
@@ -224,12 +232,14 @@ balance[,i.tp] <- bal
       desc[[tp]] <- desc.wts(data[,c(treat.var,var.names)],
                              treat.var    = treat.var,
                              w            = w[,i.tp],
+                             sampw = sampW, 
                              tp           = type,
                              na.action    = stop.method[[i.tp]]$na.action,
                              perm.test.iters=perm.test.iters,
                              verbose=verbose,
                              alerts.stack = alerts.stack,
-                             estimand       = estimand)
+                             estimand       = estimand,
+                             multinom = multinom)
       desc[[tp]]$n.trees <- 
          ifelse(stop.method[[i.tp]]$direct, NA, round(opt$minimum))
       
@@ -246,6 +256,7 @@ balance[,i.tp] <- bal
                   desc       = desc,
                   ps         = p.s,
                   w          = w,
+                  sampw      = sampW, 
                   estimand   = estimand,
 #                  plot.info  = plot.info,
                   datestamp  = date(),
@@ -254,7 +265,6 @@ balance[,i.tp] <- bal
                   iters = iters,
                   balance = balance,
                   n.trees = n.trees,
-                  sampW = sampw,
                   data = data)
    class(result) <- "ps"
    return(result)

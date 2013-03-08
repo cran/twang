@@ -1,14 +1,14 @@
-\name{ps}
-\alias{ps}
+\name{mnps}
+\alias{mnps}
 
 \title{Propensity score estimation}
 
-\description{ \code{ps} calculates propensity scores and diagnoses them using 
+\description{ \code{mnps} calculates propensity scores and diagnoses them using 
 a variety of methods, but centered on using boosted logistic regression as 
 implemented in \code{\link[gbm]{gbm}} }
 
 \usage{ 
-ps(formula = formula(data),
+mnps(formula = formula(data),
    data,
    n.trees = 10000,
    interaction.depth = 3,
@@ -21,7 +21,7 @@ ps(formula = formula(data),
    estimand = "ATE",
    stop.method = c("ks.mean", "es.mean"), 
    sampw = NULL, 
-   multinom = FALSE, ...)
+   treatATT = NULL, ...)
 }
 
 \arguments{
@@ -52,15 +52,16 @@ pretreatment variables.  Current options are \code{ks.mean}, \code{ks.max}, \cod
 and \code{es.max}.  \code{ks} refers to the 
 Kolmogorov-Smirnov statistic and \code{es} refers to standardized effect size.  These are summarized
 across the pretreatment variables by either the maximum (\code{.max}) or the mean (\code{.mean}).}
-   \item{sampw}{Optional sampling weights.}
-   \item{multinom}{Set to true only when called from \code{mnps} function.} 
-   \item{...}{Additional arguments.  }
+   \item{sampw}{Optional sampling weights.} 
+\item{treatATT}{If the estimand is specified to be ATT, this argument is 
+used to specify which treatment condition is considered 'the treated'.  It must be one of the levels of the treatment variable.  It is ignored for ATE analyses.}
+   \item{...}{Additional arguments.}
 }
 
 
 \details{
 \code{formula} should be something like "treatment ~ X1 + X2 + X3". The
-treatment variable should be a 0/1 indicator. There is no need to specify
+treatment variable should be a variable with three or more levels. There is no need to specify
 interaction terms in the formula. \code{interaction.depth} controls the level
 of interactions to allow in the propensity score model.
 
@@ -69,51 +70,19 @@ are no longer included in the \code{ps()} function. See
 \code{\link{plot}} for details of the plots.}
 
 \value{ 
-Returns an object of class \code{ps}, a list containing 
-  \item{gbm.obj}{The returned \code{\link[gbm]{gbm}} object}
-\item{treat}{The treatment variable.}
-  \item{desc}{a list containing balance tables for each method selected in
-              \code{stop.methods}. Includes a component for the unweighted
-              analysis names \dQuote{unw}. Each \code{desc} component includes
-              a list with the following components
-  \describe{
-     \item{ess}{The effective sample size of the control group}
-     \item{n.treat}{The number of subjects in the treatment group}
-     \item{n.ctrl}{The number of subjects in the control group}
-     \item{max.es}{The largest effect size across the covariates}
-     \item{mean.es}{The mean absolute effect size}
-     \item{max.ks}{The largest KS statistic across the covariates}
-     \item{mean.ks}{The average KS statistic across the covariates}
-     \item{bal.tab}{a (potentially large) table summarizing the quality of the 
-                    weights for equalizing the distribution of features across 
-                    the two groups. This table is best extracted using the
-                    \code{\link{bal.table}} method. See the help for 
-                    \code{\link{bal.table}} for details on the table's contents}
-     \item{n.trees}{The estimated optimal number of \code{\link[gbm]{gbm}} 
-                    iterations to optimize the loss function for the associated 
-                    \code{stop.methods}}
+Returns an object of class \code{mnps}, which consists of the following.  
+  \item{psList}{A list of \code{ps} objects. }
+\item{nFits}{The number of calls to \code{ps} that were used to form the \code{mnps} object.}
+  \item{estimand}{The estimand -- either ATT or ATE -- that was specified in the call to \code{mnps}.}
+\item{treatATT}{For ATT fits, the treatment category that is considered "the treated"}
+\item{treatLev}{The levels of the treatment variable.}
+\item{levExceptTreatAtt}{The levels of the treatment variable, excluding the \code{treatATT} level.}
+\item{data}{The data used to fit the model.}
+\item{treatVar}{The vector of treatment indicators}
+\item{stopMethods}{The \code{stop.method} vector specified in the call to \code{mnps}.}
+\item{sampw}{Sampling weights provided to \code{mnps}, if any.}
 
-  \item{ps}{a data frame containing the estimated propensity scores. Each
-            column is associated with one of the methods selected in
-            \code{stop.methods}}
-  \item{w}{a data frame containing the propensity score weights. Each
-            column is associated with one of the methods selected in
-            \code{stop.methods}. If sampling weights are given then these are
-            incorporated into these weights.}
-\item{estimand}{The estimand of interest (ATT or ATE).}
-
-
-     }      
-  }
-  \item{datestamp}{Records the date of the analysis}
-  \item{parameters}{Saves the \code{ps} call}
-  \item{alerts}{Text containing any warnings accumulated during the estimation}
-\item{iters}{A sequence of iterations used in the GBM fits used by \code{plot} function.}
-\item{balance}{The balance measures for the pretreatment covariates, with a column for each
-\code{stop.method}.}
-\item{n.trees}{Maximum number of trees considered in GBM fit.}
-\item{data}{Data as specified in the \code{data} argument.}
- }
+}      
 
 \references{
 Dan McCaffrey, G. Ridgeway, Andrew Morral (2004). \dQuote{Propensity Score Estimation
@@ -122,13 +91,12 @@ with Boosted Regression for Evaluating Adolescent Substance Abuse Treatment,}
 }
 
 \author{
-Greg Ridgeway \email{gregr@rand.org},
-Dan McCaffrey \email{danielm@rand.org},
-Andrew Morral \email{morral@rand.org},
-Lane Burgette \email{burgette@rand.org}
+Lane Burgette \email{burgette@rand.org},
+Beth Ann Griffin \email{bethg@rand.org},
+Dan McCaffrey \email{danielm@rand.org}
 }
 
-\seealso{ \code{\link[gbm]{gbm}} }
+\seealso{ \code{ps} }
 
 
 \keyword{models}

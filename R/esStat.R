@@ -10,7 +10,8 @@ esStat<-function(logw=NULL,
                   treat.var,
                   collapse.by.var=FALSE,
                   verbose=FALSE,
-                  estimand)
+                  estimand, 
+                  multinom)
 {
 if(!(estimand %in% c("ATT","ATE"))) stop("estimand must be either \"ATT\" or \"ATE\".")
 
@@ -25,7 +26,7 @@ if(estimand=="ATT")
    {
       if (!is.null(logw))
       {
-         w.ctrl<-exp(logw)
+         w.ctrl <- exp(logw)
       }
       w1[data[,treat.var]==0] <- w.ctrl
    } else
@@ -43,7 +44,7 @@ if(estimand=="ATT")
                 get.means=TRUE,
                 get.ks=FALSE,
                 na.action=na.action,
-                estimand=estimand)
+                estimand=estimand, multinom = multinom)
 
    if(collapse.by.var)
    {
@@ -84,7 +85,7 @@ if(estimand=="ATE")
     }
     w1 <- w1 * sampw
     es <- lapply(data[, vars], ps.summary, t = data[, treat.var], 
-        w = w1, get.means = TRUE, get.ks = FALSE, na.action = na.action, estimand=estimand)
+        w = w1, get.means = TRUE, get.ks = FALSE, na.action = na.action, estimand=estimand, multinom = multinom)
     if (collapse.by.var) {
         es <- sapply(es, function(x, rule.summary) {
             rule.summary(x$std.eff.sz, na.rm = TRUE)

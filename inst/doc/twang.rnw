@@ -722,6 +722,8 @@ weights corresponding to the estimand (ATE or ATT) that was specified
 in the original call to \texttt{ps()}.  If needed, the user can
 override the default via the optional \texttt{estimand} argument. 
 
+
+
 <<>>=
 lalonde$w <- get.weights(ps.lalonde, stop.method="es.mean")
 design.ps <- svydesign(ids=~1, weights=~w, data=lalonde)
@@ -771,6 +773,7 @@ The analysis estimates an increase in earnings of
 NSW compared with similarly situated people observed in the CPS. The
 effect, however, does not appear to be statistically significant.
 
+
 Some authors have recommended utilizing both propensity score
 adjustment and additional covariate adjustment to minimize mean
 square error or to obtain ``doubly robust'' estimates
@@ -803,6 +806,8 @@ program's effect to \$\Sexpr{round(coef(glm2)[2])}, but the
 difference is still not statistically significant. We can further
 adjust for the other covariates, but that too in this case has
 little effect on the estimated program effect.
+
+
 
 <<>>=
 glm3 <- svyglm(re78 ~ treat + age + educ + black + hispan + nodegree +
@@ -843,7 +848,6 @@ unweighted balance comparison (\$unw) from
 \texttt{bal.table(ps.lalonde)}.
 
 
-
 \subsection{Propensity scores estimated from logistic regression}
 
 Propensity score analysis is intended to avoid problems associated
@@ -870,6 +874,8 @@ diagnoses the balance for an arbitrary set of weights producing a
 balance table.  This function requires the user to specify the
 estimand argument in order to perform the appropriate calculations
 relative to the target group on which we are drawing inferences.  
+
+
 
 <<>>=
 bal.logit <- dx.wts(x = lalonde$w.logit,
@@ -1033,6 +1039,8 @@ not.  For this reason, we choose six-month survival
 Ignoring pre-treatment variables, we see that \texttt{abcix} is
 associated with lower rates of 6-month mortality:
 
+
+
 <<>>=
 data(lindner)
 table(lindner$sixMonthSurvive, lindner$abcix)
@@ -1052,6 +1060,7 @@ ps.lindner <- ps(abcix ~ stent + height + female + diabetic +
                  acutemi + ejecfrac + ves1proc, data = lindner,
                  verbose = FALSE, estimand = "ATE")
 @ 
+
 
 We set \texttt{estimand =  "ATE"} because we are interested in the
 effects of abciximab on everyone in the population.  We do not specify the
@@ -1094,6 +1103,7 @@ plot(ps.lindner, plots = 1)
 @ 
 \end{center}
 
+
 \pagebreak
 
 \begin{center}
@@ -1131,9 +1141,11 @@ measures, so we proceed with those weights.
 Also, we note that \texttt{ess.treat} is no longer equal to
 \texttt{n.treat} since we are focusing on ATE rather than ATT.
 
+
 <<>>=
 summary(ps.lindner)
 @ 
+
 
 As before, we use the \texttt{survey} package to reweight our sample
 and perform the analysis.
@@ -1270,8 +1282,6 @@ indicator of response.
 %egsingle.one$nresp <- 1-egsingle.one$resp
 %@
 
-
-
 <<>>=
 egsingle.ps <-
    ps(resp ~ race + female + size + lowinc + mobility,
@@ -1283,6 +1293,8 @@ egsingle.ps <-
 @
 
 
+
+
 \begin{figure}
 \begin{center}
 <<fig=TRUE,echo=FALSE,height=4,width=6>>=
@@ -1291,7 +1303,7 @@ plot(egsingle.ps)
 \end{center}
 \caption{Optimization of \texttt{es.mean.ATE} and
 \texttt{ks.max.ATE} for nonresponse weighting of egsingle data. The
-         horizontal axes indicate the number of iterations and the vertical
+        horizontal axes indicate the number of iterations and the vertical
          axes indicate the measure of imbalance between the two groups. For
          \texttt{es.mean.ATE} the measure is the average effect size
          difference between the two groups and for \texttt{ks.max.ATE} the
@@ -1299,13 +1311,15 @@ plot(egsingle.ps)
 \label{fig:psoptimize2}
 \end{figure}
 
-The optimal number of iterations for gbm to minimize the maximum KS
-statistic is \Sexpr{egsingle.ps$desc$ks.max.ATE$n.trees} and the
-optimal number of iterations for gbm to minimize the average effect
-size is \Sexpr{egsingle.ps$desc$es.mean.ATE$n.trees}.  The weights
-do an excellent job matching the distribution of the respondent
-group covariates to those of the nonrespondents as shown in
-Table~\ref{tab:balance2}.
+
+%The optimal number of iterations for gbm to minimize the maximum KS
+%statistic is \Sexpr{egsingle.ps$desc$ks.max.ATE$n.trees} and the
+%optimal number of iterations for gbm to minimize the average effect
+%size is \Sexpr{egsingle.ps$desc$es.mean.ATE$n.trees}.  The weights
+%do an excellent job matching the distribution of the respondent
+%group covariates to those of the nonrespondents as shown in
+%Table~\ref{tab:balance2}.
+
 
 
 <<results=tex>>=
@@ -1683,4 +1697,5 @@ data}, MIT Press, Cambridge.
 
 
 \end{document}
+
 

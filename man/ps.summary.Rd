@@ -13,15 +13,15 @@ to be called directly by the user but is used by other functions in the package.
 ps.summary(x, t, w, get.means = TRUE, get.ks = TRUE, 
            na.action = c("level", "exclude", "lowest")[1], 
            collapse.by.var = FALSE,
-           estimand)
+           estimand, multinom)
 ps.summary.f(x, t, w, get.means = TRUE, get.ks = TRUE, 
              na.action = c("level", "exclude", "lowest")[1], 
              collapse.by.var = TRUE,
-             estimand)
+             estimand, multinom)
 ps.summary.n(x, t, w, get.means = TRUE, get.ks = TRUE, 
              na.action = c("level", "exclude", "lowest")[1], 
              collapse.by.var = FALSE,
-             estimand)
+             estimand, multinom)
 }
 
 
@@ -35,7 +35,8 @@ ps.summary.n(x, t, w, get.means = TRUE, get.ks = TRUE,
   \item{na.action}{a string indicating the method for handling missing data}
   \item{collapse.by.var}{if \code{TRUE}, then statistics computed for factors 
                          are collapsed across the levels}
- \item{estimand}{either \code{"ATT"} or \code{"ATE"}}                        
+ \item{estimand}{either \code{"ATT"} or \code{"ATE"}}
+ \item{multinom}{\code{TRUE} if used in for in call from \code{mnps}}                        
 }
 \details{
 \code{ps.summary} dispatches \code{ps.summary.n} or \code{ps.summary.f} 

@@ -1,4 +1,4 @@
-desc.wts <-function(data,w,
+desc.wts <-function(data,w, sampw = sampw, 
                     vars=NULL,
                     treat.var,
                     tp,
@@ -6,19 +6,23 @@ desc.wts <-function(data,w,
                     perm.test.iters=0,
                     verbose=TRUE,
                     alerts.stack,
-                    estimand){
+                    estimand, multinom = FALSE){
    if(is.null(vars)) vars <- names(data)[names(data)!=treat.var]
    ess.ctrl          <- (sum(w[data[,treat.var]==0])^2)/sum(w[data[,treat.var]==0]^2)
    ess.treat    <- (sum(w[data[,treat.var]==1])^2)/sum(w[data[,treat.var]==1]^2)
+   
+   sampW <- sampw
+   vars1 <- vars
+   treat.var1 <- treat.var
 
 
+#multinom <- FALSE
 
-
-   bal.tab   <- bal.stat(data=data,w.all=w,
-                         vars=vars,
-                         treat.var=treat.var,
+   bal.tab   <- bal.stat(data=data,w.all=w, sampw = sampW,
+                         vars=vars1,
+                         treat.var=treat.var1,
                          na.action=na.action,
-                         estimand=estimand)
+                         estimand=estimand, multinom = multinom)
    pval.maxks <- NA
    # compute permutation p-values for KS statistic
    if(perm.test.iters>0)
@@ -53,11 +57,11 @@ desc.wts <-function(data,w,
          temp[,treat.var] <- as.numeric((1:nrow(temp))<=ess.t)
          bal.temp   <- bal.stat(data=temp,
                                 w.all=rep(1,length(i)),
-                                vars=vars,
-                                treat.var=treat.var,
+                                vars=vars1,
+                                treat.var=treat.var1,
                                 na.action=na.action,
                                 get.means=FALSE,
-                                estimand=estimand)
+                                estimand=estimand, multinom = multinom)
          # if a bootstrap sample is missing a level need to make sure
          #   these still align
          j <- match(rownames(bal.temp$results),names(pval.var))

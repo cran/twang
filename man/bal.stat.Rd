@@ -10,11 +10,13 @@ deviations, effect size, and KS statistics
 bal.stat(data, 
          vars = NULL, 
          treat.var, 
-         w.all, 
+         w.all,
+         sampw, 
          get.means = TRUE,
          get.ks = TRUE, 
          na.action = "level",
-         estimand)
+         estimand,
+         multinom)
 }
 
 \arguments{
@@ -24,6 +26,7 @@ bal.stat(data,
   \item{treat.var}{ the name of the treatment variable }
   \item{w.all}{ observation weights (e.g. propensity score weights, sampling 
                 weights, or both) }
+  \item{sampw}{ sampling weights.  These are passed in addition to \code{w.all} because the "unweighted" results shoud be adjusted for sample weights (though not propensity score weights).}              
   \item{get.means}{ logical. If \code{TRUE} then \code{bal.stat} will compute means
                  and variances}
   \item{get.ks}{ logical. If \code{TRUE} then \code{bal.stat} will compute KS 
@@ -32,6 +35,7 @@ bal.stat(data,
                     handle missing values. Current options are "level", 
                     "exclude", or "lowest" }
   \item{estimand}{ either "ATT" or "ATE"}
+  \item{multinom}{\code{TRUE} if used for multinomial propensity scores.}
 }
 \details{
     \code{bal.stat} calls \code{\link{ps.summary.f}} and 

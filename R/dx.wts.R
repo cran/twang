@@ -72,7 +72,7 @@ dx.wts <- function(x,  data, estimand, vars=NULL, treat.var, x.as.weights=TRUE, 
    if(!is.null(sampw)) w <- w*sampw
    if(is.null(vars)) vars <- names(data)[names(data) != treat.var]
 
-   summary.tab <- NULL   
+   summary.tab <- alert <- NULL   
    zz      <- textConnection("alert","a")
 #   if(plots) pdf(file=paste(title,".pdf",sep=""))
 
@@ -94,6 +94,7 @@ dx.wts <- function(x,  data, estimand, vars=NULL, treat.var, x.as.weights=TRUE, 
       {
          desc.temp <- desc.wts(data,
                                w=w[,i.tp],
+                               sampw = rep(1,nrow(w)),
                                vars=vars,
                                treat.var=treat.var,
                                perm.test.iters=perm.test.iters,
