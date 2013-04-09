@@ -18,6 +18,7 @@ means.table <- function(mnps, stop.method = 1, includeSD = FALSE, digits = NULL)
 	if(!is.numeric(stop.method)) {
 		stop.method.long <- paste(stop.method, mnps$psList[[1]]$estimand, sep = ".")
 		j <- match(stop.method.long, names(mnps$psList[[1]]$w))
+		j <- j+1
 		}
 	else j <- stop.method + 1
 

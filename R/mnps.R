@@ -45,6 +45,9 @@ treatATT = NULL, ...){
 
 
 	respAll <- model.frame(formula, data = data, na.action = na.pass)[,1]
+	
+	if(!is.factor(respAll)) stop("The treatment variable must be a factor variable with at least 3 levels.")
+	
 	respLev <- levels(respAll)
 	M <- length(respLev)
 	

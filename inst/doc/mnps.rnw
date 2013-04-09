@@ -25,7 +25,7 @@ tutorial for the \texttt{mnps} function in the \texttt{twang} package}
     by National Institute of Drug Abuse grant number 1R01DA015697 (PI: McCaffrey).} 
 \\RAND Corporation}
 
-%\VignetteIndexEntry{Toolkit for Weighting and Analysis of Nonequivalent Groups: A guide to the twang package}
+%\VignetteIndexEntry{Propensity scores for multiple treatments: A tutorial for the mnps function}
 %\VignetteDepends{gbm,survey,xtable}
 %\VignetteKeywords{propensity score, nonresponse weighting}
 %\VignettePackage{twang}

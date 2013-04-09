@@ -57,6 +57,7 @@ desc.wts <-function(data,w, sampw = sampw,
          temp[,treat.var] <- as.numeric((1:nrow(temp))<=ess.t)
          bal.temp   <- bal.stat(data=temp,
                                 w.all=rep(1,length(i)),
+                                sampw = rep(1,length(i)),
                                 vars=vars1,
                                 treat.var=treat.var1,
                                 na.action=na.action,
