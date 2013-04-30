@@ -1,6 +1,6 @@
 useDynLib(twang)
 
-export(ps, mnps, dx.wts, get.weights, bal.table, ps.summary, stop.methods, sensitivity, bal.stat, means.table)
+export(ps, mnps, dx.wts, get.weights, bal.table, stop.methods, sensitivity, bal.stat, means.table)
 
 S3method(plot, ps)
 S3method(plot, mnps)

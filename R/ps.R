@@ -76,6 +76,9 @@ stop.method <- methodList
    mf <- eval(mf, parent.frame())
    Terms <- attr(mf, "terms")
    var.names <- attributes(Terms)$term.labels
+   
+   if(length(var.names) < 2) stop("At least two variables are needed in the right-hand side of the formula.\n")
+   
    treat.var <- as.character(formula[[2]])
 
    # create the desc object. This holds information on variable balance

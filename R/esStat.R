@@ -38,9 +38,10 @@ if(estimand=="ATT")
    w1 <- w1*sampw
 
    # compute effect sizes
-   es <- lapply(data[,vars], ps.summary,
+   es <- lapply(data[,vars], ps.summary.new,
                 t=data[,treat.var],
                 w=w1,
+                sampw = sampw,
                 get.means=TRUE,
                 get.ks=FALSE,
                 na.action=na.action,
@@ -84,8 +85,8 @@ if(estimand=="ATE")
 	w1[data[, treat.var] == 1] <- 1/(w[data[, treat.var] == 1])
     }
     w1 <- w1 * sampw
-    es <- lapply(data[, vars], ps.summary, t = data[, treat.var], 
-        w = w1, get.means = TRUE, get.ks = FALSE, na.action = na.action, estimand=estimand, multinom = multinom)
+    es <- lapply(data[, vars], ps.summary.new, t = data[, treat.var], 
+        w = w1, sampw = sampw, get.means = TRUE, get.ks = FALSE, na.action = na.action, estimand=estimand, multinom = multinom)
     if (collapse.by.var) {
         es <- sapply(es, function(x, rule.summary) {
             rule.summary(x$std.eff.sz, na.rm = TRUE)

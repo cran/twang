@@ -1,7 +1,9 @@
 ps.summary.new <- function(x, t, w, sampw = NULL, get.means = TRUE, get.ks = TRUE, 
-na.action = c("level", "exclude","lowest")[1], collapse.by.var = FALSE, estimand, multinom, isFactor){
+na.action = c("level", "exclude","lowest")[1], collapse.by.var = FALSE, estimand, multinom){
 	
 	if(!(estimand %in% c("ATT","ATE"))) stop("estimand must be either \"ATT\" or \"ATE\".")
+	
+	isFactor <- is.factor(x)
 	
 	if(isFactor){
 		if((sum(is.na(x)) > 0) && (na.action %in% c("level","lowest"))){
@@ -10,6 +12,8 @@ na.action = c("level", "exclude","lowest")[1], collapse.by.var = FALSE, estimand
 		}
 		
 	}
+	
+#	if(is.null(sampw)) sampw <- rep(1, length(x))
 	
 	design <- svydesign(ids =~ 1, weights = ~w, data = data.frame(x=x,t=t,w=w, sampw = sampw, miss = is.na(x)))
 	designSW <- svydesign(ids =~ 1, weights = ~sampw, data = data.frame(x=x,t=t,w=w, sampw = sampw, miss = is.na(x)))
@@ -36,7 +40,8 @@ na.action = c("level", "exclude","lowest")[1], collapse.by.var = FALSE, estimand
 		}
 		else{
 			design.t <- subset(design, t==1)
-			if(multinomATE) design.c <- design
+			
+			if(multinomATE) design.c <- designSW
 			else design.c <- subset(design, t==0)
 			
 			m.t <- svymean(~x, design.t, na.rm = TRUE)
@@ -44,7 +49,8 @@ na.action = c("level", "exclude","lowest")[1], collapse.by.var = FALSE, estimand
 			sd.t <- sqrt(svyvar(~x, design.t, na.rm = TRUE))
 			sd.c <- sqrt(svyvar(~x, design.c, na.rm = TRUE))
 			
-			if(estimand == "ATE") sd.denom <- sqrt(svyvar(~x, design, na.rm = TRUE))
+			if((estimand == "ATE") & (! multinom)) sd.denom <- sqrt(svyvar(~x, design, na.rm = TRUE))
+			else if(multinomATE) sd.denom <- sqrt(svyvar(~x, designSW, na.rm=TRUE))
 			else sd.denom <- sd.t
 			
 			t.n <- summary(svyglm(x~t, design))$coefficients[2,3:4]
@@ -99,9 +105,7 @@ na.action = c("level", "exclude","lowest")[1], collapse.by.var = FALSE, estimand
 		else ks <- abs(sapply(split(work$w, work$x), sum))
 		
 		
-		if(multinomATE){
-			pval <- NA
-		}
+		if(multinomATE) pval <- NA
 		else if(isFactor){
 				if(sum(ks>0)<=1){ # deal with factors with some empty levels
 					ks[1:length(ks)]   <- 0  # preserves names(ks)

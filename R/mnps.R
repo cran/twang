@@ -63,6 +63,8 @@ treatATT = NULL, ...){
 	if(estimand == "ATE"){
 		nFits <- M
 		
+		if(length(n.trees) == 1) n.trees <- rep(n.trees, nFits)
+		
 		hldFts <- vector(mode = "list", length = nFits)
 		
 		for(i in 1:nFits){
@@ -70,7 +72,7 @@ treatATT = NULL, ...){
 			currResp <- as.numeric(respAll == respLev[i])
 			currDat <- data.frame(currResp = currResp, data)
 			currFormula <- update(formula, currResp ~ .)
-			currPs <- ps(formula = currFormula, data = currDat, n.trees = n.trees, interaction.depth = interaction.depth,
+			currPs <- ps(formula = currFormula, data = currDat, n.trees = n.trees[i], interaction.depth = interaction.depth,
 			shrinkage = shrinkage, bag.fraction = bag.fraction, perm.test.iters = perm.test.iters, print.level = print.level, 
 			iterlim = iterlim,
 			verbose = verbose, estimand = "ATE", stop.method = stop.method, sampw = sampw, multinom = TRUE)
@@ -83,6 +85,8 @@ treatATT = NULL, ...){
 	
 	if(estimand == "ATT"){
 		nFits <- M - 1
+		if(length(n.trees) == 1) n.trees <- rep(n.trees, nFits)
+		
 		hldFts <- vector(mode = "list", length = nFits)		
 		for(i in 1:nFits){
 			## subset data, do 
@@ -93,7 +97,7 @@ treatATT = NULL, ...){
 			currResp <- currResp == treatATT			
 			currDat <- data.frame(currResp = currResp, currDat)
 			currFormula <- update(formula, currResp ~ .)
-			currPs <- ps(formula = currFormula, data = currDat, n.trees = n.trees, interaction.depth = interaction.depth,
+			currPs <- ps(formula = currFormula, data = currDat, n.trees = n.trees[i], interaction.depth = interaction.depth,
 			shrinkage = shrinkage, bag.fraction = bag.fraction, perm.test.iters = perm.test.iters, print.level = print.level, 
 			iterlim = iterlim,
 			verbose = verbose, estimand = "ATT", stop.method = stop.method, sampw = sampwCurr, multinom = TRUE)

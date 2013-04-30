@@ -22,14 +22,14 @@ sampW <- sampw
                           t=data[,treat.var], w=w.all, sampw = sampW,
                           get.means=get.means, get.ks=get.ks,
                           na.action=na.action,
-                          collapse.by.var=FALSE, estimand=estimand, multinom = multinom, isFactor = FALSE)
+                          collapse.by.var=FALSE, estimand=estimand, multinom = multinom)
 
    ##### Calculate stats for factor variables
    ret[is.fac] <- lapply(data[,vars[is.fac],drop=FALSE], ps.summary.new,
                          t=data[,treat.var], w=w.all, sampw = sampW, 
                          get.means=get.means, get.ks=get.ks,
                          na.action=na.action,
-                         collapse.by.var=FALSE, estimand=estimand, multinom = multinom, isFactor = TRUE)
+                         collapse.by.var=FALSE, estimand=estimand, multinom = multinom)
 
 
    # this keeps the variables in the same order as vars

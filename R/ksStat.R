@@ -43,10 +43,11 @@ if(estimand=="ATT")
 
    # compute KS statistics
    w1 <- w1*sampw
-   ks <- lapply(data[,vars], ps.summary,
+   ks <- lapply(data[,vars], ps.summary.new,
                 t=data[,treat.var],
                 w=w1,
                 get.means=FALSE,
+                sampw = sampw,
                 get.ks=TRUE,
                 na.action=na.action,
                 estimand=estimand, multinom=multinom)
@@ -84,7 +85,7 @@ if(estimand=="ATE")
 	w1[data[, treat.var] == 1] <- 1/(w[data[, treat.var] == 1])
     }
     w1 <- w1 * sampw
-    ks <- lapply(data[, vars], ps.summary, t = data[, treat.var], 
+    ks <- lapply(data[, vars], ps.summary.new, t = data[, treat.var], sampw = sampw, 
         w = w1, get.means = FALSE, get.ks = TRUE, na.action = na.action, estimand=estimand, multinom = multinom)
     ks <- lapply(ks, function(x) {
         x$ks

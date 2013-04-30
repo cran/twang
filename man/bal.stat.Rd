@@ -38,12 +38,12 @@ bal.stat(data,
   \item{multinom}{\code{TRUE} if used for multinomial propensity scores.}
 }
 \details{
-    \code{bal.stat} calls \code{\link{ps.summary.f}} and 
-    \code{\link{ps.summary.n}} for each variable and assembles the results in 
+    \code{bal.stat} calls 
+    auxiliary functions 
+    for each variable and assembles the results in 
     a table
 }
 \value{
-See \code{\link{ps.summary}} for details on the returned object. 
 \code{get.means} and \code{get.ks} manipulate the inclusion of certain 
 columns in the returned result.
 }

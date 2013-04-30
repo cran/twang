@@ -7,6 +7,8 @@ bal.table <- function(x){
    else {
    	nFits <- x$nFits
    	balTabList <- vector(mode = "list", length = nFits)
+   	if(x$estimand == "ATT")
+   	cat(paste("Note that `tx` refers to the category specified as the treatATT, ", x$treatATT, ".\n\n", sep = ""))
    	for(i in 1:nFits) balTabList[[i]] <- bal.table(x$psList[[i]])
    	if(x$estimand == "ATT") names(balTabList) <- x$levExceptTreatATT
    	if(x$estimand == "ATE") names(balTabList) <- x$treatLev
