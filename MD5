@@ -1,6 +1,5 @@
-d41d8cd98f00b204e9800998ecf8427e *CHANGES.txt
-111eab351b77bd085ab933e9c8522a16 *DESCRIPTION
-c4168e6bd9a9b186c4121884b1d5e6d2 *NAMESPACE
+023b61c6dd516ad3f000b8cd4300642f *DESCRIPTION
+f8c413e36cb314ecca92e96a9d53e50f *NAMESPACE
 5162212dde6cb6a9053844746cac3c82 *R/MetricI.R
 beb111cf54a9d7707dcf143804783fbe *R/bal.stat.R
 115f55ee68ef61bc14d2c8ac5a9fd4a6 *R/bal.table.R
@@ -9,8 +8,8 @@ beb111cf54a9d7707dcf143804783fbe *R/bal.stat.R
 89224c94036124bc298cf477ddc037b1 *R/boxplot.ps.R
 572131bc787b37d0bcdffd7d9891f8ca *R/check.err.R
 4ffdef72b40fbc2de2f92731666175ad *R/desc.wts.R
-8a447132899b61bb439633a79beb29e0 *R/diag.plot.R
-5d1eef3da3c4ae55827033bf7fcf489f *R/dx.wts.R
+f4ac8365f8a35106dd9fed00b42477a5 *R/diag.plot.R
+e66900170038111579fac7ecede7e884 *R/dx.wts.R
 e19013c898b455646ffcfe4e51b92a3f *R/esStat.R
 4020689e0fea9e81ba1144cf4e3f634b *R/get.weights.R
 b2a970df1054289b3093c855789f41db *R/ksStat.R
@@ -23,9 +22,8 @@ c0d393c7cb94a498c891e799753255ba *R/plot.dxwts.R
 e4084b0547d4fa9ccee272c9d83447fe *R/print.dxwts.R
 bd72677681b23487413da98c544a0b09 *R/print.summary.mnps.R
 dd59bf3abfd2eae04b54e46d91e7e330 *R/print.summary.ps.R
-14da8d1b9183e03f9f942814bb58c75a *R/ps.R
+ca12359bbb9a1b00e811c7d378cabd3a *R/ps.R
 924a3c7eb011c8eac7e0266f142260e1 *R/ps.summary.new.R
-737a9164fb8c03ad7b270a7556f27b57 *R/sensitivity.R
 709881c6afbcd2e1834f38cdaedb6cdd *R/stop.methods.R
 b6f48854ffa41a99e749d717fce22ea7 *R/summary.mnps.R
 e07068772cac57d06b1e2ac84e0594c0 *R/summary.ps.R
@@ -35,10 +33,10 @@ f43aa47eeb3b35923070134feced6d7c *data/egsingle.RData
 1d09829c50e0fbdff61877a942eb8732 *data/lindner.RData
 0c23cb96d3e1c63ceda677b3d735fa5a *data/raceprofiling.RData
 d8ebd3aa3a1b5f563f1f8abbb0bacb75 *inst/doc/mnps.R
-c0b825d860e6f24d6b54cbf1a3ecdde3 *inst/doc/mnps.pdf
+49fdffcea8e4a13a6011af9ad4ad90c1 *inst/doc/mnps.pdf
 eb7eddef15a033a2cdf19a9b06300df7 *inst/doc/mnps.rnw
 fe8863967c1419b4ede92a7629362fd2 *inst/doc/twang.R
-2881d20aa19052f24f434eb3a1e3ee53 *inst/doc/twang.pdf
+4ef968d2161741aef986c0b9b85e6820 *inst/doc/twang.pdf
 0d9a206f981ef7f61bfb49fa7587f4c4 *inst/doc/twang.rnw
 03ab59f25e27368d103d2f8b7ed52fe7 *man/AOD.Rd
 658801ea4d1337f1e6e32ecb5b894419 *man/bal.stat.Rd
@@ -56,10 +54,11 @@ e12bf92589469d317fd664d07c4fa009 *man/lindner.Rd
 060d5218deb756543e208094704f64ea *man/print.dxwts.Rd
 ff3cee124be9994ec00541c683694e9c *man/ps.Rd
 61f4f5e36c65134121a9bf40d0a9c78b *man/raceprofiling.Rd
-e80e14f8a8b2551b0012bc8b80c43508 *man/sensitivity.Rd
 ff1d0f506158711917db30a00c308c8a *man/stop.methods.Rd
 72634cc341d2e3be4108c5fce594b130 *man/summary.mnps.Rd
 34809e7c7ad4e7d38d8fb69a50746022 *man/summary.ps.Rd
 f009e46fcf131d28ea4ead122961b7bd *src/Makevars
 23d83cc1c5169d2c23f24ecb80247690 *src/kspval.h
 eeeff59de66b5bc0c88d749006e34af5 *src/psmirnov2x.c
+eb7eddef15a033a2cdf19a9b06300df7 *vignettes/mnps.rnw
+0d9a206f981ef7f61bfb49fa7587f4c4 *vignettes/twang.rnw

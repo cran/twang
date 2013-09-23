@@ -29,11 +29,11 @@ if (plots == "optimize" || plots == 1) {
    	if(is.null(subset))
    	subset <- 1:length(levels(as.factor(esDat$whichComp)))
    	
-   	yMax <- min(3,max(esDat$effectSize)) + .05	
+   	yMax <- min(3,max(esDat$effectSize, na.rm=TRUE)) + .05	
    	
    	nullPlot <- TRUE
    	
-   	if(max(esDat[,1]) > 3)
+   	if(max(esDat[,1], na.rm=TRUE) > 3)
    	warning("Some effect sizes are larger than 3 and may not have been plotted.\n")	
    	
    	subsetHold <- !esDat$esBig & (as.factor(esDat$whichComp) %in% levels(as.factor(esDat$whichComp))[subset])
@@ -68,8 +68,8 @@ if (plots == "optimize" || plots == 1) {
    	
    	subsetHold <- as.factor(esDat$whichComp) %in% levels(as.factor(esDat$whichComp))[subset]
    	
-   	if(all(esDat$pVal < 0.05)) pchHold <- 19
-   	else if(all(esDat$pVal >= 0.05)) pchHold <- 1
+   	if(all(esDat$pVal < 0.05, na.rm=TRUE)) pchHold <- 19
+   	else if(all(esDat$pVal >= 0.05, na.rm=TRUE)) pchHold <- 1
    	else pchHold <- c(19,1)
    	
    	if(any(subsetHold)){

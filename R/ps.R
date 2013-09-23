@@ -127,6 +127,8 @@ stop.method <- methodList
 
    if(verbose) cat("Diagnosis of unweighted analysis\n")
    
+   if(is.factor(data[,treat.var])) stop("Treatment indicator must be numeric, not a factor")
+   
    desc$unw <- desc.wts(data=data[,c(treat.var,var.names)],
                         treat.var=treat.var,
                         w=sampW,
