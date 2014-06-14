@@ -19,31 +19,27 @@ ksStat<-function(logw=NULL,
 
 if(!(estimand %in% c("ATT","ATE"))) stop("estimand must be either \"ATT\" or \"ATE\".")
 
-if(estimand=="ATT") 
-{
-
-
-   if(is.null(gbm1) && is.null(w.ctrl) && is.null(logw))
-      stop("No weights given. logw, gbm1, and w.ctrl cannot all be NULL.")
-   if(!is.null(rule.summary)) rule.summary <- match.fun(rule.summary)
-   w1 <- rep(1/sum(data[,treat.var]==1), nrow(data))
-   if(is.null(gbm1))
-   {
-      if (!is.null(logw))
-      {
-         w.ctrl<-exp(logw)
-      }
-      w1[data[,treat.var]==0] <- w.ctrl
-   } else
-   {
-      w <- exp(predict(gbm1,newdata=data[data[,treat.var]==0,],
+if(estimand=="ATT") {
+	if(is.null(gbm1) && is.null(w.ctrl) && is.null(logw))
+		stop("No weights given. logw, gbm1, and w.ctrl cannot all be NULL.")
+	if(!is.null(rule.summary)) rule.summary <- match.fun(rule.summary)
+	
+	w1 <- rep(1/sum(data[,treat.var]==1), nrow(data))
+	
+	if(is.null(gbm1)){
+      if (!is.null(logw)) w.ctrl<-exp(logw)
+      	w1[data[,treat.var]==0] <- w.ctrl
+      } 
+      else {
+      	w <- exp(predict(gbm1,newdata=data[data[,treat.var]==0,],
                            n.trees=i))
-      w1[data[,treat.var]==0]<- w
+        w1[data[,treat.var]==0]<- w
    }
 
    # compute KS statistics
+   
    w1 <- w1*sampw
-   ks <- lapply(data[,vars], ps.summary.new,
+   ks <- lapply(data[,vars], ps.summary.new2,
                 t=data[,treat.var],
                 w=w1,
                 get.means=FALSE,
@@ -56,18 +52,16 @@ if(estimand=="ATT")
    if(collapse.by.var) ks <- sapply(ks,max)
    else ks <- unlist(ks)
 
-   if(!is.null(rule.summary))
-   {
+   if(!is.null(rule.summary)){
       if(verbose) print(rule.summary(ks))
       return(rule.summary(ks))
-   } else
-   {
+   } 
+   else{
       return(ks)
    }
 }
 
-if(estimand=="ATE") 
-{
+if(estimand=="ATE") {
     if (is.null(gbm1) && is.null(w.ctrl) && is.null(logw)) 
         stop("No weights given. logw, gbm1, and w.ctrl cannot all be NULL.")
     if (!is.null(rule.summary)) 
@@ -85,7 +79,7 @@ if(estimand=="ATE")
 	w1[data[, treat.var] == 1] <- 1/(w[data[, treat.var] == 1])
     }
     w1 <- w1 * sampw
-    ks <- lapply(data[, vars], ps.summary.new, t = data[, treat.var], sampw = sampw, 
+    ks <- lapply(data[, vars], ps.summary.new2, t = data[, treat.var], sampw = sampw, 
         w = w1, get.means = FALSE, get.ks = TRUE, na.action = na.action, estimand=estimand, multinom = multinom)
     ks <- lapply(ks, function(x) {
         x$ks

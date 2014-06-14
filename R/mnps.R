@@ -8,14 +8,14 @@ print.level = 2,
 iterlim = 1000,
 verbose =TRUE,
 estimand = "ATE",
-stop.method = c("ks.mean","es.mean"),
+stop.method = "es.max",
 sampw = NULL,
 treatATT = NULL, ...){
-	
+	stop.method <- levels(as.factor(stop.method))  ## alphbetizes for consitency in ordering of plots
 	multinom <- TRUE
 	
 	if(is.null(sampw)) sampw <- rep(1, nrow(data))
-
+	
 	
 	terms <- match.call()
    
@@ -50,6 +50,7 @@ treatATT = NULL, ...){
 	
 	respLev <- levels(respAll)
 	M <- length(respLev)
+	if(M < 3) stop("The treatment variable must be a factor variable with at least 3 levels.")
 	
 	levExceptTreatATT <- NULL
 	
@@ -109,7 +110,7 @@ treatATT = NULL, ...){
 		names(hldFts) <- levExceptTreatATT
 		}
 	
-	returnObj <- list(psList = hldFts, nFits = nFits, estimand = estimand, treatATT = treatATT, treatLev = respLev, levExceptTreatATT = levExceptTreatATT, data = data, treatVar = respAll, stopMethods = stop.method, sampw = sampw)
+	returnObj <- list(psList = hldFts, nFits = nFits, estimand = estimand, treatATT = treatATT, treatLev = respLev, levExceptTreatATT = levExceptTreatATT, data = data, treatVar = respAll, treat.var = treat.var, stopMethods = stop.method, sampw = sampw)
 	
 	class(returnObj) <- "mnps"
 

@@ -1,3 +1,4 @@
+## require(twang); data(lalonde); ps.lalonde <- ps(treat~age + educ + black + hispan + nodegree + married + re74 + re75, data = lalonde, stop.method = c("es.max", "es.mean"),estimand = "ATT", n.trees = 5000, verbose = FALSE)
 ps<-function(formula = formula(data),
              data,                         # data
              n.trees=10000,                 # gbm options
@@ -10,7 +11,7 @@ ps<-function(formula = formula(data),
              verbose=TRUE,
              estimand="ATE", 
              stop.method = c("ks.mean", "es.mean"), 
-             sampw = NULL, multinom = FALSE,
+             sampw = NULL, multinom = FALSE, 
              ...){
              	
 	
@@ -152,8 +153,9 @@ balance <- matrix(NA, ncol = nMethod, nrow = 25)
       # get optimal number of iterations
       # Step #1: evaluate at 25 equally spaced points
       iters <- round(seq(1,gbm1$n.trees,length=25))
-#      iters <- round(seq(1,gbm1$n.trees,length=100))
       bal <- rep(0,length(iters))
+      
+      
       for (j in 1:length(iters)){
          bal[j] <- MetricI(iters[j],
                     fun          = match.fun(stop.method[[i.tp]]$metric),
@@ -166,7 +168,7 @@ balance <- matrix(NA, ncol = nMethod, nrow = 25)
                     gbm1         = gbm1,
                     estimand       = estimand,
                     multinom = multinom)
-      }
+
 
 balance[,i.tp] <- bal
 
@@ -174,6 +176,9 @@ balance[,i.tp] <- bal
       interval <- which.min(bal) +c(-1,1)
       interval[1] <- max(1,interval[1])
       interval[2] <- min(length(iters),interval[2])
+      }
+ 
+
    
       # Step #3: refine the minimum by searching with the identified interval
       opt<-optimize(MetricI,

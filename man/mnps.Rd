@@ -19,7 +19,7 @@ mnps(formula = formula(data),
    iterlim = 1000,
    verbose = TRUE, 
    estimand = "ATE",
-   stop.method = c("ks.mean", "es.mean"), 
+   stop.method = "es.max", 
    sampw = NULL, 
    treatATT = NULL, ...)
 }

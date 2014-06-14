@@ -6,7 +6,7 @@
 \description{This function produces a collection of diagnostic plots for ps objects. }
 
 \usage{ 
-\method{plot}{ps}(x, plots = "optimize", subset=NULL, \dots)
+\method{plot}{ps}(x, plots = "optimize", subset=NULL, color = TRUE, \dots)
 }
 
 \arguments{
@@ -22,6 +22,7 @@
 }
 }
 \item{subset}{If multiple \code{stop.method} rules were used in the \code{ps()} call, \code{subset} restricts the plots of a subset of the stopping rules that were employed.  This argument expects a subset of the integers from 1 to k, if k \code{stop.method}s were used.}
+\item{color}{If set to \code{FALSE}, grayscale figures will be produced}
   \item{...}{Additional arguments that may be passed to the underlying \code{lattice} package plotting functions}
 
 }

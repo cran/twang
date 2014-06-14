@@ -29,12 +29,11 @@ makePlotDat <- function(x, whichPlot, subsetStopMeth=NULL, yOnly = FALSE, incUnw
 	}
 	else if(whichPlot == 3){
 		tpHld <- NULL	
-
 		
 		desc.unw <- x$desc[[1]]
 		hldESBig <- hldEffSz <- hldPVal <- pVal <- effectSize <- esBig <- NULL
 		stopIndices <- 2:n.tp
-		if(!is.null(subsetStopMeth)) stopIndices <- subsetStopMeth
+		if(!is.null(subsetStopMeth)) stopIndices <- stopIndices[subsetStopMeth]
 		for(i in stopIndices){
 			desc.temp <- x$desc[[i]]
 			iter <- desc.temp$n.trees
@@ -52,8 +51,8 @@ makePlotDat <- function(x, whichPlot, subsetStopMeth=NULL, yOnly = FALSE, incUnw
 		}
 		
 	   	whichComp = as.factor(rep(tpHld, each = 2*n.var)) 
-		weighted = as.factor(rep(rep(c("Weighted", "Unweighted"), each = n.var), (n.tp-1))) 
-		whichVar = factor(rep(1:n.var, 2*(n.tp-1)))  		
+		weighted = as.factor(rep(rep(c("Weighted", "Unweighted"), each = n.var), length(stopIndices))) 
+		whichVar = factor(rep(1:n.var, 2*length(stopIndices)))  		
 
 		if(!yOnly){
 			esDat <- data.frame(effectSize = abs(hldEffSz), esBig = hldESBig, whichComp = whichComp, 
@@ -62,6 +61,10 @@ makePlotDat <- function(x, whichPlot, subsetStopMeth=NULL, yOnly = FALSE, incUnw
 		else{
 		 esDat <- list(effectSize = hldEffSz, pVal = hldPVal)
 		 }
+		 
+		 if(any(is.na(esDat$pVal))) 
+		 	for(i in 2:length(esDat$pVal)) 
+		 		if(is.na(esDat$pVal[i])) esDat$pVal[i] <- esDat$pVal[i-1]
 		
 		return(esDat)
 		
@@ -72,7 +75,7 @@ makePlotDat <- function(x, whichPlot, subsetStopMeth=NULL, yOnly = FALSE, incUnw
 		desc.unw <- x$desc[[1]]
 		hldTVal <- hldTRank <- tPVal <- tRank <- NULL
 		stopIndices <- 2:n.tp		
-		if(!is.null(subsetStopMeth)) stopIndices <- subsetStopMeth
+		if(!is.null(subsetStopMeth)) stopIndices <- stopIndices[subsetStopMeth]
 		for(i in stopIndices){
 			desc.temp <- x$desc[[i]]
 			iter <- desc.temp$n.trees
@@ -86,8 +89,8 @@ makePlotDat <- function(x, whichPlot, subsetStopMeth=NULL, yOnly = FALSE, incUnw
 			}
 			
 		whichComp = as.factor(rep(tpHld, each = 2*n.var)) 
-		weighted = as.factor(rep(rep(c("Weighted", "Unweighted"), each = n.var), (n.tp-1))) 
-		whichVar = factor(rep(1:n.var, 2*(n.tp-1)))  
+		weighted = as.factor(rep(rep(c("Weighted", "Unweighted"), each = n.var), length(stopIndices))) 
+		whichVar = factor(rep(1:n.var, 2*length(stopIndices)))  
 					
 		}
 		
@@ -103,7 +106,7 @@ makePlotDat <- function(x, whichPlot, subsetStopMeth=NULL, yOnly = FALSE, incUnw
 		desc.unw <- x$desc[[1]]
 		hldksPVal <- hldksPValRanks <- ksPVal <- ksRank <- NULL
 		stopIndices <- 2:n.tp		
-		if(!is.null(subsetStopMeth)) stopIndices <- subsetStopMeth
+		if(!is.null(subsetStopMeth)) stopIndices <- stopIndices[subsetStopMeth]
 		for(i in stopIndices){
 			desc.temp <- x$desc[[i]]
 			iter <- desc.temp$n.trees
@@ -119,8 +122,8 @@ makePlotDat <- function(x, whichPlot, subsetStopMeth=NULL, yOnly = FALSE, incUnw
 		}
 		
 	   	whichComp = as.factor(rep(tpHld, each = 2*n.var)) 
-		weighted = as.factor(rep(rep(c("Weighted", "Unweighted"), each = n.var), (n.tp-1))) 
-		whichVar = factor(rep(1:n.var, 2*(n.tp-1)))  
+		weighted = as.factor(rep(rep(c("Weighted", "Unweighted"), each = n.var), length(stopIndices))) 
+		whichVar = factor(rep(1:n.var, 2*length(stopIndices)))  
 		
 		
 		if(!yOnly){

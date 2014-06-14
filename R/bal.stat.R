@@ -18,14 +18,14 @@ bal.stat <- function(data,vars=NULL,treat.var,w.all, sampw,
 sampW <- sampw
 
    ##### Calculate stats for numeric variables
-   ret[!is.fac] <- lapply(data[,vars[!is.fac],drop=FALSE], ps.summary.new,
+   ret[!is.fac] <- lapply(data[,vars[!is.fac],drop=FALSE], ps.summary.new2,
                           t=data[,treat.var], w=w.all, sampw = sampW,
                           get.means=get.means, get.ks=get.ks,
                           na.action=na.action,
                           collapse.by.var=FALSE, estimand=estimand, multinom = multinom)
 
    ##### Calculate stats for factor variables
-   ret[is.fac] <- lapply(data[,vars[is.fac],drop=FALSE], ps.summary.new,
+   ret[is.fac] <- lapply(data[,vars[is.fac],drop=FALSE], ps.summary.new2,
                          t=data[,treat.var], w=w.all, sampw = sampW, 
                          get.means=get.means, get.ks=get.ks,
                          na.action=na.action,

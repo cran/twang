@@ -4,15 +4,18 @@
 
 \title{Compute balance table}
 \description{
- Extract the balance table from \code{\link{ps}} and 
- \code{\link{dx.wts}} objects
+ Extract the balance table from \code{\link{ps}}, 
+ \code{\link{dx.wts}}, and \code{\link{mnps}} objects
 }
 \usage{
-bal.table(x)
+bal.table(x, digits = 3, collapse.to = c("pair","covariate","stop.method")[1])
 }
 
 \arguments{
   \item{x}{a \code{\link{ps}} or \code{\link{dx.wts}} object}
+  \item{digits}{The number of digits that the numerical entries should be rounded to.}
+  \item{collapse.to}{For \code{mnps} ATE objects, the comparisons can be given for all pairs (default), summarized by 
+  	pre-treatment covariate and stop.method, or as a single summary for each stop.method. }
 }
 
 \details{ \code{bal.table} is a generic function for extracting balance 
