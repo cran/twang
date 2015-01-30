@@ -1,10 +1,20 @@
-boxplot.mnps <- function(x, stop.method = NULL, color = TRUE, ...){
+boxplot.mnps <- function(x, stop.method = NULL, color = TRUE, figureRows = NULL, singlePlot = NULL, multiPage = FALSE, ...){
 	
 	ptSymCol <- ifelse(color, "#0080ff", "black")	
 	bwCols <- list(col = ptSymCol)
 	stripBgCol <- ifelse(color, "#ffe5cc", "transparent")
+	nPlot <- x$nFits
+	
+	
+	ptHld <- vector(mode = "list", length = nPlot)
+	
 	
 	if(is.null(stop.method)) stop.method <- x$stopMethods
+	
+	if(!is.null(singlePlot)){
+		if(!is.numeric(singlePlot) | singlePlot > x$nFits) stop(paste("If specified, the \"singlePlot\" argument must be an integer between 1 and", x$nFits, "for this object."))
+		if(round(singlePlot) != singlePlot) stop("If specified, the \"singlePlot\" argument must be a positive integer.")
+	}
 	
 	if(length(stop.method) > 1){ 
 		if(is.numeric(stop.method))
@@ -21,22 +31,17 @@ boxplot.mnps <- function(x, stop.method = NULL, color = TRUE, ...){
 	
 	if(x$estimand == "ATE"){
 
-			bwDat <- whichResp <- NULL
+		bwDat <- whichResp <- NULL
 			
-			stopMethLong <- paste(stop.method, ".ATE", sep = "")
+		stopMethLong <- paste(stop.method, ".ATE", sep = "")
 			
-		for(j in 1:x$nFits){
-#			bwDat <- rbind(bwDat, data.frame(ps = x$psList[[j]]$ps[,currStopMeth], treat = x$treatVar, whichResp = x$respLev[j]))
+			
+		for(j in 1:nPlot){
 			bwDat <- data.frame(ps = x$psList[[j]]$ps[,stopMethLong], treat = x$treatVar, whichResp = x$treatLev[j])
-
-		
-		
-		
-		pt1 <- bwplot(ps ~ treat, groups = whichResp, #layout = c(1,x$nFits), 
+			pt1 <- bwplot(ps ~ treat, groups = whichResp,  
 		xlab = "Treatment", ylab = "Propensity scores", ylim = c(-.1,1.1), data = bwDat, main = paste(x$treatLev[j], " propensity scores by Tx group"),par.settings = list(strip.background = list(col=stripBgCol), box.rectangle = bwCols, plot.symbol = bwCols, box.umbrella = bwCols), ...)
-
-
-		print(pt1, split = c(1,j,1,x$nFits), more = (j < x$nFits))
+		
+		ptHld[[j]] <- pt1
 
 		}
 		}
@@ -49,16 +54,18 @@ boxplot.mnps <- function(x, stop.method = NULL, color = TRUE, ...){
 		stopMethLong <- paste(stop.method, ".ATT", sep = "")
 		bwDat <- NULL
 		
-		for(j in 1:x$nFits){
+		for(j in 1:nPlot){
 			currCats <- c(x$treatATT, x$levExceptTreatATT[j])
 			bwDat <- data.frame(ps = x$psList[[j]]$ps[,stopMethLong], treat = currCats[1 + x$psList[[j]]$data$currResp], respCat = x$levExceptTreatATT[j], attGrp = x$treatATT)
 			pt1 <- bwplot(ps ~ treat, data = bwDat, ylim = c(-.1,1.1), ylab = "Propensity scores", xlab = "Treatment", main = paste("Propensity score of ", x$levExceptTreatATT[j], " versus ", x$treatATT, ".", sep = ""),par.settings = list(strip.background = list(col=stripBgCol), box.rectangle = bwCols, plot.symbol = bwCols, box.umbrella = bwCols), ...)
-			print(pt1, split = c(1,j,1,x$nFits), more = (j < x$nFits))
+			
+			ptHld[[j]] <- pt1
+	
 			
 		}		
 	}	
+	
+	displayPlots(ptHld, figureRows = figureRows, singlePlot = singlePlot, multiPage = multiPage, bxpt = TRUE)
 
-
-	 
 
 }

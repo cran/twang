@@ -12,6 +12,7 @@ stop.method = "es.max",
 sampw = NULL,
 treatATT = NULL, ...){
 	stop.method <- levels(as.factor(stop.method))  ## alphbetizes for consitency in ordering of plots
+	origStopMeth <- stop.method
 	
 	multinom <- TRUE
 	
@@ -93,7 +94,7 @@ stop.method <- methodList
 		else levExceptTreatATT <- respLev[respLev != treatATT]
 	}
 	
-	dummyPS <- list(gbm.obj = NA,treat = NULL, treat.var = NULL,
+	dummyPS <- list(gbm.obj = NA,treat = NULL, treat.var = treat.var,
                  	desc = NULL, ps = NULL, w = NULL, sampw = NULL, estimand = estimand,
                   	datestamp  = date(), parameters = NULL, alerts = NULL,
                   	iters = NA, balance = NULL, n.trees = NA, data = NA)
@@ -110,7 +111,7 @@ stop.method <- methodList
 		
 	mnpsObj <- list(psList = vector(mode = 'list', length = nFits), nFits = nFits, estimand = estimand, 
 					treatATT = treatATT, treatLev = respLev,
-					levExceptTreatATT = levExceptTreatATT, data = data, treatVar = respAll, stopMethods = stop.method,
+					levExceptTreatATT = levExceptTreatATT, data = data, treatVar = respAll, treat.var = treat.var, stopMethods = stop.method,
 					sampw = sampw)
 					
 	dummyPS$ps <- dummyPS$w <- matrix(NA, nrow = nrow(data), ncol = nMethod)	
@@ -233,6 +234,7 @@ stop.method <- methodList
 			
 	}
 	
+	
 		if(estimand == "ATT")
 		for(i in 1:(M-1)){
 			tempDt <- data
@@ -280,7 +282,7 @@ stop.method <- methodList
 			mnpsObj$psList[[i]]$iters <- iters
 			mnpsObj$psList[[i]]$balance <- balance
 			mnpsObj$psList[[i]]$n.trees <- round(opt$minimum)
-			mnpsObj$psList[[i]]$data <- NULL			
+			mnpsObj$psList[[i]]$data <- data			
 			names(mnpsObj$psList[[i]]$desc) <- c("unw", stop.method.names)	
 
 			
@@ -292,9 +294,16 @@ stop.method <- methodList
    	
    }
 
-			
+	origStopMethLong <- origStopMeth
+	for(i in 1:length(origStopMeth)) origStopMethLong[i] <- paste(origStopMeth[i], ".", estimand, sep = "")
+	for(i in 1:length(mnpsObj$psList)){
+		mnpsObj$psList[[i]]$ps <- data.frame(mnpsObj$psList[[i]]$ps)
+		names(mnpsObj$psList[[i]]$ps) <- origStopMethLong
+	}
+
+		
 	returnObj <- mnpsObj
-	
+	returnObj$stopMethods <- origStopMeth
 	returnObj$gbm.obj <- multFit
 	
 	class(returnObj) <- "mnps"

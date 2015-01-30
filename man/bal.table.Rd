@@ -8,7 +8,9 @@
  \code{\link{dx.wts}}, and \code{\link{mnps}} objects
 }
 \usage{
-bal.table(x, digits = 3, collapse.to = c("pair","covariate","stop.method")[1])
+bal.table(x, digits = 3, collapse.to = c("pair","covariate","stop.method")[1], 
+	subset.var = NULL, subset.treat = NULL, subset.stop.method = NULL, es.cutoff = 0, 
+	ks.cutoff = 0, p.cutoff = 1, ks.p.cutoff = 1, \dots)
 }
 
 \arguments{
@@ -16,6 +18,14 @@ bal.table(x, digits = 3, collapse.to = c("pair","covariate","stop.method")[1])
   \item{digits}{The number of digits that the numerical entries should be rounded to.}
   \item{collapse.to}{For \code{mnps} ATE objects, the comparisons can be given for all pairs (default), summarized by 
   	pre-treatment covariate and stop.method, or as a single summary for each stop.method. }
+  \item{subset.var}{Eliminate all but a specified subset of covariates.}
+  \item{subset.treat}{Subset to either all pairs that include a specified treatment or a single pair of treatments.}
+  \item{subset.stop.method}{Subset to a subset of stop.method\'s used to fit the ps object.}
+  \item{es.cutoff}{Subsets to comparisons with absolute ES values bigger than \code{es.cutoff}.}
+  \item{ks.cutoff}{Subsets to comparisons with KS values bigger than \code{ks.cutoff}.}
+  \item{p.cutoff}{Subsets to comparisons with t- or chi-squared p-values no bigger than \code{p.cutoff}.}
+  \item{ks.p.cutoff}{Subsets to comparisons with KS p-values no bigger than \code{ks.p.cutoff}.}
+  \item{\dots}{Additional arugments.}
 }
 
 \details{ \code{bal.table} is a generic function for extracting balance 

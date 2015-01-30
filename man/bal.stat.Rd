@@ -16,7 +16,7 @@ bal.stat(data,
          get.ks = TRUE, 
          na.action = "level",
          estimand,
-         multinom)
+         multinom, fillNAs = FALSE)
 }
 
 \arguments{
@@ -36,6 +36,7 @@ bal.stat(data,
                     "exclude", or "lowest" }
   \item{estimand}{ either "ATT" or "ATE"}
   \item{multinom}{\code{TRUE} if used for multinomial propensity scores.}
+  \item{fillNAs}{If \code{TRUE}, fills in zeros for missing values.}
 }
 \details{
     \code{bal.stat} calls 

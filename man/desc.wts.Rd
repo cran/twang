@@ -9,7 +9,7 @@ and control group.
 \usage{
 desc.wts(data, 
          w, 
-         sampw,
+         sampw = sampw,
          vars = NULL, 
          treat.var, 
          tp, 
@@ -17,7 +17,7 @@ desc.wts(data,
          perm.test.iters=0,
          verbose=TRUE,
          alerts.stack,
-         estimand, multinom = FALSE)
+         estimand, multinom = FALSE, fillNAs = FALSE)
 }
 
 \arguments{
@@ -40,6 +40,7 @@ desc.wts(data,
   \item{alerts.stack}{ an object for collecting warnings issued during the analyses }
   \item{estimand}{the estimand of interest: either "ATT" or "ATE"}
   \item{multinom}{Indicator that weights are from a propsensity score analysis with 3 or more treatment groups.}
+  \item{fillNAs}{If \code{TRUE} fills NAs with zeros.}
 }
 \details{
 \code{desc.wts} calls \code{\link{bal.stat}} to assess covariate balance.

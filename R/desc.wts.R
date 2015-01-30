@@ -6,7 +6,7 @@ desc.wts <-function(data,w, sampw = sampw,
                     perm.test.iters=0,
                     verbose=TRUE,
                     alerts.stack,
-                    estimand, multinom = FALSE){
+                    estimand, multinom = FALSE, fillNAs = FALSE){
    if(is.null(vars)) vars <- names(data)[names(data)!=treat.var]
    ess.ctrl          <- (sum(w[data[,treat.var]==0])^2)/sum(w[data[,treat.var]==0]^2)
    ess.treat    <- (sum(w[data[,treat.var]==1])^2)/sum(w[data[,treat.var]==1]^2)
@@ -22,7 +22,7 @@ desc.wts <-function(data,w, sampw = sampw,
                          vars=vars1,
                          treat.var=treat.var1,
                          na.action=na.action,
-                         estimand=estimand, multinom = multinom)
+                         estimand=estimand, multinom = multinom, fillNAs = fillNAs)
    pval.maxks <- NA
    # compute permutation p-values for KS statistic
    if(perm.test.iters>0)

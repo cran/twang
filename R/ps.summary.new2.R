@@ -1,5 +1,5 @@
 ps.summary.new2 <- function(x, t, w, sampw = NULL, get.means = TRUE, get.ks = TRUE, 
-na.action = c("level", "exclude","lowest")[1], collapse.by.var = FALSE, estimand, multinom){
+na.action = c("level", "exclude","lowest")[1], collapse.by.var = FALSE, estimand, multinom, fillNAs = FALSE){
 	
 	if(!(estimand %in% c("ATT","ATE"))) stop("estimand must be either \"ATT\" or \"ATE\".")
 	
@@ -143,6 +143,10 @@ na.action = c("level", "exclude","lowest")[1], collapse.by.var = FALSE, estimand
 		}
 		
 	ret <- data.frame(ret)
+	if(isFactor & fillNAs) {
+		ret$stat[is.na(ret$stat)] <- ret$stat[1]
+		ret$p[is.na(ret$p)] <- ret$p[1]
+		}
 	if(!isFactor) rownames(ret) <- c("","<NA>")[1:nrow(ret)]
 	return(ret)
 	

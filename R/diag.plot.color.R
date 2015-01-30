@@ -64,7 +64,7 @@ if (plots == "optimize" || plots == 1) {
    	if(any(subsetHold)){
    	   	esDatTmp <- esDat
    		esDatTmp$effectSize[!subsetHold] <- NA		
-   		pt1.2 <- xyplot(effectSize ~ weighted | whichComp, groups = whichVar, 
+   		pt1.2 <- xyplot(effectSize ~ weighted | whichComp, groups = whichVar, subset = subsetHold, 
    		data = esDatTmp, ylab = "Absolute standard difference", xlab = NULL, as.table = TRUE, 
    		ylim = c(-.05, yMax), type = "l", col = rdCol, par.settings = list(strip.background = list(col=stripBgCol)),
    		lwd = 2, ...)

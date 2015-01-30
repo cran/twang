@@ -2,7 +2,7 @@
 % setwd("d:/dev/twang/inst/doc")
 % Sweave("twang.rnw"); system("texify twang.tex"); system("c:\\MiKTeX\\miktex\\bin\\yap.exe twang.dvi",wait=FALSE)
 
-\SweaveOpts{prefix.string=twang}
+
 
 \documentclass{article}
 \bibliographystyle{plain}
@@ -32,6 +32,7 @@ tutorial for the \texttt{twang} package}
 
  \newcommand{\mathgbf}[1]{{\mbox{\boldmath$#1$\unboldmath}}}
 
+\usepackage{Sweave}
 \begin{document}
 
 \maketitle
@@ -43,10 +44,11 @@ The Toolkit for Weighting and Analysis of Nonequivalent Groups,
 causal modeling of observational data through the estimation and
 evaluation of propensity scores and associated weights. This package
 was developed in 2004.  After extensive use, it received a major
-update in 2012.
+update in 2012. This tutorial provides an introduction to \texttt{twang} 
+and demonstrates its use through illustrative examples. 
 
-
-The propensity score is the probability that a particular case would
+The foundation to the methods supported by \texttt{twang} is the 
+propensity score. The propensity score is the probability that a particular case would
 be assigned or exposed to a treatment condition. Rosenbaum \& Rubin
 (1983) showed that knowing the propensity score is sufficient to
 separate the effect of a treatment on an outcome from observed confounding
@@ -67,12 +69,11 @@ treated, population treatment effect), and how they utilize the
 resulting estimated propensity scores (e.g. stratification,
 matching, weighting, doubly robust estimators). We originally
 developed the \texttt{twang} package with a particular process in
-mind, generalized boosted regression, to estimate the propensity
-scores and weighting of the comparison cases to estimate a treatment
-effect on the treated. However, we have updated the package to also
-meaningfully handle the case where interest lies in using the
-population weights (e.g., weighting of comparison and treatment cases
-to estimate the population average treatment effect.) The main
+mind, namely, generalized boosted regression to estimate the propensity
+scores and weighting of the comparison cases to estimate the average treatment effect on the treated (ATT). 
+However, we have updated the package to also meaningfully
+handle the case where interest lies in using the population weights (e.g., weighting of comparison
+and treatment cases to estimate the population average treatment effect, ATE). The main
 workhorse of \texttt{twang} is the 
 \texttt{ps()} function which implements generalized boosted regression
 modeling to estimate the propensity scores. 
@@ -89,11 +90,14 @@ The same set of functions is also useful for other tasks
 such as non-response weighting, as discussed in
 Section~\ref{sec:nonresponse}.
 
-The \texttt{twang} package aims to compute from the data estimates of
-the propensity scores which yield accurate causal effect estimates, 
-check the quality of the weights by assessing whether or not they
-have the balancing properties that we expect in theory, and use them
-in computing treatment effect estimates.
+The \texttt{twang} package aims to (i) compute from the data estimates of
+the propensity scores which yield accurate causal effect estimates, (ii)
+check the quality of the resulting propensity score weights by assessing 
+whether or not they have the balancing properties that we expect in theory, 
+and (iii) use them in computing treatment effect estimates. Users who are
+more comfortable with SAS than R are encouraged to visit
+\url{www.rand.org/statistics/twang/sas-tutorial.html} for information
+SAS macros that implement these methods. 
 
 \section{An ATT example to start}
 
@@ -124,7 +128,7 @@ set.seed(1)
 
 To demonstrate the package we utilize data from Lalonde's National
 Supported Work Demonstration analysis (Lalonde 1986, Dehejia \&
-Wahba 1999, \url{http://www.columbia.edu/~rd247/nswdata.html}). This
+Wahba 1999, \url{http://users.nber.org/~rdehejia/nswdata2.html}). This
 dataset is provided with the \texttt{twang} package.
 
 <<>>=
@@ -170,8 +174,10 @@ The arguments to \texttt{ps()} require some discussion. The first
 argument specifies a formula indicating that \texttt{treat} is the
 0/1 treatment indicator and that the propensity score model should
 predict \texttt{treat} from the eight covariates listed there
-separated by ``+''. The ``+'' does \emph{not} mean that these
-variables are being summed \emph{nor} does it mean that the model is
+separated by ``+''. As when fitting linear models via the \texttt{lm()}
+function, ``+'' does \emph{not} mean that these
+variables are being summed; in contrast to the \texttt{lm()} function,
+neither does it mean that the model is 
 linear. This is just R's notation for including predictor 
 variables in the model. There
 is no need to specify interaction terms in the formula. There is
@@ -193,7 +199,12 @@ the estimated optimal number of iterations is too close to the bound
 selected in this argument because it indicates that balance may
 improve if more complex models (i.e., those with more trees) are
 considered. The user should increase \texttt{n.trees} or decrease
-\texttt{shrinkage} if this warning appears.
+\texttt{shrinkage} if this warning appears. The argument \texttt{interaction.depth} controls the level
+of interactions allowed in the GBM.  The default is 3 and we typically use the default in our analyses. The GBM
+estimation algorithm uses shrinkage to enhance the smoothness of resulting model. The \texttt{shrinkage} argument
+controls the amount of shrinkage. Small values such as 0.005 or 0.001 yield smooth fits but require greater values of \texttt{n.trees}
+to achieve adequate fits. Computational time increases inversely with \texttt{shrinkage} argument. Additional details on
+\texttt{n.trees}, \texttt{interaction.depth}, and \texttt{shrinkage} can be found McCaffrey, Ridgeway, and Morral (2004).
 
 
 
@@ -206,7 +217,11 @@ presence of many ties. If \texttt{perm.test.iters=0} is called, then
 analytic approximations are used. If \texttt{perm.test.iters=500} is
 called, then 500 Monte Carlo trials are run to establish the
 reference distribution of KS statistics for each covariate. Higher
-numbers of trials will produce more precise $p$-values.
+numbers of trials will produce more precise $p$-values. Specifying 
+\texttt{permtestiters} greater than zero can greatly slow down
+the \texttt{twang} computations. We tend to rely on the 
+approximations (\texttt{permtestiters}=0) when using
+\texttt{twang} in practice.
 
 The \texttt{estimand} argument is used to indicate whether
 the analyst is interested in estimating the average treatment effect
@@ -226,7 +241,7 @@ The \texttt{stop.method} argument %takes a \texttt{stop.method}
 specifies 
 a set (or sets) of rules and measures for assessing the
 balance, or equivalence, established on the pretreatment covariates
-of the treatment and weighted control group. 
+of the weighted treatment and control groups. 
 The \texttt{ps}
 function selects the optimal number of GBM iterations to minimize
 the differences between the treatment and control groups as measured
@@ -242,7 +257,7 @@ covariates.  The balance metric summarizes the difference between two
 univariate distributions of a single pre-treatment variable (e.g.,
 age).  The default stopping rules in \texttt{twang} use two balance
 metrics: absolute standardized bias (also referred to as the absolute
-standardized mean difference of the \textit{E}ffect \textit{S}ize) and
+standardized mean difference or the \textit{E}ffect \textit{S}ize) and
 the Kolmogorov-Smirnov (KS) statistic.  The stopping rule use two
 different rules for summarizing across covariates: the mean of the
 covariate balance metrics (``mean'') or the maximum of the balance
@@ -255,17 +270,6 @@ with the mean and the \texttt{ks.max} uses the KS statistics to assess
 balances and summarizes using the maximum across variables and the
 other two stopping rules use the remaining two combinations of balance
 metrics and summary statistics.
-%rules consist of a
-%statistic that is evaluated on each of the pre-treatment variables
-%that was used in the call to \texttt{ps()}, and a method for
-%summarizing the statistics across the pretreatment
-%variables. \texttt{es} stands for
-%``standardized \underline{e}ffect 
-%\underline{s}ize'' and \texttt{ks} stands for the
-%Kolmogorov-Smirnov statistic.  The included \texttt{stop.methods}
-%either use the maximum (\texttt{.max}) or the mean (\texttt{.mean}) of
-%these statistics 
-%as the overall measure of balance to be optimized. 
 The variable distributions used in the balance metrics depend on
 whether we are interested 
 in estimating the ATT or ATE, and correct specification of these
@@ -288,10 +292,10 @@ object gives the balance measures as a function of the number
 of iterations in the GBM algorithm, with higher iterations
 corresponding to more complicated fitted models.  
 In the example below, 
-\Sexpr{ps.lalonde$desc$es.mean.ATT$n.trees} 
+2127 
 iterations minimized
  the average effect size difference and
-\Sexpr{ps.lalonde$desc$ks.max.ATT$n.trees} iterations minimized
+1756 iterations minimized
 the largest of the eight Kolmogorov-Smirnov (KS)
 statistics computed for the covariates. 
 If it appears that additional iterations would be likely to result in
@@ -312,6 +316,7 @@ measures.
 @
 
 \end{center}
+
 
 %This figure illustrates the process of selecting the number of trees
 %or iterations in the GBM fit by assessing
@@ -373,7 +378,7 @@ summary(ps.lalonde$gbm.obj,
 @
 \end{center}
 \caption{Relative influence of the covariates on the estimated propensity
-score}
+score.}
 \label{fig:relativeinfluence}
 \end{figure}
 
@@ -418,7 +423,7 @@ with named components, one for an unweighted analysis (named
 \texttt{es.mean} and \texttt{ks.max}. McCaffrey et al
 (2004) essentially used \texttt{es.mean} for the analyses, but
 our more recent work has sometimes used \texttt{ks.max}. See
-Section~\ref{sec:pseval} for a more detailed description of these
+McCaffrey et al. (2013) for a more detailed description of these
 choices.
 
 If there are missing values (represented as \texttt{NA}) in
@@ -542,10 +547,10 @@ precision due to weighting.
 The \texttt{ess.treat} and \texttt{ess.ctrl} columns in the summary
 results shows the ESS for the 
 estimated propensity scores. Note that although the original
-comparison group had \Sexpr{ps.lalonde$desc[[1]]$n.ctrl} cases, the
+comparison group had 429 cases, the
 propensity score estimates effectively utilize only
-\Sexpr{round(ps.lalonde$desc$es.mean.ATT$ess.ctrl,1)} or
-\Sexpr{round(ps.lalonde$desc$ks.max.ATT$ess.ctrl,1)} of the comparison
+23 or
+27.1 of the comparison
 cases, depending on the rules and measures used to estimate the
 propensity scores. While this may seem like a large loss of sample
 size, this indicates that many of the original cases were unlike the
@@ -562,7 +567,7 @@ have a weight of 1).
 \subsection{Graphical assessments of balance}
 \label{sec:plots} 
 
-The \texttt{plot()} method can generate useful
+The \texttt{plot()} function can generate useful
 diagnostic plots from the propensity score objects. The full set of
 plots available in \texttt{twang} and the argument value of
 \texttt{plot} to produce each one are given in
@@ -632,14 +637,15 @@ plot(ps.lalonde, plots=3)
 @
 \end{center}
 
-P-values from independent tests in which the null hypothesis is true
-have a uniform distribution. Therefore, a QQ plot comparing the
-quantiles of the observed $p$-values to the quantiles of the uniform
-distribution illustrate whether group differences observed before
-and after weighting are consistent with what we would expect to see
-had groups been formed by random assignment (and hence the null
-hypothesis would be true). Setting \texttt{plots = 4} or \texttt{plots="t"} 
-generates such QQ plots.
+When many of the p-values testing individual covariates for balance are very small, the groups are clearly
+imbalanced and inconsistent with what we would expect had the groups been formed by random assignment. After
+weighting we would expect the p-values to be larger if balance had been achieved. We use a QQ plot comparing
+the quantiles of the observed p-values to the quantiles of the uniform distribution (45 degree line) to conduct
+this check of balance. Ideally, the p-values from independent tests in which the null hypothesis is true will
+have a uniform distribution. Although the ideal is unlikely to hold even if we had random assignment (Bland, 2013),
+severe deviation of the p-values below the diagonal suggests lack of balance and p-values running at or above the diagonal
+suggests balance might have been achieved. The p-value plot (\texttt{plots}=4 or \texttt{plots="t"}) allows users to visually to inspect
+the p-values of the t-tests for group differences in the covariate means.
 
 \begin{center}
 <<fig =TRUE, height=4, width = 6>>=
@@ -709,8 +715,6 @@ standard error estimates. It is not a part of the standard R
 installation but installing \texttt{twang} should automatically
 install \texttt{survey} as well.
 
-
-
 <<>>=
 library(survey)
 @
@@ -731,6 +735,7 @@ design.ps <- svydesign(ids=~1, weights=~w, data=lalonde)
 
 <<echo=FALSE>>=
 @ 
+
 
 %The \texttt{estimand} argument to the \texttt{get.weights} function
 %specifies whether the weights are for estimating the treatment
@@ -768,8 +773,9 @@ summary(glm1)
 @
 
 
+
 The analysis estimates an increase in earnings of
-\$\Sexpr{round(coef(glm1)[2])} for those that participated in the
+\$733 for those that participated in the
 NSW compared with similarly situated people observed in the CPS. The
 effect, however, does not appear to be statistically significant.
 
@@ -783,9 +789,9 @@ propensity scores are estimated correctly \textit{or} the regression
 model is specified correctly. For example, note that the balance
 table for \texttt{ks.max.ATT} made the two groups more similar on
 \texttt{nodegree}, but still some differences remained,
-\Sexpr{100*lalonde.balance$ks.max.ATT[5,1]}\% of the treatment
+70.8\% of the treatment
 group had no degree while
-\Sexpr{100*lalonde.balance$ks.max.ATT[5,3]}\% of the comparison
+60.1\% of the comparison
 group had no degree. While linear regression is sensitive to model
 misspecification when the treatment and comparison groups are
 dissimilar, the propensity score weighting has made them more
@@ -802,7 +808,7 @@ summary(glm2)
 
 Adjusting for the remaining group difference in the
 \texttt{nodegree} variable slightly increased the estimate of the
-program's effect to \$\Sexpr{round(coef(glm2)[2])}, but the
+program's effect to \$920, but the
 difference is still not statistically significant. We can further
 adjust for the other covariates, but that too in this case has
 little effect on the estimated program effect.
@@ -834,6 +840,7 @@ glm5 <- lm(sqrt(re78) ~ treat + age + educ + black + hispan + nodegree +
                         married + sqrt(re74) + sqrt(re75),
            data=lalonde)
 @
+
 
 This model estimates a rather strong treatment effect, estimating a
 program effect of \$\Sexpr{round(coef(glm4)[2])} with a
@@ -893,15 +900,19 @@ variable-by-variable summary of balance, just like it did for the
 \texttt{ps} object.  
 
 <<>>=
-
-bal.tab.logit <- bal.table(bal.logit)
-bal.tab.logit
-@
+bal.logit <- dx.wts(x = lalonde$w.logit,
+                    data=lalonde,
+                    vars=c("age","educ","black","hispan","nodegree",
+                      "married","re74","re75"),
+                    treat.var="treat",
+                    perm.test.iters=0, estimand = "ATT")
+bal.logit
+@ 
 
 For weights estimated with logistic regression, the
 largest KS statistic was reduced from the unweighted sample's
-largest KS of \Sexpr{round(bal.logit$summary.tab$max.ks[1],2)} to
-\Sexpr{round(bal.logit$summary.tab$max.ks[2],2)}, which is still
+largest KS of 0.64 to
+0.31, which is still
 quite a large KS statistic. Table~\ref{tab:balancelogit} shows the
 details of the balance of the treatment and comparison groups. The
 means of the two groups appear to be quite similar while the KS
@@ -952,11 +963,14 @@ summary(glm6)
 @
 
 
+
 The analysis estimates an increase in earnings of
 \$\Sexpr{round(coef(glm6)[2])} for those that participated in the
 NSW compared with similarly situated people observed in the CPS.
 Table~\ref{tab:allTE} compares all of the treatment effect
 estimates.
+
+
 
 <<echo=FALSE>>=
 glm7 <- svyglm(re78 ~ treat + age + educ + black + hispan + nodegree +
@@ -1040,7 +1054,6 @@ Ignoring pre-treatment variables, we see that \texttt{abcix} is
 associated with lower rates of 6-month mortality:
 
 
-
 <<>>=
 data(lindner)
 table(lindner$sixMonthSurvive, lindner$abcix)
@@ -1054,6 +1067,7 @@ to be other confounding pretreatment variables.  For this tutorial, we
 simply follow HP in choosing the pre-treatment covariates.  
 The \texttt{twang} model is fit as follows
 
+
 <<>>=
 set.seed(1)
 ps.lindner <- ps(abcix ~ stent + height + female + diabetic + 
@@ -1062,11 +1076,13 @@ ps.lindner <- ps(abcix ~ stent + height + female + diabetic +
 @ 
 
 
+
 We set \texttt{estimand =  "ATE"} because we are interested in the
 effects of abciximab on everyone in the population.  We do not specify the
 stopping rules.  Consequently \texttt{ps()} uses the defaults:
-\texttt{es.mean} and \texttt{ks.max}.  
+\texttt{es.mean} and \texttt{ks.mean}.  
 We then inspect pre- and post-weighting balance with the command
+
 
 <<echo=FALSE>>=
 options(width=85)
@@ -1080,8 +1096,9 @@ bal.table(ps.lindner)
 options(width = 60)
 @ 
 
+
 This balance table shows that \texttt{stent}, \texttt{acutemi},
-\texttt{ejectfrac} and \texttt{ves1proc} were all significantly
+and \texttt{ves1proc} were all significantly
 imbalanced before weighting.  
 After weighting (using either
 \texttt{stop.method} considered)  we do not see problems in this
@@ -1102,7 +1119,6 @@ iterations selected by each rule.
 plot(ps.lindner, plots = 1)
 @ 
 \end{center}
-
 
 \pagebreak
 
@@ -1142,6 +1158,7 @@ Also, we note that \texttt{ess.treat} is no longer equal to
 \texttt{n.treat} since we are focusing on ATE rather than ATT.
 
 
+
 <<>>=
 summary(ps.lindner)
 @ 
@@ -1149,11 +1166,13 @@ summary(ps.lindner)
 
 As before, we use the \texttt{survey} package to reweight our sample
 and perform the analysis.
+
 <<>>=
 lindner$w <- get.weights(ps.lindner, stop.method = "es.mean")
 design.ps <- svydesign(ids=~1, weights = ~w, data = lindner)
 svychisq(~sixMonthSurvive + abcix, design = design.ps)
 @ 
+
 The reweighting does not diminish the association between the
 treatment and the outcome.  Indeed, it is marginally more significant
 after the reweighting.
@@ -1194,32 +1213,8 @@ respondent represents the nonrespondents.
 Nonresponse weights equal the reciprocal of the
 probability of response and are applied only to respondents.  
 
-%Let
-%$p$ denote the probability of response and and $1/p$ denote the
-%nonresponse weight. Using basic algebra we can rewrite the
-%nonresponse weights:
-%\begin{equation}
-%\frac{1}{p} = 1 + \frac{1-p}{p}
-%\end{equation}
-%Written in this way, the nonresponse weight can be viewed as having
-%two components, a component for the respondent (which equals 1) and
-%a component for the nonrespondents ($(1-p)/p$) that the respondent
-%is to represent in the analysis. 
 
-%This second component is a
-%respondent weight designed to make the respondents look like the
-%non-respondents, which is a problem identical to that which the
-%\texttt{ps()} function is designed to solve; it finds weights that
-%make the control group look like the treatment group in terms of the
-%distribution of their covariates. Hence if we call the
-%nonrespondents the ``treatment'' group and respondents the
-%``control'' group then \texttt{ps()} function can provide estimates
-%of $(1-p)/p$, the second component of the nonresponse weight, and
-%the diagnostic tools in \texttt{twang} can be used to diagnose the
-%weights. To obtain the final nonresponse weight we just add 1 to the
-%weights from \texttt{ps()}.
-
-Note that the weights $p$ are equivalent to the propensity score if we
+Note that the the probability of response is equivalent to the propensity score if we
 consider subjects with an observed outcome to be the ``treated''
 group, and those with an unobserved outcome to be the ``controls''.
 We wish to reweight the sample to make it equivalent to the population
@@ -1239,25 +1234,52 @@ First we load the data.
 data(egsingle)
 @
 
-Next we create the patterns of grades for which students have
-responses
+Next we create a response indicator variable that we can merge onto the student by test score level data.
+We want to include only students with scores from all of grades 1 to 4. The data include scores from 
+kindergarten (grade = 0) to grade 5 with some students having multiple scores from the same grade.  First 
+we keep the unique grades for each student:
 
 <<>>=
-tmp <- sapply(split(egsingle,egsingle$childid),function(x){
-              paste(as.character(x$grade),collapse="")})
+tmp <- tapply(egsingle$grade, egsingle$childid, unique) 
 @
-identify students with test scores for every grade from 1 to 4
+
+Because students do not all have the same number of score,
+\texttt{tapply()} returns a list with one element per student.  
+Each element contains the unique set of grades observed for each
+student. We now check for grades in 1 to 4: 
 
 <<>>=
-tmp <- data.frame(childid=names(tmp), gpatt=tmp,
-                  resp=as.numeric((1:length(tmp)) %in%
-                          grep("1234",as.character(tmp))))
+tmp <- lapply(tmp, function(x){return(x %in% 1:4)})
 @
+
+The list tmp now contains a boolean vector for each student, where ``TRUE'' indicates the grade 
+took on a value in 1 to 4. The sum of this vector for each student determines how many of grades 1 to 4 
+we observed for him or her. 
+
+<<>>=
+tmp <- lapply(tmp, sum)
+@
+
+A student is a respondent if he or she has scores from all four of grades 1 to 4 or if the value of \texttt{tmp} is 4.
+
+<<>>=
+tmp <- sapply(tmp, function(x){as.numeric(x == 4)})
+@
+
+We create a data frame of response indicators so we can merge them onto the test scores data:
+
+<<>>=
+tmp <- data.frame(tmp)
+names(tmp) <- "resp"
+tmp$childid <- row.names(tmp)
+@
+
 and merge this back to create a single data frame
 
 <<>>=
 egsingle <- merge(egsingle, tmp)
 @
+
 
 Because nonresponse is a student-level variable rather than a
 student-by-year-level variable we create one record per student.
@@ -1283,67 +1305,107 @@ indicator of response.
 %@
 
 <<>>=
-egsingle.ps <-
-   ps(resp ~ race + female + size + lowinc + mobility,
+egsingle.ps <-  ps(resp ~ race + female + size + lowinc + mobility,
       data=egsingle.one,
       stop.method=c("es.mean","ks.max"),
-      n.trees=2500,
+      n.trees=5000,
       verbose=FALSE,
       estimand = "ATE")
 @
 
+As in standard propensity score applications, we should check that
+\texttt{n.trees} was set large enough, so that balance would seem not
+to be improved if more complex models were considered. Recall that for
+\texttt{es.mean.ATE} the measure is the average effect size 
+difference between the two groups and for \texttt{ks.max.ATE} the
+measure is the largest of the KS statistics.
 
-
-
-\begin{figure}
 \begin{center}
-<<fig=TRUE,echo=FALSE,height=4,width=6>>=
+<<fig=TRUE,height=4,width=6>>=
 plot(egsingle.ps)
 @
 \end{center}
-\caption{Optimization of \texttt{es.mean.ATE} and
-\texttt{ks.max.ATE} for nonresponse weighting of egsingle data. The
-        horizontal axes indicate the number of iterations and the vertical
-         axes indicate the measure of imbalance between the two groups. For
-         \texttt{es.mean.ATE} the measure is the average effect size
-         difference between the two groups and for \texttt{ks.max.ATE} the
-         measure is the largest of the KS statistics}
-\label{fig:psoptimize2}
-\end{figure}
 
 
 %The optimal number of iterations for gbm to minimize the maximum KS
-%statistic is \Sexpr{egsingle.ps$desc$ks.max.ATE$n.trees} and the
+%statistic is 3989 and the
 %optimal number of iterations for gbm to minimize the average effect
-%size is \Sexpr{egsingle.ps$desc$es.mean.ATE$n.trees}.  The weights
+%size is 3513.  The weights
 %do an excellent job matching the distribution of the respondent
 %group covariates to those of the nonrespondents as shown in
 %Table~\ref{tab:balance2}.
 
+By default the balance table generated by \texttt{ps()} compares 
+the weighted treatment group (respondents) to the weighted comparison
+group (nonresponders) -- both groups weighted to equal the overall 
+population.  However, the  goal is to weight the respondents to match 
+the population not to compare the weighted respondents and 
+nonrespondents. The default balance table may be useful for 
+evaluating the propensity scores, but it does not directly assess the 
+quality of the weights for  balancing the weighted respondents with 
+the overall population.
 
+We can ``trick'' the \texttt{dx.wts()} function in the \texttt{twang}
+package into making the desired comparison. We want to compare the 
+weighted respondents to the unweighted full sample. When evaluating
+ATT weights we compare the weighted comparison group with the unweighted
+treatment group. If we apply \texttt{dx.wts()} to a data set where
+the ``treatment'' group is the entire \texttt{esingle.one} sample
+and the ``control'' group is the \texttt{esingle.one} respondents and
+the weights equal one for every student in the pseudo-treatment group
+and equal the weights from \texttt{ps()} for every student in the 
+pseudo-control group, we can obtain the balance statistics we want.
 
-<<results=tex>>=
-pretty.tab<-bal.table(egsingle.ps)$ks.max.ATE[,c("tx.mn","ct.mn","std.eff.sz","ks")]
-names(pretty.tab) <- c("Non-responders","Weighted responders","Std ES","KS")
-xtable(pretty.tab,
-       caption = "Balance of the nonrespondents and respondents",
-       label = "tab:balance2",
-       digits = c(0, 2, 2, 2, 2),
-       align=c("l","r","r","r","r"))
-@
-
-The final steps are to find the ATE weights
+We begin by setting up the data with the pseudo-treatment and control groups.
+We add ATE weights from the ``ks.max'' stopping rule as our nonresponse 
+weights.
 
 <<>>=
 egsingle.one$wgt <- get.weights(egsingle.ps, stop.method="ks.max")
 @
 
-and select only the records with an observed outcome.
+We now stack the full sample and the respondents. The variable ``nr2''
+is the pseudo-treatment indicator.  We set it equal to one for the 
+full sample and 0 for the respondents. Similarly, ``wgt2'' is the 
+pseudo-ATT weight which is set equal to one for the full sample and
+equal to the nonresponse weights for the respondents.
 
 <<>>=
- egsinge.resp <- merge(subset(egsingle, subset=resp==1),
-                       subset(egsingle.one, subset=resp==1,
-                              select=c(childid, wgt)) )
+egtmp <- rbind(data.frame(egsingle.one, nr2=1, wgt2=1), 
+                data.frame(egsingle.one, nr2=0, wgt2=egsingle.one$wgt)[egsingle.one$resp==1,])
+@
+
+We now run \texttt{dx.wts()} to obtain the balance statistics.
+Switching to ATT from ATE yields a warning that can be ignored in this case.
+
+<<>>=
+egdxwts <- dx.wts(x=egtmp$wgt2, 
+                   data=egtmp, 
+                   estimand="ATT", 
+                   vars=c("race", "female", "size",  "lowinc",  "mobility"),
+                   treat.var="nr2")
+@
+
+<<results=tex>>=
+pretty.tab<-bal.table(egdxwts)[[2]][,c("tx.mn","ct.mn","std.eff.sz","ks")]
+names(pretty.tab) <- c("OverallS Sample","Weighted responders","Std ES","KS")
+xtable(pretty.tab,
+        caption = "Balance of the nonrespondents and respondents",
+        label = "tab:balance2",
+        digits = c(0, 2, 2, 2, 2),
+        align=c("l","r","r","r","r"))
+@ 
+
+
+The balance is very good. We can use the weighted respondents
+for analysis. We select only the records with an observed outcome.
+This will be our analysis sample and the variable ``wgt'' will
+contains the nonreponse weights.
+
+<<>>=
+egsinge.resp <- merge(subset(egsingle, subset=resp==1),
+                        subset(egsingle.one, subset=resp==1,
+                               select=c(childid, wgt)) )
 @
 
 
@@ -1394,7 +1456,7 @@ produce a weight near 0. On the other hand, comparison cases with
 features typical of the treatment cases would receive larger
 weights.
 
-For ATE, each group is weighted to match the population.  The weight
+For ATE, each group is weighted to match the population. The weight
 must satisfy:
 \begin{equation}
 f(\mathbf{x} | t =1) = w(\mathbf{x})f(\mathbf{x}), \mbox{ and}   
@@ -1404,9 +1466,9 @@ f(\mathbf{x} | t =1) = w(\mathbf{x})f(\mathbf{x}), \mbox{ and}
  f(\mathbf{x} | t=0) = w(\mathbf{x}) f(\mathbf{x}), \mbox{ and}
   \label{eq:balance3}
 \end{equation}
-Again using Bayes Theorem we obtain $w(\mathbf{x}) =
-1/f(\mathbf{x}|t=1)$ for the treatment group and $w(\mathbf{x}) = 1/
-f(\mathbf{x} | t = 0)$ for the control group.  
+Again using Bayes Theorem we obtain  $w(\mathbf{x}) \propto
+1/f(t=1 | \mathbf{x})$ for the treatment group and $w(\mathbf{x}) \propto 1/
+f(t = 0 | \mathbf{x} )$  for the control group.  
 
 
 \subsection{Estimating the propensity score}
@@ -1518,58 +1580,9 @@ provides both the standardized effect sizes and KS statistics and
 p-values testing for differences in the means and distributions of
 the covariates for analysts to use in assessing balance.
 
-%The \texttt{twang} package encodes decisions on how to assess the
-%quality of the balance in \texttt{stop.method} objects which
-%determine how to select the gbm iterations and tune the weights.
-%There are three \texttt{stop.method} objects included with
-%\texttt{twang} that compare means, KS statistics, and within
-%propensity score strata mean differences. A valid
-%\texttt{stop.method} object is a \texttt{list} with the following
-%components
 
-%\begin{description}
-%\item[metric] This is a function that takes weights or propensity
-%scores either as log propensity score weights (useful for direct
-%optimization of the weights), weights for just the control group, or
-%from a model object like \texttt{gbm}. This function must also
-%define how missing data are handled and whether to handle each level
-%of a categorical variable separately or to treat them all as one
-%variable. The function must return a single number, smaller values
-%indicating better balance between the two groups. See the help files
-%and code for \texttt{ks.stat} and \texttt{strat.stat} for examples
 
-%\item[rule.summary] This is a function that defines how to combine
-%the balance measures across all the variables. \texttt{twang}
-%currently uses \texttt{mean} and \texttt{max}. This function is
-%passed to \texttt{metric}
 
-%\item[direct] This is a logical parameter that indicates whether
-%\texttt{twang} should try to directly optimize the weights using a
-%nonlinear optimizer, \texttt{nlm}. This method is experimental and
-%can take a very long time for large datasets.
-
-%\item[na.action] A character string that is passed to metric to
-%indicate how to handle missing data. Current options are
-%\begin{enumerate}
-%\item ``level,'' treat missing items as a separate level of a
-%categorical variable. If the variable is continuous then separate it
-%out as a distinct variable and try to balance on missingness
-%\item ``exclude,'' drop missing data
-%\item ``lowest,'' recode missing data to be the lowest observed
-%value for continuous variables. For factors this is equivalent to
-%``level''
-%\end{enumerate}
-
-%\item[name] A character string for labeling results
-%\end{description}
-
-%The \texttt{ks.stat.max} \texttt{stop.method} has
-%\texttt{metric=ks.stat}, \texttt{rule.summary=max},
-%\texttt{direct=FALSE}, \texttt{na.action="level"}, and
-%\texttt{name="ks.stat.max"}. Advanced users interested in designing
-%and experimenting with their own measures of balance may do so by
-%implementing a new \texttt{stop.method} and passing it to the
-%\texttt{stop.method} argument of \texttt{ps()}.
 
 \subsection{Analysis of outcomes}
 
@@ -1582,7 +1595,7 @@ weight of 1 and each comparison
 case a weight $w_i = p(\mathbf{x}_i)/(1 - p(\mathbf{x}_i))$. To
 estimate the ATE, we give control cases weight $w_i =
 1/p(\mathbf{x}_i)$ and we give the treatment cases $w_i =
-1/(1-p(\mathbf{x}_i)$.  We then
+1/(1-p(\mathbf{x}_i))$.  We then
 estimate the treatment effect estimate with a weighted regression
 model that contains only a treatment indicator. No additional
 covariates are needed if the weights account for
@@ -1616,6 +1629,9 @@ estimator will be unbiased (Bang \& Robins 2005).
 
 \bibitem{Bang:Robins:2005} Bang H. and J. Robins (2005). ``Doubly robust estimation in missing data and
 causal inference models,'' \textit{Biometrics} 61:692--972.
+
+\bibitem{bland:2013} Bland M. (2013). ``Do baseline p-values follow a uniform distribution in randomised trials?''
+\textit{PLoS ONE} 8(10): e76010: 1--5.
 
 \bibitem{Dehejia:Wahba:1999} Dehejia, R.H. and S. Wahba (1999). ``Causal effects in nonexperimental
 studies: re-evaluating the evaluation of training programs," \textit{Journal

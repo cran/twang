@@ -2,7 +2,7 @@ useDynLib(twang)
 
 export(ps, mnps, dx.wts, get.weights, bal.table, stop.methods, bal.stat, means.table)
 importFrom(graphics, boxplot)
-import(gbm, latticeExtra, survey, xtable)
+import(gbm, latticeExtra, survey, xtable, lattice)
 
 S3method(boxplot, ps)
 S3method(boxplot, mnps)
