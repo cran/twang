@@ -8,7 +8,7 @@
 \usage{ 
 \method{plot}{mnps}(x, plots = "optimize", pairwiseMax = TRUE, figureRows = NULL,  
 	color = TRUE, subset = NULL, treatments = NULL, singlePlot = NULL, 
-	multiPage = FALSE, \dots)
+	multiPage = FALSE, time = NULL, print = TRUE, \dots)
 }
 
 \arguments{
@@ -45,6 +45,8 @@
 \item{singlePlot}{For plot calls that produce multiple plots, specifying an integer value of \code{singlePlot} will 
 	return only the corresponding plot.  E.g., specifying \code{singlePlot = 2} will return the second plot.}
 \item{multiPage}{When multiple frames of a figure are produced, \code{multiPage = TRUE} will print each frame on a different page. This is intended for situations where the graphical output is being saved to a file.}
+\item{time}{For use with iptw.}
+\item{print}{If FALSE, the figure is returned but not printed.}
 \item{\dots}{Additional arguments.}
 }
 

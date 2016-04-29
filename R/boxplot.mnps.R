@@ -1,4 +1,4 @@
-boxplot.mnps <- function(x, stop.method = NULL, color = TRUE, figureRows = NULL, singlePlot = NULL, multiPage = FALSE, ...){
+boxplot.mnps <- function(x, stop.method = NULL, color = TRUE, figureRows = NULL, singlePlot = NULL, multiPage = FALSE, time = NULL, print = TRUE,  ...){
 	
 	ptSymCol <- ifelse(color, "#0080ff", "black")	
 	bwCols <- list(col = ptSymCol)
@@ -38,8 +38,10 @@ boxplot.mnps <- function(x, stop.method = NULL, color = TRUE, figureRows = NULL,
 			
 		for(j in 1:nPlot){
 			bwDat <- data.frame(ps = x$psList[[j]]$ps[,stopMethLong], treat = x$treatVar, whichResp = x$treatLev[j])
+			ptNm <- paste(x$treatLev[j], " propensity scores by Tx group")
+			if(!is.null(time)) ptNm <- paste(ptNm, " (time ", time, ")", sep = "")
 			pt1 <- bwplot(ps ~ treat, groups = whichResp,  
-		xlab = "Treatment", ylab = "Propensity scores", ylim = c(-.1,1.1), data = bwDat, main = paste(x$treatLev[j], " propensity scores by Tx group"),par.settings = list(strip.background = list(col=stripBgCol), box.rectangle = bwCols, plot.symbol = bwCols, box.umbrella = bwCols), ...)
+		xlab = "Treatment", ylab = "Propensity scores", ylim = c(-.1,1.1), data = bwDat, main = ptNm, par.settings = list(strip.background = list(col=stripBgCol), box.rectangle = bwCols, plot.symbol = bwCols, box.umbrella = bwCols), ...)
 		
 		ptHld[[j]] <- pt1
 
@@ -57,7 +59,9 @@ boxplot.mnps <- function(x, stop.method = NULL, color = TRUE, figureRows = NULL,
 		for(j in 1:nPlot){
 			currCats <- c(x$treatATT, x$levExceptTreatATT[j])
 			bwDat <- data.frame(ps = x$psList[[j]]$ps[,stopMethLong], treat = currCats[1 + x$psList[[j]]$data$currResp], respCat = x$levExceptTreatATT[j], attGrp = x$treatATT)
-			pt1 <- bwplot(ps ~ treat, data = bwDat, ylim = c(-.1,1.1), ylab = "Propensity scores", xlab = "Treatment", main = paste("Propensity score of ", x$levExceptTreatATT[j], " versus ", x$treatATT, ".", sep = ""),par.settings = list(strip.background = list(col=stripBgCol), box.rectangle = bwCols, plot.symbol = bwCols, box.umbrella = bwCols), ...)
+			ptNm <- paste("Propensity score of ", x$levExceptTreatATT[j], " versus ", x$treatATT, ".", sep = "")
+			if(!is.null(time)) ptNm <- paste(ptNm, " (time ", time, ")", sep = "")
+			pt1 <- bwplot(ps ~ treat, data = bwDat, ylim = c(-.1,1.1), ylab = "Propensity scores", xlab = "Treatment", main = ptNm,par.settings = list(strip.background = list(col=stripBgCol), box.rectangle = bwCols, plot.symbol = bwCols, box.umbrella = bwCols), ...)
 			
 			ptHld[[j]] <- pt1
 	
@@ -65,7 +69,8 @@ boxplot.mnps <- function(x, stop.method = NULL, color = TRUE, figureRows = NULL,
 		}		
 	}	
 	
-	displayPlots(ptHld, figureRows = figureRows, singlePlot = singlePlot, multiPage = multiPage, bxpt = TRUE)
+	if(print) displayPlots(ptHld, figureRows = figureRows, singlePlot = singlePlot, multiPage = multiPage, bxpt = TRUE)
+	return(ptHld)
 
 
 }

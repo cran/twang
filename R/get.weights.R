@@ -48,7 +48,7 @@ get.weights <- function(ps1, stop.method = NULL, estimand = NULL, withSampW = TR
 #      Available options: ",names(ps1$ps),".")
    } else
    {
-   	warning("No stop.method specified.  Using ", names(ps1$psList[[1]]$ps)[1], "\n")
+   	if(length(ps1$stopMethods) > 1) warning("No stop.method specified.  Using ", names(ps1$psList[[1]]$ps)[1], "\n")
       i <- 1
    }
   

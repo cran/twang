@@ -986,9 +986,9 @@ glm7 <- svyglm(re78 ~ treat + age + educ + black + hispan + nodegree +
 \hline
 Treatment effect & PS estimate & Linear adjustment \\
 \hline
-\$\Sexpr{round(coef(glm1)[2])} & GBM, minimize KS    & none \\
-\$\Sexpr{round(coef(glm2)[2])} & GBM, minimize KS    & nodegree\\
-\$\Sexpr{round(coef(glm3)[2])} & GBM, minimize KS    & all\\
+\$\Sexpr{round(coef(glm1)[2])} & GBM, minimize ES    & none \\
+\$\Sexpr{round(coef(glm2)[2])} & GBM, minimize ES    & nodegree\\
+\$\Sexpr{round(coef(glm3)[2])} & GBM, minimize ES    & all\\
 \$\Sexpr{round(coef(glm4)[2])} & None                & all\\
 \$\Sexpr{round(coef(glm6)[2])} & Logistic regression & none \\
 \$\Sexpr{round(coef(glm7)[2])} & Logistic regression & all\\

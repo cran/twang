@@ -70,8 +70,9 @@ dx.wts <- function(x,  data, estimand, vars=NULL, treat.var, x.as.weights=TRUE, 
    if(!is.null(sampw)) w <- w*sampw
    if(is.null(vars)) vars <- names(data)[names(data) != treat.var]
 
-   summary.tab <- alert <- NULL   
-   zz      <- textConnection("alert","a")
+#   summary.tab <- alert <- NULL   
+  summary.tab <- NULL
+#   zz      <- textConnection("alert","a")
 #   if(plots) pdf(file=paste(title,".pdf",sep=""))
 
    n.tp <- ifelse(class(x)=="ps",length(x$desc),ncol(w))
@@ -115,10 +116,9 @@ dx.wts <- function(x,  data, estimand, vars=NULL, treat.var, x.as.weights=TRUE, 
 
    } 
 
-   close(zz)
 #   if(plots) dev.off()
 
-   cat(alert,sep="\n")
+#   cat(alert,sep="\n")
    rownames(summary.tab) <- 1:nrow(summary.tab)
 
    result <- list(treat      = data[, treat.var],
@@ -128,7 +128,7 @@ dx.wts <- function(x,  data, estimand, vars=NULL, treat.var, x.as.weights=TRUE, 
                   w          = as.matrix(w[,-1]),
                   datestamp  = date(),
                   parameters = match.call(),
-                  alerts     = alert,
+#                  alerts     = alert,
                   varNames   = vars)
    class(result) <- "dxwts"
    return(result)

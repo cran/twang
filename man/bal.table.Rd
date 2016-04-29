@@ -10,7 +10,7 @@
 \usage{
 bal.table(x, digits = 3, collapse.to = c("pair","covariate","stop.method")[1], 
 	subset.var = NULL, subset.treat = NULL, subset.stop.method = NULL, es.cutoff = 0, 
-	ks.cutoff = 0, p.cutoff = 1, ks.p.cutoff = 1, \dots)
+	ks.cutoff = 0, p.cutoff = 1, ks.p.cutoff = 1, timePeriods = NULL, \dots)
 }
 
 \arguments{
@@ -25,6 +25,7 @@ bal.table(x, digits = 3, collapse.to = c("pair","covariate","stop.method")[1],
   \item{ks.cutoff}{Subsets to comparisons with KS values bigger than \code{ks.cutoff}.}
   \item{p.cutoff}{Subsets to comparisons with t- or chi-squared p-values no bigger than \code{p.cutoff}.}
   \item{ks.p.cutoff}{Subsets to comparisons with KS p-values no bigger than \code{ks.p.cutoff}.}
+  \item{timePeriods}{Used to subset times for iptw fits. }
   \item{\dots}{Additional arugments.}
 }
 
