@@ -102,7 +102,7 @@ SAS macros that implement these methods.
 \section{An ATT example to start}
 
 <<echo=FALSE>>=
-options(width=60)
+options(width=80)
 @
 
 If you have not already done so, install \texttt{twang} by typing
@@ -413,7 +413,7 @@ lalonde.balance
 @
 
 <<echo=FALSE>>=
-options(width=60)
+options(width=80)
 @
 
 \texttt{bal.table()} returns information on the pretreatment
@@ -1093,7 +1093,7 @@ bal.table(ps.lindner)
 @
 
 <<echo=FALSE>>=
-options(width = 60)
+options(width = 80)
 @ 
 
 
@@ -1594,8 +1594,8 @@ cases by reweighting. For ATT, we give each treatment case a
 weight of 1 and each comparison
 case a weight $w_i = p(\mathbf{x}_i)/(1 - p(\mathbf{x}_i))$. To
 estimate the ATE, we give control cases weight $w_i =
-1/p(\mathbf{x}_i)$ and we give the treatment cases $w_i =
-1/(1-p(\mathbf{x}_i))$.  We then
+1/(1-p(\mathbf{x}_i))$ and we give the treatment cases $w_i =
+1/p(\mathbf{x}_i)$.  We then
 estimate the treatment effect estimate with a weighted regression
 model that contains only a treatment indicator. No additional
 covariates are needed if the weights account for

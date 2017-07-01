@@ -4,12 +4,12 @@ export(ps, mnps, dx.wts, get.weights, bal.table, stop.methods, bal.stat, means.t
 
 import(gbm, latticeExtra, survey, xtable, lattice)
 
-importFrom("grDevices", "dev.cur", "dev.new")
-importFrom("graphics","plot", "boxplot")
-importFrom("stats", "approx", "as.formula", "cor", "fitted", "formula",
-              "median", "model.extract", "model.frame", "na.pass", "nlm",
-              "optimize", "predict", "quasibinomial", "runif", "terms",
-              "update", "var")
+importFrom("grDevices", dev.cur, dev.new)
+importFrom("graphics",plot, boxplot)
+importFrom("stats", approx, as.formula, cor, fitted, formula,
+              median, model.extract, model.frame, na.pass, nlm,
+              optimize, predict, quasibinomial, runif, terms,
+              update, var)
 
 S3method(boxplot, ps)
 S3method(boxplot, mnps)

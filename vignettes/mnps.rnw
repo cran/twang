@@ -72,7 +72,7 @@ and much of that information will not be repeated here.
 \section{An ATE example}
 
 <<echo=FALSE>>=
-options(width=60)
+options(width=80)
 @
 
 
@@ -329,7 +329,7 @@ all other treatment groups.
 \end{center}
 
 <<echo=FALSE>>=
-options(width=60)
+options(width=80)
 @
 
 As seen in this figure, the pairwise minimum $p$-values all increase
@@ -459,7 +459,7 @@ summary(mnps.AOD)
 
 
 <<echo=FALSE>>=
-options(width=60)
+options(width=80)
 @
 
 After examining the graphical and tabular diagnostics provided by
@@ -630,7 +630,7 @@ bal.table(mnps.AOD.ATT, digits = 3, collapse.to = "stop.method")
 
 
 <<echo=FALSE>>=
-options(width=60)
+options(width=80)
 @
 
 \subsection{Estimating treatment effects}

@@ -22,7 +22,7 @@ get.weights.unstab(x,
 }
 
 \value{
-a vector of weights
+a data.frame of weights
 }
 
 \seealso{ \code{\link{iptw}} }

@@ -4,7 +4,7 @@ iptw <- function(formula, data, timeInvariant = NULL, n.trees = 10000, stop.meth
 	
 	if(length(stop.method) > 1) stop("Only one stop.method is allowed at one time.") 
 	
-	isLong <- !is.list(formula)   
+	isLong <- !is.list(formula)      
 	estimand <- NULL
 	
 	if(isLong){
