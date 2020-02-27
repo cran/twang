@@ -34,6 +34,7 @@ tutorial for the \texttt{twang} package}
 
 \usepackage{Sweave}
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 \maketitle
 
