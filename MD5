@@ -1,4 +1,4 @@
-34e9a593adf37e91d8ec9a726ca57425 *DESCRIPTION
+333614bbed595f47343fc78605e44ef4 *DESCRIPTION
 e62637ea8a114355b985fd86c9ffbd6e *LICENSE
 5d475040d2ac2173595bf4859bfe8d62 *NAMESPACE
 761ec1929efff81901ddeb3ed9360d0d *R/MetricI.R
@@ -70,8 +70,8 @@ a1ffe4f27d5706274d0c01b54116a22d *R/summary.iptw.R
 26ccfbc1312bb3f83ea81fad0ab0bb51 *R/summary.ps.R
 a68d46479f90d6069ef1b78451c672d3 *R/surveytable.R
 ec6883090ca2869cbfe5bb77d6af5840 *R/twang.R
-aa809fafd21fd6c8fe7c89018741a3b6 *R/zzz.R
-75e4d2b0f7f6d97cda044accf566d223 *build/vignette.rds
+1bf57386cd8bbcd27e4981481e118b16 *R/zzz.R
+62f13f46dd9c28963c045db0e120c824 *build/vignette.rds
 f13b2cf955fe77ba3e4887d22a4a8d03 *data/AOD.RData
 ac7e2fbd66249c5401b30f6a0fbe1926 *data/egsingle.RData
 42112763704298377784700ef789bc9d *data/iptwExLong.RData
@@ -82,14 +82,14 @@ ab1c47ae103f67c6a083e9be63428cd2 *data/lalonde.RData
 fa6da7639ae2108ba4dc912e12baa44a *data/mnIptwExWide.RData
 b56590c4a114b2bfc0736dc52d955ac9 *data/raceprofiling.RData
 f25f7cae9b80fa0610f2266111d78dbe *inst/doc/iptw.R
-a4175c4a7832147c0bb658bc9f7e6f7b *inst/doc/iptw.pdf
+444d3e4fb0b666781c8af5e7ce2e646f *inst/doc/iptw.pdf
 6a89dcdd6af38e42650b237711e5c281 *inst/doc/iptw.rnw
 f130f8c73f85d568214b79acba416fce *inst/doc/mnps.R
-2743746b96801d09ccc5458498f7eee4 *inst/doc/mnps.pdf
+e8ac9da335397bc5b00e67ba402d54d4 *inst/doc/mnps.pdf
 0a39428d4f29acf4825c8b20ac18e9ea *inst/doc/mnps.rnw
-e0359ffd61ed9cbfa5b8ba8bb4b5d5f8 *inst/doc/twang.R
-1c360ec52ea08ebb37beffe5479b38b8 *inst/doc/twang.pdf
-13b2f0a2e53256676cf4701268ea1d3a *inst/doc/twang.rnw
+ae770aa3c4929cc48efde4f1b96223a9 *inst/doc/twang.R
+3200ccf21afa410755db0be362c92994 *inst/doc/twang.pdf
+b54e71973cb14e60e759154c54092d41 *inst/doc/twang.rnw
 03ab59f25e27368d103d2f8b7ed52fe7 *man/AOD.Rd
 936d49c07f82089d3059608b0dce4d24 *man/bal.stat.Rd
 f4d28b60836409645d2d4f43c19b15fc *man/bal.table.Rd
@@ -140,4 +140,6 @@ beb2b6d37eb13098e3614586dff50074 *src/init.c
 604472c841c7bc5a3e1b1f23c9011311 *src/ks.h
 6a89dcdd6af38e42650b237711e5c281 *vignettes/iptw.rnw
 0a39428d4f29acf4825c8b20ac18e9ea *vignettes/mnps.rnw
-13b2f0a2e53256676cf4701268ea1d3a *vignettes/twang.rnw
+242bbb7ddb0df987f87bff113fe8e1f8 *vignettes/ovtool_ate.rda
+7ece960fc61580144df9ded0a718fc1d *vignettes/ovtool_att.rda
+b54e71973cb14e60e759154c54092d41 *vignettes/twang.rnw
