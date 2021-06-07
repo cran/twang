@@ -1,4 +1,4 @@
-333614bbed595f47343fc78605e44ef4 *DESCRIPTION
+ec8b59867e07ee46cbd285bf5184d46b *DESCRIPTION
 e62637ea8a114355b985fd86c9ffbd6e *LICENSE
 5d475040d2ac2173595bf4859bfe8d62 *NAMESPACE
 761ec1929efff81901ddeb3ed9360d0d *R/MetricI.R
@@ -39,12 +39,12 @@ c65e9c023d7520232f35b4317fa4b78e *R/mnps.old.R
 6700044ba67a4d4906b261e4e5ad9994 *R/mnps2.R
 44d96b0335bcb4ceb95d148830d078f7 *R/pairwiseComp.R
 18a6d53c7455b84223591f0bd94e4730 *R/pairwiseCompForPlot.R
-fcd155874e5d39c1b56bed8542b92152 *R/pairwiseComparison.R
+dbfe990c0cfe5984815d99dd5f210255 *R/pairwiseComparison.R
 e2624d4d8f04bfb1350a33b8be1de0f4 *R/plot.dxwts.R
 f9037d77d1d0112080ff1d57c56050ef *R/plot.iptw.R
 144287703fcac8057fd586c65aeb2cb1 *R/plot.mniptw.R
 51b593d209af8e7286d1e2c5908efe0b *R/plot.mnps.2.R
-0cdec98ebca92aef9ce060e9d9fe33df *R/plot.mnps.R
+1a4c00964ae82fbf7c953296b7ec267c *R/plot.mnps.R
 d43929446815dc032d969049c4796bff *R/plot.ps.R
 cd92e1cb9e7bc49e6b45061ee7549750 *R/plotTruePairs.R
 374d8265e577c82bfa5e38ceb427d472 *R/pred.xgboost.R
@@ -82,13 +82,13 @@ ab1c47ae103f67c6a083e9be63428cd2 *data/lalonde.RData
 fa6da7639ae2108ba4dc912e12baa44a *data/mnIptwExWide.RData
 b56590c4a114b2bfc0736dc52d955ac9 *data/raceprofiling.RData
 f25f7cae9b80fa0610f2266111d78dbe *inst/doc/iptw.R
-444d3e4fb0b666781c8af5e7ce2e646f *inst/doc/iptw.pdf
+e9871321b7e1f83301b934ba3b9a5cd4 *inst/doc/iptw.pdf
 6a89dcdd6af38e42650b237711e5c281 *inst/doc/iptw.rnw
 f130f8c73f85d568214b79acba416fce *inst/doc/mnps.R
-e8ac9da335397bc5b00e67ba402d54d4 *inst/doc/mnps.pdf
+356a12087d9aa15276981fe74a563891 *inst/doc/mnps.pdf
 0a39428d4f29acf4825c8b20ac18e9ea *inst/doc/mnps.rnw
 ae770aa3c4929cc48efde4f1b96223a9 *inst/doc/twang.R
-3200ccf21afa410755db0be362c92994 *inst/doc/twang.pdf
+6b40f72e7667ca0f69e09bda00b3e88c *inst/doc/twang.pdf
 b54e71973cb14e60e759154c54092d41 *inst/doc/twang.rnw
 03ab59f25e27368d103d2f8b7ed52fe7 *man/AOD.Rd
 936d49c07f82089d3059608b0dce4d24 *man/bal.stat.Rd
@@ -133,7 +133,7 @@ d485f659d8927cf00f070e0a2dd80215 *man/print.dxwts.Rd
 19ec85c221f386475058c29d8ae2d588 *man/summary.mniptw.Rd
 b913d6913ee73e9145a895d58ac73c57 *man/summary.mnps.Rd
 6c87d7029557c245b6bcb758c9c0c46d *man/summary.ps.Rd
-3d0d13e26f309e48706928de9400be15 *man/twang-package.Rd
+d86e4d553f6be56691f05d1aedd01e60 *man/twang-package.Rd
 f009e46fcf131d28ea4ead122961b7bd *src/Makevars
 beb2b6d37eb13098e3614586dff50074 *src/init.c
 922d9780e8d4188f45412fe07d4fed48 *src/ks.c
