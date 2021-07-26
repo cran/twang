@@ -1,4 +1,4 @@
-c2e5e7fd4f4bf187f25212632b1afa20 *DESCRIPTION
+f438404b7b31e96424c490b78fba7667 *DESCRIPTION
 e62637ea8a114355b985fd86c9ffbd6e *LICENSE
 5d475040d2ac2173595bf4859bfe8d62 *NAMESPACE
 761ec1929efff81901ddeb3ed9360d0d *R/MetricI.R
@@ -8,7 +8,7 @@ b2eb47f882ab5d05a754fae1578eb7ce *R/bal.table.R
 9524591b78e05af1cbe45c97b5232d79 *R/bal.table.hidden.R
 ef97fa742df2de0ba28716d03e54719f *R/bal.table.mnps.R
 38d0b2a47193344f008119037f5a7658 *R/bal.table.ps.R
-aa775b72038d01541803f74a9efe43a7 *R/boxplot.mnps.R
+203c4b1b9d699a4bd928c4efc0123795 *R/boxplot.mnps.R
 eb395f1c57ebd209f9b16ec689b6f382 *R/boxplot.ps.R
 bc6da08f6b000143a4b4a92a2d040384 *R/calcES.R
 4018c2aedc76275bd55243a813f90247 *R/calcKS.R
@@ -82,13 +82,13 @@ ab1c47ae103f67c6a083e9be63428cd2 *data/lalonde.RData
 fa6da7639ae2108ba4dc912e12baa44a *data/mnIptwExWide.RData
 b56590c4a114b2bfc0736dc52d955ac9 *data/raceprofiling.RData
 f25f7cae9b80fa0610f2266111d78dbe *inst/doc/iptw.R
-1b5ca0cfa8059adf826e3cfc6a32d2be *inst/doc/iptw.pdf
+7d740ba7a641d95ab2d7f94cedec6c8c *inst/doc/iptw.pdf
 6a89dcdd6af38e42650b237711e5c281 *inst/doc/iptw.rnw
 f130f8c73f85d568214b79acba416fce *inst/doc/mnps.R
-d4371aa7e68e1e486dade1cfeb729841 *inst/doc/mnps.pdf
+f1612bc10c2c475f438895868b7b3537 *inst/doc/mnps.pdf
 0a39428d4f29acf4825c8b20ac18e9ea *inst/doc/mnps.rnw
 ae770aa3c4929cc48efde4f1b96223a9 *inst/doc/twang.R
-d8ea42ebf9dd97a7ea1822f5ea72693f *inst/doc/twang.pdf
+cb69f6b12e47d5265c9b13c737803a65 *inst/doc/twang.pdf
 b54e71973cb14e60e759154c54092d41 *inst/doc/twang.rnw
 03ab59f25e27368d103d2f8b7ed52fe7 *man/AOD.Rd
 936d49c07f82089d3059608b0dce4d24 *man/bal.stat.Rd
