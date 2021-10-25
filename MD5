@@ -1,4 +1,4 @@
-f438404b7b31e96424c490b78fba7667 *DESCRIPTION
+f34d10fcba8ce6ae409b86ca4449658f *DESCRIPTION
 e62637ea8a114355b985fd86c9ffbd6e *LICENSE
 5d475040d2ac2173595bf4859bfe8d62 *NAMESPACE
 761ec1929efff81901ddeb3ed9360d0d *R/MetricI.R
@@ -71,7 +71,7 @@ a1ffe4f27d5706274d0c01b54116a22d *R/summary.iptw.R
 a68d46479f90d6069ef1b78451c672d3 *R/surveytable.R
 ec6883090ca2869cbfe5bb77d6af5840 *R/twang.R
 1bf57386cd8bbcd27e4981481e118b16 *R/zzz.R
-62f13f46dd9c28963c045db0e120c824 *build/vignette.rds
+75e4d2b0f7f6d97cda044accf566d223 *build/vignette.rds
 f13b2cf955fe77ba3e4887d22a4a8d03 *data/AOD.RData
 ac7e2fbd66249c5401b30f6a0fbe1926 *data/egsingle.RData
 42112763704298377784700ef789bc9d *data/iptwExLong.RData
@@ -82,14 +82,14 @@ ab1c47ae103f67c6a083e9be63428cd2 *data/lalonde.RData
 fa6da7639ae2108ba4dc912e12baa44a *data/mnIptwExWide.RData
 b56590c4a114b2bfc0736dc52d955ac9 *data/raceprofiling.RData
 f25f7cae9b80fa0610f2266111d78dbe *inst/doc/iptw.R
-7d740ba7a641d95ab2d7f94cedec6c8c *inst/doc/iptw.pdf
+dbe93ed9db9d5cc97b70c5b9ce97a090 *inst/doc/iptw.pdf
 6a89dcdd6af38e42650b237711e5c281 *inst/doc/iptw.rnw
 f130f8c73f85d568214b79acba416fce *inst/doc/mnps.R
-f1612bc10c2c475f438895868b7b3537 *inst/doc/mnps.pdf
+b1913d480ee4d1c3f940c2cecdfd97d8 *inst/doc/mnps.pdf
 0a39428d4f29acf4825c8b20ac18e9ea *inst/doc/mnps.rnw
-ae770aa3c4929cc48efde4f1b96223a9 *inst/doc/twang.R
-cb69f6b12e47d5265c9b13c737803a65 *inst/doc/twang.pdf
-b54e71973cb14e60e759154c54092d41 *inst/doc/twang.rnw
+f6f91b3ea9973a22b4345aa0e00b755d *inst/doc/twang.R
+bbcf2c9adcdd238611de372bf9664d42 *inst/doc/twang.pdf
+81b0273a27d77c36afc906262efb7761 *inst/doc/twang.rnw
 03ab59f25e27368d103d2f8b7ed52fe7 *man/AOD.Rd
 936d49c07f82089d3059608b0dce4d24 *man/bal.stat.Rd
 f4d28b60836409645d2d4f43c19b15fc *man/bal.table.Rd
@@ -142,4 +142,4 @@ beb2b6d37eb13098e3614586dff50074 *src/init.c
 0a39428d4f29acf4825c8b20ac18e9ea *vignettes/mnps.rnw
 242bbb7ddb0df987f87bff113fe8e1f8 *vignettes/ovtool_ate.rda
 7ece960fc61580144df9ded0a718fc1d *vignettes/ovtool_att.rda
-b54e71973cb14e60e759154c54092d41 *vignettes/twang.rnw
+81b0273a27d77c36afc906262efb7761 *vignettes/twang.rnw
