@@ -3,12 +3,12 @@ makePlotDat <- function(x, whichPlot, subsetStopMeth=NULL, yOnly = FALSE, incUnw
 	## 3 = esPlot; 4 = t p-values; 5 = ks p-values
 	
 #	n.tp <- ifelse(class(x) == "dxwts", length(x$desc), ncol(weights))
-	if(class(x) == "mnps") {
+	if(inherits(x, "mnps")) {
 		n.tp <- length(x$psList[[1]]$desc)
 		n.var <- nrow(x$psList[[1]]$desc$unw$bal.tab$results)
 		}
 
-	else if(class(x) == "ps") {
+	else if(inherits(x, "ps")) {
 		n.tp <- length(x$desc) 
 		n.var <- nrow(x$desc$unw$bal.tab$results)
 	}

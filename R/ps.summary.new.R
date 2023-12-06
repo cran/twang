@@ -119,7 +119,7 @@ na.action = c("level", "exclude","lowest")[1], collapse.by.var = FALSE, estimand
 					}
 		}
 		
-		else pval <- 1- .Call("pSmirnov2x", as.double(ks), as.integer(ess[2]), as.integer(ess[1]))
+		else pval <- 1- .Call(pSmirnov2x, as.double(ks), as.integer(ess[2]), as.integer(ess[1]))
 		
 		if((sum(is.na(design$variables$x)) > 0) && (na.action == "level") && !isFactor){
 			work <- design$variables

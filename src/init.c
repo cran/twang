@@ -6,27 +6,15 @@
 /* .C calls */
 #define CALLDEF(name, n)  {#name, (DL_FUNC) &name, n}
 
-static const R_CMethodDef CEntries[]  = {
-   {NULL, NULL, 0}
-};
-
-static const R_CallMethodDef CallEntries[] = {
+static const R_CallMethodDef R_CallDef[] = {
    CALLDEF(pSmirnov2x, 3),
    CALLDEF(pKS2, 2),
    {NULL, NULL, 0}
 };
 
-static const R_FortranMethodDef FortEntries[] = {
-   {NULL, NULL, 0}
-};
-
-static const R_ExternalMethodDef ExtEntries[] = {
-   {NULL, NULL, 0}
-};
-
-void attribute_visible R_init_stats(DllInfo *dll)
+void attribute_visible R_init_twang(DllInfo *dll)
 {
-   R_registerRoutines(dll, CEntries, CallEntries, FortEntries, ExtEntries);
+   R_registerRoutines(dll, NULL, R_CallDef, NULL, NULL);
    R_useDynamicSymbols(dll, FALSE);
    R_forceSymbols(dll, TRUE);
 }

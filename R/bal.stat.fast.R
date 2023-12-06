@@ -65,7 +65,7 @@ bal.stat.fast <- function(data,vars=NULL,treat.var,w.all, sampw,
         ess <- ess1
       }
       if ( ifelse( is.null(ks.exact) , prod(ess)<10000 , ks.exact) ){
-        pval <- 1- .Call("pSmirnov2x", as.double(ret.ks[var,"ks"]), as.integer(ess[2]), as.integer(ess[1]))
+        pval <- 1- .Call(pSmirnov2x, as.double(ret.ks[var,"ks"]), as.integer(ess[2]), as.integer(ess[1]))
       }else{
          ## copied from ks.test
          pkstwo <- function(x, tol = 1e-06) {
@@ -76,7 +76,7 @@ bal.stat.fast <- function(data,vars=NULL,treat.var,w.all, sampw,
             p[is.na(x)] <- NA
             IND <- which(!is.na(x) & (x > 0))
             if (length(IND)) 
-               p[IND] <- .Call("pKS2", p = x[IND], tol)
+               p[IND] <- .Call(pKS2, p = x[IND], tol)
             p
          }
          pval <- 1 - pkstwo(sqrt(prod(ess)/sum(ess))*ret.ks[var,"ks"])

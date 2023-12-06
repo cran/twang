@@ -41,7 +41,7 @@
   effective survival advantage in high volume interventional practice.
   \emph{Am Heart J} 2000; \bold{140}: 603-610.
 
-  Obenchain RL. (2009) \bold{USPSinR.pdf}  ../R\_HOME/library/USPS  40 pages.
+  Obenchain RL. (2009) \bold{USPSinR.pdf}  ../R_HOME/library/USPS  40 pages.
 }
 
 \keyword{datasets}

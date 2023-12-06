@@ -1,6 +1,6 @@
 ## Generic function for extracting balance tables from ps and other objects
 bal.table.hidden <- function(x, pairwise = TRUE, digits = 3){
-	if(class(x) != "mnps"){
+	if(!inherits(x, "mnps")){
    bal.tab <- lapply(x$desc, function(x){return(round(x$bal.tab$results, digits))})
    return(bal.tab)
    }
@@ -31,8 +31,6 @@ bal.table.hidden <- function(x, pairwise = TRUE, digits = 3){
    	}
    	else return(balTabList)
    }
-   	
-   	
 }
 
 

@@ -65,7 +65,7 @@ ps.fast<-function(formula ,
      methodList[[i]]$name <- methodName
      }
      else {
-     	if (class(stop.method[i]) != "stop.method"){
+     	if (!inherits(stop.method[i], "stop.method")){
      		print(allowableStopMethods)
      		stop("Each element of stop.method must either be one of \nthe above character strings, or an object of the stop.method class.")
      	}

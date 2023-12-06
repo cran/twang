@@ -6,9 +6,7 @@
 \alias{twang-package}
 \title{twang: Toolkit for Weighting and Analysis of Nonequivalent Groups}
 \description{
-Provides functions for propensity score
-        estimating and weighting, nonresponse weighting, and diagnosis
-        of the weights.
+Provides functions for propensity score estimating and weighting, nonresponse weighting, and diagnosis of the weights.
 }
 \keyword{propensity}
 \keyword{score}

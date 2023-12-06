@@ -54,7 +54,7 @@
 #'   Default: \code{c("ks.mean", "es.mean")}.
 #' @param sampw Optional sampling weights.
 #' @param version \code{"gbm"}, \code{"xgboost"}, or \code{"legacy"}, indicating which version of the twang package to use.
-#'   \itemize{
+#'   \describe{
 #'     \item{\code{"gbm"}}{ uses gradient boosting from the \code{\link{gbm}} package,}
 #'     \item{\code{"xgboost"}}{ uses gradient boosting from the \code{\link{xgboost}} package, and}
 #'     \item{\code{"legacy"}}{ uses the prior implementation of the \code{ps} function.}
@@ -82,7 +82,7 @@
 #' @param ... Additional arguments that are passed to \code{ps} function.
 #' 
 #' @return Returns an object of class \code{ps}, a list containing 
-#'   \itemize{
+#'   \describe{
 #'   \item{\code{gbm.obj}}{ The returned \code{\link{gbm}} or \code{\link{xgboost}} object.}
 #'   \item{\code{treat}}{ The vector of treatment indicators.}
 #'   \item{\code{treat.var}}{ The treatment variable.}
@@ -90,7 +90,7 @@
 #'     \code{stop.methods}. Includes a component for the unweighted
 #'     analysis names \dQuote{unw}. Each \code{desc} component includes
 #'     a list with the following components
-#'     \itemize{
+#'     \describe{
 #'     \item{\code{ess}}{ The effective sample size of the control group.}
 #'     \item{\code{n.treat}}{ The number of subjects in the treatment group.}
 #'     \item{\code{n.ctrl}}{ The number of subjects in the control group.}

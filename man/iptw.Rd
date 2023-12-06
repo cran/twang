@@ -84,7 +84,7 @@ Default: \code{c("es.max")}.}
 \item{sampw}{Optional sampling weights.}
 
 \item{version}{\code{"gbm"}, \code{"xgboost"}, or \code{"legacy"}, indicating which version of the twang package to use.
-\itemize{
+\describe{
   \item{\code{"gbm"}}{ uses gradient boosting from the \code{\link{gbm}} package.}
   \item{\code{"xgboost"}}{ uses gradient boosting from the \code{\link{xgboost}} package.}
   \item{\code{"legacy"}}{ uses the prior implementation of the \code{\link{ps}} function.}
@@ -115,7 +115,7 @@ corresponds to a grid of points on the kept iterations as defined by `\code{n.ke
 }
 \value{
 Returns an object of class \code{iptw}, a list containing
-  \itemize{
+  \describe{
     \item{\code{psList}}{ A list of \code{\link{ps}} objects with length equal to the number of time periods.}
     \item{\code{estimand}}{ The specified estimand.}
     \item{\code{stop.methods}}{ The stopping rules used to optimize \code{iptw} balance.}

@@ -51,7 +51,7 @@
 #'   Default: \code{c("es.mean")}.
 #' @param sampw Optional sampling weights.
 #' @param version \code{"gbm"}, \code{"xgboost"}, or \code{"legacy"}, indicating which version of the twang package to use.
-#'   \itemize{
+#'   \describe{
 #'     \item{\code{"gbm"}}{ uses gradient boosting from the \code{\link{gbm}} package.}
 #'     \item{\code{"xgboost"}}{ uses gradient boosting from the \code{\link{xgboost}} package.}
 #'     \item{\code{"legacy"}}{ uses the prior implementation of the \code{\link{ps}} function.}
@@ -81,7 +81,7 @@
 #' @param ... Additional arguments that are passed to \code{\link{ps}} function.
 #'
 #' @return Returns an object of class \code{mnps}, which consists of the following.  
-#'   \itemize{
+#'   \describe{
 #'     \item{\code{psList}}{ A list of \code{\link{ps}} objects with length equal to the number of time periods.}
 #'     \item{\code{nFits}}{ The number of \code{\link{ps}} objects (i.e., the number of distinct time points).}
 #'     \item{\code{estimand}}{ The specified estimand.}
