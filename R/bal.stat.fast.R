@@ -50,7 +50,8 @@ bal.stat.fast <- function(data,vars=NULL,treat.var,w.all, sampw,
       x = bal.data$bal.data[,var]
       index = is.na(x)
       x[index] = 0
-      D= solve(Di - crossprod( WX[index,] , X[index,]) ) 
+#      D= solve(Di - crossprod( WX[index,] , X[index,]) ) 
+      D= solve(Di - crossprod( WX[index,,drop=FALSE] , X[index,,drop=FALSE]) )
       beta = D %*% crossprod( WX , x ) 
       resid = x - X%*%beta
       resid[index] = 0

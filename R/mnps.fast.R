@@ -112,7 +112,7 @@ mnps.fast <- function(formula,
          currResp <- respAll[respAll == treatATT | respAll == levExceptTreatATT[i]]
          sampwCurr <- sampw[respAll == treatATT | respAll == levExceptTreatATT[i]]
          #			currResp <- currResp == levExceptTreatATT[i]
-         currResp <- currResp == treatATT			
+         currResp <- as.numeric(currResp == treatATT)			
          currDat <- data.frame(currResp = currResp, currDat)
          currFormula <- update(formula, currResp ~ .)
          currPs <- ps.fast(formula = currFormula, data = currDat, n.trees = nrounds[i], interaction.depth = max_depth,

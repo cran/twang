@@ -3,12 +3,13 @@
 #' \code{mnps} calculates propensity scores for more than two treatment groups using gradient boosted
 #' logistic regression, and diagnoses the resulting propensity scores using a variety of methods.
 #' 
-#' For user more comfortable with the options of \code{\link{xgboost}},
+#' For user more comfortable with the options of 
+#' \code{\link[xgboost:xgboost]{xgboost::xgboost()}},
 #' the options for \code{mnps} controlling the behavior of the gradient boosting
-#' algorithm can be specified using the \code{\link{xgboost}} naming
+#' algorithm can be specified using the \code{\link[xgboost]{xgboost}} naming
 #' scheme. This includes \code{nrounds}, \code{max_depth}, \code{eta}, and
 #' \code{subsample}. In addition, the list of parameters passed to
-#' \code{\link{xgboost}} can be specified with \code{params}.
+#' \code{\link[xgboost]{xgboost}} can be specified with \code{params}.
 #' 
 #' Note that unlike earlier versions of \code{twang}, the plotting functions are
 #' no longer included in the \code{mnps} function. See \code{\link[twang:plot.mnps]{plot}} for
@@ -18,17 +19,18 @@
 #'   indicator on the left side of the formula and the potential
 #'   confounding variables on the right side.
 #' @param data The dataset, includes treatment assignment as well as covariates.
-#' @param n.trees Number of gbm iterations passed on to \code{\link{gbm}}. Default: 10000.
+#' @param n.trees Number of gbm iterations passed on to \code{\link[gbm:gbm]{gbm::gbm()}}. 
+#' Default: 10000.
 #' @param interaction.depth A positive integer denoting the tree depth used in
 #'   gradient boosting. Default: 3.
 #' @param shrinkage A numeric value between 0 and 1 denoting the learning rate.
-#'   See \code{\link{gbm}} for more details. Default: 0.01.
+#'   See \code{\link[gbm]{gbm}} for more details. Default: 0.01.
 #' @param bag.fraction A numeric value between 0 and 1 denoting the fraction of
 #'   the observations randomly selected in each iteration of the gradient
-#'   boosting algorithm to propose the next tree. See \code{\link{gbm}} for
+#'   boosting algorithm to propose the next tree. See \code{\link[gbm]{gbm}} for
 #'   more details. Default: 1.0.
 #' @param n.minobsinnode An integer specifying the minimum number of observations 
-#'   in the terminal nodes of the trees used in the gradient boosting. See \code{\link{gbm}} for
+#'   in the terminal nodes of the trees used in the gradient boosting. See \code{\link[gbm]{gbm}} for
 #'   more details. Default: 10.
 #' @param perm.test.iters A non-negative integer giving the number of iterations
 #'   of the permutation test for the KS statistic. If \code{perm.test.iters=0}
@@ -52,8 +54,8 @@
 #' @param sampw Optional sampling weights.
 #' @param version \code{"gbm"}, \code{"xgboost"}, or \code{"legacy"}, indicating which version of the twang package to use.
 #'   \describe{
-#'     \item{\code{"gbm"}}{ uses gradient boosting from the \code{\link{gbm}} package.}
-#'     \item{\code{"xgboost"}}{ uses gradient boosting from the \code{\link{xgboost}} package.}
+#'     \item{\code{"gbm"}}{ uses gradient boosting from the \code{\link[gbm]{gbm}} package.}
+#'     \item{\code{"xgboost"}}{ uses gradient boosting from the \code{\link[xgboost]{xgboost}} package.}
 #'     \item{\code{"legacy"}}{ uses the prior implementation of the \code{\link{ps}} function.}
 #'   }
 #'   Default: \code{"gbm"}.
@@ -101,7 +103,7 @@
 #'   Score Estimation with Boosted Regression for Evaluating Adolescent
 #'   Substance Abuse Treatment", *Psychological Methods* 9(4):403-425.
 #'
-#' @seealso \code{\link{ps}}, \code{\link{gbm}}, \code{\link{xgboost}}, \code{\link[twang:plot.mnps]{plot}}, \code{\link{bal.table}}
+#' @seealso \code{\link{ps}}, \code{\link[gbm]{gbm}}, \code{\link[xgboost]{xgboost}}, \code{\link[twang:plot.mnps]{plot}}, \code{\link{bal.table}}
 #'
 #' @export
 mnps<-function(formula,
