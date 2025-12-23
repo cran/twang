@@ -159,7 +159,7 @@ ps.fast<-function(formula ,
       }
       
       gbm1 <- xgboost(data=sparse.data , label=data[,treat.var], params=params, tree_method = tree_method, 
-                      feval=pred.xgboost , nrounds=n.trees , verbose=verbose , weight = sampW, 
+                      feval=pred.xgboost , nrounds=n.trees , verbose=verbose , weights = sampW, 
                       callbacks=callback.list)
       iters = (1:n.trees)[(1:n.trees)%%n.keep==0]
       ps = plogis(as.matrix(gbm1$evaluation_log))

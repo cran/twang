@@ -1,4 +1,4 @@
-6753e5d1b403eadf80cebad3f4b677ce *DESCRIPTION
+e345026b541c45058cc755fb7ba033f0 *DESCRIPTION
 e62637ea8a114355b985fd86c9ffbd6e *LICENSE
 5d475040d2ac2173595bf4859bfe8d62 *NAMESPACE
 761ec1929efff81901ddeb3ed9360d0d *R/MetricI.R
@@ -58,7 +58,7 @@ d0f2dfeacdc5ff8b82ccd801fba0bfda *R/print.summary.iptw.R
 b9cc7b8d24a1d0f19a6bc6538e81d523 *R/print.summary.mnps.R
 f8459a768d58014d62575e064a31b42b *R/print.summary.ps.R
 05c2f608206ddd130689346cbe9c3bda *R/ps.R
-b36c3bbcdefbf4233fa7f241bb5da074 *R/ps.fast.R
+90a490829c90fa6d19fc95cad34faacd *R/ps.fast.R
 d66941a5db4e69e5eecf9a15c2e7ce51 *R/ps.old.R
 c2b1c84fc1df8e6e2fe8ebb417d3138f *R/ps.summary.new.R
 a1ce29c046abaf424016271ae0b5a70b *R/ps.summary.new2.R
@@ -71,7 +71,7 @@ a1ffe4f27d5706274d0c01b54116a22d *R/summary.iptw.R
 a68d46479f90d6069ef1b78451c672d3 *R/surveytable.R
 ec6883090ca2869cbfe5bb77d6af5840 *R/twang.R
 1bf57386cd8bbcd27e4981481e118b16 *R/zzz.R
-227e7a6fd2fa044f72268fffed93da1f *build/vignette.rds
+8ba1ade4042a2ef46293a61919986e82 *build/vignette.rds
 f13b2cf955fe77ba3e4887d22a4a8d03 *data/AOD.RData
 ac7e2fbd66249c5401b30f6a0fbe1926 *data/egsingle.RData
 42112763704298377784700ef789bc9d *data/iptwExLong.RData
@@ -82,13 +82,13 @@ ab1c47ae103f67c6a083e9be63428cd2 *data/lalonde.RData
 fa6da7639ae2108ba4dc912e12baa44a *data/mnIptwExWide.RData
 b56590c4a114b2bfc0736dc52d955ac9 *data/raceprofiling.RData
 9cf56a43ffbaed5b9b424010e0f22f44 *inst/doc/iptw.R
-5dd88faaaf480c4908afcd4d5c64e981 *inst/doc/iptw.pdf
+0fa597e4d17be98621c809d270b4c27d *inst/doc/iptw.pdf
 6a89dcdd6af38e42650b237711e5c281 *inst/doc/iptw.rnw
 e600507be84067eb0fd6df45b32964b8 *inst/doc/mnps.R
-33553aaa04b91c1deadad6273ef831ef *inst/doc/mnps.pdf
+9c944fdfd657d72972ca51dd200b51aa *inst/doc/mnps.pdf
 0a39428d4f29acf4825c8b20ac18e9ea *inst/doc/mnps.rnw
 1808a614ccb56f78d60a0a97460b9bf2 *inst/doc/twang.R
-70699932128aaf935d5cf20bf6cb557a *inst/doc/twang.pdf
+35f7e9809fb1059ca8733a36de32796a *inst/doc/twang.pdf
 81b0273a27d77c36afc906262efb7761 *inst/doc/twang.rnw
 03ab59f25e27368d103d2f8b7ed52fe7 *man/AOD.Rd
 936d49c07f82089d3059608b0dce4d24 *man/bal.stat.Rd
